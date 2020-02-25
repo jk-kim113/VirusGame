@@ -4,20 +4,21 @@ using UnityEngine;
 
 public class Plant : MonoBehaviour
 {
-    //private RespawnObj mRespawn;
+    private int mID;
+    private RespawnPlant mRespawn;
 
     private void Awake()
     {
-        //mRespawn = GetComponentInParent<RespawnObj>();
+        mRespawn = GetComponentInParent<RespawnPlant>();
     }
 
-    public void Init()
+    public void Init(int id)
     {
-
+        mID = id;
     }
 
     public void BeingDestroyed()
-    {
-        //mRespawn.ChildDestroy();
+    {   
+        mRespawn.ChildDestroy(mID);
     }
 }

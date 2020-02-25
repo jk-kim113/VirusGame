@@ -80,7 +80,6 @@ public class Player : MonoBehaviour
         {
             // Get Item from target Obj
             plantDetected.BeingDestroyed();
-            plantDetected.gameObject.SetActive(false);
         }
 
         MainUIController.Instance.OnOffActionGaugeBar(false);
