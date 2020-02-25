@@ -79,6 +79,7 @@ public class Player : MonoBehaviour
         if(current <= 0)
         {
             // Get Item from target Obj
+            plantDetected.BeingDestroyed();
             plantDetected.gameObject.SetActive(false);
         }
 
