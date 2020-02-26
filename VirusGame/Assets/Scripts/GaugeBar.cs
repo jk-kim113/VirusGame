@@ -10,7 +10,7 @@ public class GaugeBar : MonoBehaviour
     private Image mGaugeBar;
 #pragma warning restore
 
-    public void ShowActionGaugeBar(float value)
+    public void ShowGaugeBar(float value)
     {
         mGaugeBar.fillAmount = value;
     }

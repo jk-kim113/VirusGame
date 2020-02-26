@@ -5,7 +5,8 @@ using UnityEngine;
 public class RespawnPlant : MonoBehaviour
 {
     private Plant[] mIncludedObj;
-    
+    private float mRespawnDelay = 6.0f;
+
     private void Awake()
     {
         mIncludedObj = GetComponentsInChildren<Plant>();
@@ -27,7 +28,7 @@ public class RespawnPlant : MonoBehaviour
 
     private IEnumerator RespawnObj(int id)
     {
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(mRespawnDelay);
 
         mIncludedObj[id].gameObject.SetActive(true);
     }

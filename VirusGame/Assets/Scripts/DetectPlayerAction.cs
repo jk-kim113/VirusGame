@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DetectPlayerAction : MonoBehaviour
 {
-    private float mDectectRange = 50.0f;
+    private float mDectectRange = 20.0f;
     private GameObject mDetectObj;
     public GameObject DetectObj { get { return mDetectObj; } }
 

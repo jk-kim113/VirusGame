@@ -12,6 +12,10 @@ public class MainUIController : MonoBehaviour
     private Text mActionText;
     [SerializeField]
     private GaugeBar mActionGaugeBar;
+    [SerializeField]
+    private GaugeBar mStaminaGaugeBar;
+    [SerializeField]
+    private GaugeBar mHungryGaugeBar;
 #pragma warning restore
 
     private void Awake()
@@ -40,6 +44,16 @@ public class MainUIController : MonoBehaviour
 
     public void ShowActionGaugeBar(float max, float current)
     {
-        mActionGaugeBar.ShowActionGaugeBar(current / max);
+        mActionGaugeBar.ShowGaugeBar(current / max);
+    }
+
+    public void ShowStaminaGaugeBar(float max, float current)
+    {
+        mStaminaGaugeBar.ShowGaugeBar(current / max);
+    }
+
+    public void ShowHungryGaugeBar(float max, float current)
+    {
+        mHungryGaugeBar.ShowGaugeBar(current / max);
     }
 }

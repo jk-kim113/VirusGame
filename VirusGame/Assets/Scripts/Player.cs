@@ -18,6 +18,12 @@ public class Player : MonoBehaviour
     private bool bPlantAction;
     public bool IsPlantAction { get { return bPlantAction; } set { bPlantAction = value; } }
 
+    private float mStaminaMax;
+    private float mStaminaCurrent;
+
+    private float mHungryMax;
+    private float mHungryCurrent;
+
     private void Awake()
     {   
         if(Instance == null)
@@ -30,6 +36,18 @@ public class Player : MonoBehaviour
         }
 
         mCHControl = GetComponent<CharacterController>();
+
+        mStaminaMax = 100f;
+        mStaminaCurrent = mStaminaMax;
+
+        mHungryMax = 100f;
+        mHungryCurrent = mHungryMax;
+    }
+
+    private void Start()
+    {
+        MainUIController.Instance.ShowStaminaGaugeBar(mStaminaMax, mStaminaCurrent);
+        MainUIController.Instance.ShowHungryGaugeBar(mHungryMax, mHungryCurrent);
     }
 
     void Update()
@@ -53,6 +71,10 @@ public class Player : MonoBehaviour
                 StartCoroutine(DoingAction());
             }
         }
+
+        // Player Hungry decrease
+        mHungryCurrent -= 0.5f * Time.deltaTime;
+        MainUIController.Instance.ShowHungryGaugeBar(mHungryMax, mHungryCurrent);
     }
 
     private IEnumerator DoingAction()
@@ -80,8 +102,21 @@ public class Player : MonoBehaviour
         {
             // Get Item from target Obj
             plantDetected.BeingDestroyed();
+
+            mStaminaCurrent -= 3;
+            
+            if(mStaminaCurrent <= 0)
+            {
+                GameOver();
+            }
         }
 
+        MainUIController.Instance.ShowStaminaGaugeBar(mStaminaMax, mStaminaCurrent);
         MainUIController.Instance.OnOffActionGaugeBar(false);
+    }
+
+    private void GameOver()
+    {
+        // Game Over!!
     }
 }
