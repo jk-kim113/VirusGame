@@ -9,11 +9,13 @@ public class Plant : MonoBehaviour
     private Transform mTransform;
     private float mGrowPeriod = 5.0f;
     private Coroutine mSpendGrowPeriodCoroutine;
+    private Renderer mRenderer;
 
     private void Awake()
     {
         mRespawn = GetComponentInParent<RespawnPlant>();
         mTransform = GetComponent<Transform>();
+        mRenderer = GetComponent<Renderer>();
     }
 
     private void OnEnable()
@@ -51,6 +53,13 @@ public class Plant : MonoBehaviour
 
                 mTransform.localScale = new Vector3(1f, 1f, 1f);
                 StopCoroutine(mSpendGrowPeriodCoroutine);
+                mSpendGrowPeriodCoroutine = StartCoroutine(SpendGrowPeriod(ePlantGrowthType.Rotten));
+
+                break;
+            case ePlantGrowthType.Rotten:
+
+                mRenderer.material.SetColor("_Color", Color.black);
+                StopCoroutine(mSpendGrowPeriodCoroutine);
 
                 break;
             default:
@@ -75,5 +84,6 @@ public enum ePlantGrowthType
 {
     Early,
     MidTerm,
-    LastPeriod
+    LastPeriod,
+    Rotten
 }
