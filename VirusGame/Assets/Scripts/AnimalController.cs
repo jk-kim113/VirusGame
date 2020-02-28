@@ -4,7 +4,8 @@ using UnityEngine;
 
 public enum eAnimaKind
 {
-    Goat
+    Goat,
+    Bear
 }
 
 public class AnimalController : MonoBehaviour
