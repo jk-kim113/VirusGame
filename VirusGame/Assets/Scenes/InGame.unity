@@ -14675,6 +14675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mOriginArr:
   - {fileID: 542758753946083173, guid: feec0bb87b2350742a84cf58423fc0bb, type: 3}
+  - {fileID: 114542670283535680, guid: 3ab164258b5613d4caa3f570831d4ca7, type: 3}
 --- !u!4 &747721408
 Transform:
   m_ObjectHideFlags: 0
