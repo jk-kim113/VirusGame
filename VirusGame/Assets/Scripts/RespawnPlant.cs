@@ -5,7 +5,7 @@ using UnityEngine;
 public class RespawnPlant : MonoBehaviour
 {
     private Plant[] mIncludedObj;
-    private float mRespawnDelay = 6.0f;
+    private float mRespawnDelay = 180.0f;
 
     private void Awake()
     {

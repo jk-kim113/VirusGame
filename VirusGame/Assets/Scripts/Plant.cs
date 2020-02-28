@@ -7,7 +7,7 @@ public class Plant : MonoBehaviour
     private int mID;
     private RespawnPlant mRespawn;
     private Transform mTransform;
-    private float mGrowPeriod = 5.0f;
+    private float mGrowPeriod = 360.0f;
     private Coroutine mSpendGrowPeriodCoroutine;
     private Renderer mRenderer;
 
