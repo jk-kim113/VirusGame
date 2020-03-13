@@ -16,7 +16,7 @@ public class DetectPlayerAction : MonoBehaviour
         {
             mDetectObj = hit.collider.gameObject;
 
-            if (hit.collider.CompareTag("Plant"))
+            if (hit.collider.CompareTag("Plant") || hit.collider.CompareTag("Tree"))
             {   
                 PlantAction(true);
             }

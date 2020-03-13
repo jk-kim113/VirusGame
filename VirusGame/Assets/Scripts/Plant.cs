@@ -11,6 +11,9 @@ public class Plant : MonoBehaviour
     private Coroutine mSpendGrowPeriodCoroutine;
     private Renderer mRenderer;
 
+    private bool bFoodSelected = false;
+    public bool FoodSelected { get { return bFoodSelected; } set { bFoodSelected = value; } }
+
     private void Awake()
     {
         mRespawn = GetComponentInParent<RespawnPlant>();
@@ -75,7 +78,8 @@ public class Plant : MonoBehaviour
     }
     
     public void BeingDestroyed()
-    {   
+    {
+        bFoodSelected = false;
         mRespawn.ChildDestroy(mID);
     }
 }

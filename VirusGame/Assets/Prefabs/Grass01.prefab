@@ -13,12 +13,13 @@ GameObject:
   - component: {fileID: 23719891806253812}
   - component: {fileID: 64500878528945302}
   - component: {fileID: 1287141668}
+  - component: {fileID: 4915935038885294785}
   m_Layer: 0
   m_Name: Grass01
   m_TagString: Plant
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &4838038023361216
 Transform:
@@ -105,3 +106,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9c74ee20c5e5084ea83aa60c469cf41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &4915935038885294785
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1076394005861882}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.54, y: 1.16, z: 0.52}
+  m_Center: {x: 0, y: 0.56, z: 0}
