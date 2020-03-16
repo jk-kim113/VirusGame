@@ -102,7 +102,7 @@ public class Player : MonoBehaviour
         {
             // Get Item from target Obj
             plantDetected.BeingDestroyed();
-            InvenController.Instance.SpawnItem(this.gameObject.transform.position, plantDetected.gameObject.transform.position, plantDetected.gameObject.tag, ePlantGrowthType.Early);
+            InvenController.Instance.SpawnItem(plantDetected.gameObject.transform.position, plantDetected.gameObject.tag, ePlantGrowthType.Early);
 
             mStaminaCurrent -= 3;
             

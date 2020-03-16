@@ -6,6 +6,10 @@ public class InvenController : MonoBehaviour
 {
     public static InvenController Instance;
 
+    Dictionary<string, List<Item>> mItemDic = new Dictionary<string, List<Item>>();
+
+    Dictionary<string, Dictionary<ePlantGrowthType, List<int>>> mItemDic2 = new Dictionary<string, Dictionary<ePlantGrowthType, List<int>>>();
+
 #pragma warning disable 0649
     [SerializeField]
     private ItemObjPool mItemObjPool;
@@ -89,12 +93,89 @@ public class InvenController : MonoBehaviour
         #endregion
     }
 
-    public void SpawnItem(Vector3 playerPos, Vector3 Itempos, string tag, ePlantGrowthType type)
+    private void Start()
     {
-        for(int i = 0; i < 3; i++)
+        MakeItemGroup();
+
+        
+
+        List<Item> itemList = new List<Item>();
+
+        for(int i = 0; i < mItemArr.Length; i++)
+        {
+            if(mItemArr[i].ID >= 1000 && mItemArr[i].ID < 2000)
+            {
+                itemList.Add(mItemArr[i]);
+            }
+        }
+
+        mItemDic.Add("Grass", itemList);
+    }
+
+    private void MakeItemGroup()
+    {
+        Dictionary<ePlantGrowthType, List<int>> plantItemgroup = new Dictionary<ePlantGrowthType, List<int>>();
+
+        List<int> itemgroup = new List<int>();
+        itemgroup.Add(0);
+
+        plantItemgroup.Add(ePlantGrowthType.Early, itemgroup);
+        itemgroup.Clear();
+
+        itemgroup.Add(0);
+        itemgroup.Add(2);
+        itemgroup.Add(3);
+
+        plantItemgroup.Add(ePlantGrowthType.MidTerm, itemgroup);
+        itemgroup.Clear();
+
+        itemgroup.Add(0);
+        itemgroup.Add(2);
+        itemgroup.Add(3);
+        itemgroup.Add(4);
+        itemgroup.Add(5);
+
+        plantItemgroup.Add(ePlantGrowthType.LastPeriod, itemgroup);
+        itemgroup.Clear();
+
+        itemgroup.Add(1);
+
+        plantItemgroup.Add(ePlantGrowthType.Rotten, itemgroup);
+
+        mItemDic2.Add("Grass", plantItemgroup);
+    }
+
+    public void SpawnItem(Vector3 Itempos, string tag, ePlantGrowthType type)
+    {
+        List<Item> itemList = new List<Item>();
+        itemList = mItemDic[tag];
+
+        // Early - 풀 0
+        // MidTerm - 풀, 싱싱한풀, 산삼 0 2 3
+        // LastPeriod - 풀, 싱싱한풀, 산삼, 싱싱한 산삼, 100년 묵은 산삼 0 2 3 4 5
+        // Rotten - 썩은 풀 1
+
+        switch(type)
+        {
+            case ePlantGrowthType.Early:
+                
+                break;
+            case ePlantGrowthType.MidTerm:
+                break;
+            case ePlantGrowthType.LastPeriod:
+                break;
+            case ePlantGrowthType.Rotten:
+                break;
+            default:
+                break;
+        }
+
+
+        int itemNum = Random.Range(3, 6);
+        for(int i = 0; i < itemNum; i++)
         {
             ItemObj item = mItemObjPool.GetFromPool(0);
-            item.ShowItem(playerPos, Itempos);
+            item.ShowItem(Itempos);
         }
     }
 }
