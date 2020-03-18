@@ -42,7 +42,7 @@ public class DetectRangeH : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {   
-        if (other.gameObject.CompareTag("Plant"))
+        if (other.gameObject.CompareTag("Grass"))
         {
             Plant food = other.gameObject.GetComponent<Plant>();
 

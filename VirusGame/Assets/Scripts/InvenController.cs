@@ -8,18 +8,22 @@ public class InvenController : MonoBehaviour
 
     Dictionary<string, List<Item>> mItemDic = new Dictionary<string, List<Item>>();
 
-    Dictionary<string, Dictionary<ePlantGrowthType, List<int>>> mItemDic2 = new Dictionary<string, Dictionary<ePlantGrowthType, List<int>>>();
-
 #pragma warning disable 0649
     [SerializeField]
     private ItemObjPool mItemObjPool;
+    [SerializeField]
+    private Inven mPlayerInven;
 #pragma warning restore
 
     private Item[] mItemArr;
+    private Sprite[] mGrassSpriteArr;
+    private Sprite[] mTreeSpriteArr;
+    private int[] mGrassItemNum;
+    private int[] mTreeItemNum;
 
     private void Awake()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -28,121 +32,50 @@ public class InvenController : MonoBehaviour
             Destroy(gameObject);
         }
 
-        #region Item Data
-        mItemArr = new Item[12];
+        mGrassSpriteArr = Resources.LoadAll<Sprite>("Sprites/GrassItem");
+        mTreeSpriteArr = Resources.LoadAll<Sprite>("Sprites/TreeItem");
 
-        mItemArr[0] = new Item();
-        mItemArr[0].Name = "풀";
-        mItemArr[0].ID = 1000;
-        mItemArr[0].Info = "풀에서 일반적으로 얻을 수 있는 아이템";
+        mGrassItemNum = new int[mGrassSpriteArr.Length];
+        for (int i = 0; i < mGrassSpriteArr.Length; i++)
+        {
+            mGrassItemNum[i] = 0;
+        }
 
-        mItemArr[1] = new Item();
-        mItemArr[1].Name = "썩은 풀";
-        mItemArr[1].ID = 1001;
-        mItemArr[1].Info = "썩은 풀에서 일반적으로 얻을 수 있는 아이템";
-
-        mItemArr[2] = new Item();
-        mItemArr[2].Name = "싱싱한 풀";
-        mItemArr[2].ID = 1002;
-        mItemArr[2].Info = "풀에서 확률적으로 얻을 수 있는 아이템";
-
-        mItemArr[3] = new Item();
-        mItemArr[3].Name = "산삼";
-        mItemArr[3].ID = 1003;
-        mItemArr[3].Info = "풀에서 희귀한 확률로 얻을 수 있는 아이템";
-
-        mItemArr[4] = new Item();
-        mItemArr[4].Name = "싱싱한 산삼";
-        mItemArr[4].ID = 1004;
-        mItemArr[4].Info = "풀에서 매우 희귀한 확률로 얻을 수 있는 아이템";
-
-        mItemArr[5] = new Item();
-        mItemArr[5].Name = "100년 묵은 산삼";
-        mItemArr[5].ID = 1005;
-        mItemArr[5].Info = "전설로만 내려오는 아이템";
-
-        mItemArr[6] = new Item();
-        mItemArr[6].Name = "나무가지";
-        mItemArr[6].ID = 2000;
-        mItemArr[6].Info = "나무에서 일반적으로 얻을 수 있는 아이템";
-
-        mItemArr[7] = new Item();
-        mItemArr[7].Name = "썩은 나무가지";
-        mItemArr[7].ID = 2001;
-        mItemArr[7].Info = "썩은 나무에서 일반적으로 얻을 수 있는 아이템";
-
-        mItemArr[8] = new Item();
-        mItemArr[8].Name = "싱싱한 나무가지";
-        mItemArr[8].ID = 2002;
-        mItemArr[8].Info = "나무에서 확률적으로 얻을 수 있는 아이템";
-
-        mItemArr[9] = new Item();
-        mItemArr[9].Name = "수액";
-        mItemArr[9].ID = 2003;
-        mItemArr[9].Info = "나무에서 희귀한 확률로 얻을 수 있는 아이템";
-
-        mItemArr[10] = new Item();
-        mItemArr[10].Name = "싱싱한 수액";
-        mItemArr[10].ID = 2004;
-        mItemArr[10].Info = "나무에서 매우 희귀한 확률로 얻을 수 있는 아이템";
-
-        mItemArr[11] = new Item();
-        mItemArr[11].Name = "100년 묵은 수액";
-        mItemArr[11].ID = 2005;
-        mItemArr[11].Info = "전설로만 내려오는 아이템";
-        #endregion
+        mTreeItemNum = new int[mTreeSpriteArr.Length];
+        for (int i = 0; i < mTreeSpriteArr.Length; i++)
+        {
+            mTreeItemNum[i] = 0;
+        }
     }
 
     private void Start()
     {
-        MakeItemGroup();
+        JsonDataLoader.Instance.LoadJsonData<Item>(out mItemArr, "JsonFiles/ItemData");
 
-        
+        MakeItemList();
+    }
 
-        List<Item> itemList = new List<Item>();
+    private void MakeItemList()
+    {
+        List<Item> Grass = new List<Item>();
+        List<Item> Tree = new List<Item>();
 
         for(int i = 0; i < mItemArr.Length; i++)
         {
-            if(mItemArr[i].ID >= 1000 && mItemArr[i].ID < 2000)
+            string id = mItemArr[i].ID.ToString();
+            char[] idfirst = id.ToCharArray();
+            if(idfirst[0] == 1)
             {
-                itemList.Add(mItemArr[i]);
+                Grass.Add(mItemArr[i]);
+            }
+            else if(idfirst[0] == 2)
+            {
+                Tree.Add(mItemArr[i]);
             }
         }
 
-        mItemDic.Add("Grass", itemList);
-    }
-
-    private void MakeItemGroup()
-    {
-        Dictionary<ePlantGrowthType, List<int>> plantItemgroup = new Dictionary<ePlantGrowthType, List<int>>();
-
-        List<int> itemgroup = new List<int>();
-        itemgroup.Add(0);
-
-        plantItemgroup.Add(ePlantGrowthType.Early, itemgroup);
-        itemgroup.Clear();
-
-        itemgroup.Add(0);
-        itemgroup.Add(2);
-        itemgroup.Add(3);
-
-        plantItemgroup.Add(ePlantGrowthType.MidTerm, itemgroup);
-        itemgroup.Clear();
-
-        itemgroup.Add(0);
-        itemgroup.Add(2);
-        itemgroup.Add(3);
-        itemgroup.Add(4);
-        itemgroup.Add(5);
-
-        plantItemgroup.Add(ePlantGrowthType.LastPeriod, itemgroup);
-        itemgroup.Clear();
-
-        itemgroup.Add(1);
-
-        plantItemgroup.Add(ePlantGrowthType.Rotten, itemgroup);
-
-        mItemDic2.Add("Grass", plantItemgroup);
+        mItemDic.Add("Grass", Grass);
+        mItemDic.Add("Tree", Tree);
     }
 
     public void SpawnItem(Vector3 Itempos, string tag, ePlantGrowthType type)
@@ -150,33 +83,121 @@ public class InvenController : MonoBehaviour
         List<Item> itemList = new List<Item>();
         itemList = mItemDic[tag];
 
-        // Early - 풀 0
-        // MidTerm - 풀, 싱싱한풀, 산삼 0 2 3
-        // LastPeriod - 풀, 싱싱한풀, 산삼, 싱싱한 산삼, 100년 묵은 산삼 0 2 3 4 5
-        // Rotten - 썩은 풀 1
+        int itemNum = Random.Range(3, 6);
 
-        switch(type)
+        switch (type)
         {
             case ePlantGrowthType.Early:
-                
+                for (int i = 0; i < itemNum; i++)
+                {
+                    ItemObj item = mItemObjPool.GetFromPool(0);
+                    item.InitObj(0, mItemArr[0].Rare, tag);
+                    item.ShowItem(Itempos);
+                }
                 break;
             case ePlantGrowthType.MidTerm:
+                for (int i = 0; i < itemNum; i++)
+                {
+                    ItemObj item = mItemObjPool.GetFromPool(0); // 0 2 3
+
+                    float probability = Random.value;
+                    if(probability <= 0.2)
+                    {
+                        item.InitObj(3, mItemArr[3].Rare, tag);
+                    }
+                    else if(probability <= 0.5)
+                    {
+                        item.InitObj(2, mItemArr[2].Rare, tag);
+                    }
+                    else if(probability <= 1.0)
+                    {
+                        item.InitObj(0, mItemArr[0].Rare, tag);
+                    }
+                    else
+                    {
+                        item.InitObj(0, mItemArr[0].Rare, tag);
+                    }
+
+                    item.ShowItem(Itempos);
+                }
                 break;
             case ePlantGrowthType.LastPeriod:
+                for (int i = 0; i < itemNum; i++)
+                {
+                    ItemObj item = mItemObjPool.GetFromPool(0); // 0 2 3 4 5
+
+                    float probability = Random.value;
+                    if (probability <= 0.01)
+                    {
+                        item.InitObj(5, mItemArr[5].Rare, tag);
+                    }
+                    else if (probability <= 0.06)
+                    {
+                        item.InitObj(4, mItemArr[4].Rare, tag);
+                    }
+                    else if (probability <= 0.2)
+                    {
+                        item.InitObj(3, mItemArr[3].Rare, tag);
+                    }
+                    else if(probability <= 0.5)
+                    {
+                        item.InitObj(2, mItemArr[2].Rare, tag);
+                    }
+                    else if(probability <= 1.0)
+                    {
+                        item.InitObj(0, mItemArr[0].Rare, tag);
+                    }
+                    else
+                    {
+                        item.InitObj(0, mItemArr[0].Rare, tag);
+                    }
+
+                    item.ShowItem(Itempos);
+                }
                 break;
             case ePlantGrowthType.Rotten:
+                for (int i = 0; i < itemNum; i++)
+                {
+                    ItemObj item = mItemObjPool.GetFromPool(0);
+                    item.InitObj(1, mItemArr[1].Rare, tag);
+                    item.ShowItem(Itempos);
+                }
                 break;
             default:
                 break;
         }
+    }
 
+    public void SetSpriteToInven(int id, string tag)
+    {
+        int itemId = TransformIndex(id);
 
-        int itemNum = Random.Range(3, 6);
-        for(int i = 0; i < itemNum; i++)
+        switch(tag)
         {
-            ItemObj item = mItemObjPool.GetFromPool(0);
-            item.ShowItem(Itempos);
+            case "Grass":
+                mGrassItemNum[itemId]++;
+                mPlayerInven.GetItem(mGrassSpriteArr[itemId], mGrassItemNum[itemId], id);
+                break;
+            case "Tree":
+                mTreeItemNum[itemId]++;
+                mPlayerInven.GetItem(mTreeSpriteArr[itemId], mTreeItemNum[itemId], id);
+                break;
         }
+    }
+
+    private int TransformIndex(int id)
+    {
+        string num = id.ToString();
+        char[] numArr = num.ToCharArray();
+        
+        if(int.Parse(numArr[3].ToString()) == 0)
+        {
+            return int.Parse(numArr[4].ToString());
+        }
+
+        string index = numArr[3].ToString() + numArr[4].ToString();
+
+        return int.Parse(index);
     }
 }
 
@@ -185,4 +206,5 @@ public class Item
     public string Name;
     public int ID;
     public string Info;
+    public int Rare;
 }

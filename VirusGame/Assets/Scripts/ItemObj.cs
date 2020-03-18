@@ -6,17 +6,48 @@ public class ItemObj : MonoBehaviour
 {
     private Rigidbody mRB;
     private Player mPlayer;
-    private const float mForcePower = 30.0f;
+    private const float mForcePower = 20.0f;
     private const float mDistance = 2.5f;
-    
+    private int mItemID;
+    private Renderer mRend;
+    private string mItemType;
+
     private void Awake()
     {
         mRB = GetComponent<Rigidbody>();
+        mRend = GetComponent<Renderer>();
     }
 
     private void OnEnable()
     {
         mPlayer = null;
+    }
+
+    public void InitObj(int id, int rare, string tag)
+    {
+        mItemID = id;
+        mItemType = tag;
+
+        switch(rare)
+        {
+            case 0:
+                mRend.material.SetColor("_Color", Color.black);
+                break;
+            case 1:
+                mRend.material.SetColor("_Color", Color.green);
+                break;
+            case 2:
+                mRend.material.SetColor("_Color", Color.blue);
+                break;
+            case 3:
+                mRend.material.SetColor("_Color", Color.magenta);
+                break;
+            case 4:
+                mRend.material.SetColor("_Color", Color.yellow);
+                break;
+            default:
+                break;
+        }
     }
 
     public void ShowItem(Vector3 itemPos)
@@ -51,5 +82,6 @@ public class ItemObj : MonoBehaviour
         }
 
         gameObject.SetActive(false);
+        InvenController.Instance.SetSpriteToInven(mItemID, mItemType);
     }
 }

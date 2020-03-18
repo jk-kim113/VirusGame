@@ -107,7 +107,7 @@ public class Animal : MonoBehaviour
 
     private IEnumerator MovePattern()
     {   
-        WaitForSeconds term = new WaitForSeconds(3f);
+        WaitForSeconds term = new WaitForSeconds(2f);
         eBehaviorPattern pattern = eBehaviorPattern.Idle;
         SetMovePattern(pattern);
         
