@@ -29,6 +29,14 @@ public class Slot : MonoBehaviour
 
         mItemID = id;
         mItemImg.sprite = img;
-        mItemNum.text = num.ToString();
+
+        if(num == 1)
+        {
+            mItemNum.text = "";
+        }
+        else
+        {
+            mItemNum.text = num.ToString();
+        }
     }
 }

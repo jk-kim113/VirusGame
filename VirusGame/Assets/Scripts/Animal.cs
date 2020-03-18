@@ -25,11 +25,14 @@ public class Animal : MonoBehaviour
     private BoxCollider mMoveBoundary;
     protected NavMeshAgent mNav;
     protected Animator mAnimator;
-    private float mGrowPeriod = 720.0f;
+    private const float mGrowPeriod = 720.0f;
     private Coroutine mMovePatternCoroutine;
     private Coroutine mSpendGrowPeriodCoroutine;
     private BoxCollider mCollider;
     protected bool bIsEating;
+    private float mHungerCurrent;
+    private float mHungerMax;
+    public float HungerMax { set { mHungerMax = value; } }
 
     private void Awake()
     {
@@ -37,6 +40,8 @@ public class Animal : MonoBehaviour
         mAnimator = GetComponent<Animator>();
         mCollider = GetComponent<BoxCollider>();
         bIsEating = false;
+
+        mHungerMax = mHungerCurrent;
     }
 
     private void OnEnable()

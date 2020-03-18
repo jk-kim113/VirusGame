@@ -56,12 +56,12 @@ public class AnimalController : MonoBehaviour
         }
     }
 
-    private Vector3 MakeSpawnPos(BoxCollider collider)
+    private Vector3 MakeSpawnPos(BoxCollider coll)
     {
-        float xCord = Random.Range(collider.gameObject.transform.position.x - (collider.size.x / 4),
-                                    collider.gameObject.transform.position.x + (collider.size.x / 4));
-        float zCord = Random.Range(collider.gameObject.transform.position.z - (collider.size.z / 4),
-                                    collider.gameObject.transform.position.z + (collider.size.z / 4));
+        float xCord = Random.Range(coll.gameObject.transform.position.x - (coll.size.x / 4),
+                                    coll.gameObject.transform.position.x + (coll.size.x / 4));
+        float zCord = Random.Range(coll.gameObject.transform.position.z - (coll.size.z / 4),
+                                    coll.gameObject.transform.position.z + (coll.size.z / 4));
 
         return new Vector3(xCord, 0, zCord);
     }

@@ -6,7 +6,7 @@ public class ItemObj : MonoBehaviour
 {
     private Rigidbody mRB;
     private Player mPlayer;
-    private const float mForcePower = 20.0f;
+    private const float mForcePower = 10.0f;
     private const float mDistance = 2.5f;
     private int mItemID;
     private Renderer mRend;
@@ -23,9 +23,9 @@ public class ItemObj : MonoBehaviour
         mPlayer = null;
     }
 
-    public void InitObj(int id, int rare, string tag)
+    public void InitObj(int originalId, int rare, string tag)
     {
-        mItemID = id;
+        mItemID = originalId;
         mItemType = tag;
 
         switch(rare)
@@ -54,7 +54,7 @@ public class ItemObj : MonoBehaviour
     {
         transform.position = itemPos + new Vector3(0, 3, 0);
         
-        mRB.AddForce(Random.insideUnitSphere * 500);
+        mRB.AddForce(Random.insideUnitSphere * 80);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -64,7 +64,10 @@ public class ItemObj : MonoBehaviour
             if(mPlayer == null)
             {
                 mPlayer = other.gameObject.GetComponent<Player>();
-                StartCoroutine(MoveItemToPlayer());
+                if(!InvenController.Instance.CheckIsFull(mItemID))
+                {
+                    StartCoroutine(MoveItemToPlayer());
+                }
             }
         }
     }

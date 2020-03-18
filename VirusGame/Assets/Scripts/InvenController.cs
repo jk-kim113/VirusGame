@@ -64,11 +64,11 @@ public class InvenController : MonoBehaviour
         {
             string id = mItemArr[i].ID.ToString();
             char[] idfirst = id.ToCharArray();
-            if(idfirst[0] == 1)
+            if(int.Parse(idfirst[0].ToString()) == 1)
             {
                 Grass.Add(mItemArr[i]);
             }
-            else if(idfirst[0] == 2)
+            else if(int.Parse(idfirst[0].ToString()) == 2)
             {
                 Tree.Add(mItemArr[i]);
             }
@@ -80,9 +80,6 @@ public class InvenController : MonoBehaviour
 
     public void SpawnItem(Vector3 Itempos, string tag, ePlantGrowthType type)
     {
-        List<Item> itemList = new List<Item>();
-        itemList = mItemDic[tag];
-
         int itemNum = Random.Range(3, 6);
 
         switch (type)
@@ -91,31 +88,31 @@ public class InvenController : MonoBehaviour
                 for (int i = 0; i < itemNum; i++)
                 {
                     ItemObj item = mItemObjPool.GetFromPool(0);
-                    item.InitObj(0, mItemArr[0].Rare, tag);
+                    item.InitObj(mItemDic[tag][0].ID, mItemArr[0].Rare, tag);
                     item.ShowItem(Itempos);
                 }
                 break;
             case ePlantGrowthType.MidTerm:
                 for (int i = 0; i < itemNum; i++)
                 {
-                    ItemObj item = mItemObjPool.GetFromPool(0); // 0 2 3
+                    ItemObj item = mItemObjPool.GetFromPool(0);
 
                     float probability = Random.value;
                     if(probability <= 0.2)
                     {
-                        item.InitObj(3, mItemArr[3].Rare, tag);
+                        item.InitObj(mItemDic[tag][3].ID, mItemArr[3].Rare, tag);
                     }
                     else if(probability <= 0.5)
                     {
-                        item.InitObj(2, mItemArr[2].Rare, tag);
+                        item.InitObj(mItemDic[tag][2].ID, mItemArr[2].Rare, tag);
                     }
                     else if(probability <= 1.0)
                     {
-                        item.InitObj(0, mItemArr[0].Rare, tag);
+                        item.InitObj(mItemDic[tag][0].ID, mItemArr[0].Rare, tag);
                     }
                     else
                     {
-                        item.InitObj(0, mItemArr[0].Rare, tag);
+                        item.InitObj(mItemDic[tag][0].ID, mItemArr[0].Rare, tag);
                     }
 
                     item.ShowItem(Itempos);
@@ -124,32 +121,32 @@ public class InvenController : MonoBehaviour
             case ePlantGrowthType.LastPeriod:
                 for (int i = 0; i < itemNum; i++)
                 {
-                    ItemObj item = mItemObjPool.GetFromPool(0); // 0 2 3 4 5
+                    ItemObj item = mItemObjPool.GetFromPool(0);
 
                     float probability = Random.value;
                     if (probability <= 0.01)
                     {
-                        item.InitObj(5, mItemArr[5].Rare, tag);
+                        item.InitObj(mItemDic[tag][5].ID, mItemArr[5].Rare, tag);
                     }
                     else if (probability <= 0.06)
                     {
-                        item.InitObj(4, mItemArr[4].Rare, tag);
+                        item.InitObj(mItemDic[tag][4].ID, mItemArr[4].Rare, tag);
                     }
                     else if (probability <= 0.2)
                     {
-                        item.InitObj(3, mItemArr[3].Rare, tag);
+                        item.InitObj(mItemDic[tag][3].ID, mItemArr[3].Rare, tag);
                     }
                     else if(probability <= 0.5)
                     {
-                        item.InitObj(2, mItemArr[2].Rare, tag);
+                        item.InitObj(mItemDic[tag][2].ID, mItemArr[2].Rare, tag);
                     }
                     else if(probability <= 1.0)
                     {
-                        item.InitObj(0, mItemArr[0].Rare, tag);
+                        item.InitObj(mItemDic[tag][0].ID, mItemArr[0].Rare, tag);
                     }
                     else
                     {
-                        item.InitObj(0, mItemArr[0].Rare, tag);
+                        item.InitObj(mItemDic[tag][0].ID, mItemArr[0].Rare, tag);
                     }
 
                     item.ShowItem(Itempos);
@@ -159,7 +156,7 @@ public class InvenController : MonoBehaviour
                 for (int i = 0; i < itemNum; i++)
                 {
                     ItemObj item = mItemObjPool.GetFromPool(0);
-                    item.InitObj(1, mItemArr[1].Rare, tag);
+                    item.InitObj(mItemDic[tag][1].ID, mItemArr[1].Rare, tag);
                     item.ShowItem(Itempos);
                 }
                 break;
@@ -168,36 +165,41 @@ public class InvenController : MonoBehaviour
         }
     }
 
-    public void SetSpriteToInven(int id, string tag)
+    public void SetSpriteToInven(int originalId, string tag)
     {
-        int itemId = TransformIndex(id);
+        int itemId = TransformIndex(originalId);
 
         switch(tag)
         {
             case "Grass":
                 mGrassItemNum[itemId]++;
-                mPlayerInven.GetItem(mGrassSpriteArr[itemId], mGrassItemNum[itemId], id);
+                mPlayerInven.GetItem(mGrassSpriteArr[itemId], mGrassItemNum[itemId], originalId);
                 break;
             case "Tree":
                 mTreeItemNum[itemId]++;
-                mPlayerInven.GetItem(mTreeSpriteArr[itemId], mTreeItemNum[itemId], id);
+                mPlayerInven.GetItem(mTreeSpriteArr[itemId], mTreeItemNum[itemId], originalId);
                 break;
         }
     }
 
-    private int TransformIndex(int id)
+    private int TransformIndex(int originalID)
     {
-        string num = id.ToString();
-        char[] numArr = num.ToCharArray();
-        
-        if(int.Parse(numArr[3].ToString()) == 0)
+        string originalStr = originalID.ToString();
+        char[] originalCharArr = originalStr.ToCharArray();
+
+        if (int.Parse(originalCharArr[2].ToString()) == 0)
         {
-            return int.Parse(numArr[4].ToString());
+            return int.Parse(originalCharArr[3].ToString());
         }
 
-        string index = numArr[3].ToString() + numArr[4].ToString();
+        string Index = originalCharArr[2].ToString() + originalCharArr[3].ToString();
 
-        return int.Parse(index);
+        return int.Parse(Index);
+    }
+
+    public bool CheckIsFull(int originalId)
+    {
+        return mPlayerInven.CheckIsFull(originalId);
     }
 }
 

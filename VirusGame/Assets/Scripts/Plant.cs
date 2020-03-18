@@ -14,6 +14,9 @@ public class Plant : MonoBehaviour
     private bool bFoodSelected = false;
     public bool FoodSelected { get { return bFoodSelected; } set { bFoodSelected = value; } }
 
+    private ePlantGrowthType mGrowthType;
+    public ePlantGrowthType GrowthType { get { return mGrowthType; } }
+
     private void Awake()
     {
         mRespawn = GetComponentInParent<RespawnPlant>();
@@ -38,6 +41,8 @@ public class Plant : MonoBehaviour
 
     public void GrowUpPlant(ePlantGrowthType type)
     {
+        mGrowthType = type;
+
         switch(type)
         {
             case ePlantGrowthType.Early:
