@@ -56,7 +56,7 @@ public class DetectRangeH : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("Plant"))
+        if (other.gameObject.CompareTag("Grass"))
         {
             if(mFoodList != null)
             {

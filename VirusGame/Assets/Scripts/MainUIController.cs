@@ -32,9 +32,10 @@ public class MainUIController : MonoBehaviour
         mActionText.gameObject.SetActive(false);
     }
 
-    public void OnOffActionText(bool value)
+    public void OnOffActionText(bool value, string text)
     {   
         mActionText.gameObject.SetActive(value);
+        mActionText.text = text;
     }
 
     public void OnOffActionGaugeBar(bool value)

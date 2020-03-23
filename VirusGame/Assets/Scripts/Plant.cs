@@ -88,11 +88,3 @@ public class Plant : MonoBehaviour
         mRespawn.ChildDestroy(mID);
     }
 }
-
-public enum ePlantGrowthType
-{
-    Early,
-    MidTerm,
-    LastPeriod,
-    Rotten
-}

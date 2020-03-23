@@ -64,6 +64,7 @@ public class Player : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X");
         transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y + mouseX, transform.localEulerAngles.z);
 
+        // Start Plant Action
         if(Input.GetMouseButtonDown(0))
         {
             if(bPlantAction)
@@ -75,6 +76,12 @@ public class Player : MonoBehaviour
         // Player Hungry decrease
         mHungryCurrent -= 0.5f * Time.deltaTime;
         MainUIController.Instance.ShowHungryGaugeBar(mHungryMax, mHungryCurrent);
+
+        // Open Inven Box
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            InvenController.Instance.OpenInvenBox(true);
+        }
     }
 
     private IEnumerator DoingAction()

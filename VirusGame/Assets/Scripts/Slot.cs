@@ -22,12 +22,12 @@ public class Slot : MonoBehaviour
         mItemID = -999;
     }
 
-    public void Init(Sprite img, int num, int id)
+    public void Init(Sprite img, int num, int originalID)
     {
         mItemImg.enabled = true;
         mItemNum.enabled = true;
 
-        mItemID = id;
+        mItemID = originalID;
         mItemImg.sprite = img;
 
         if(num == 1)

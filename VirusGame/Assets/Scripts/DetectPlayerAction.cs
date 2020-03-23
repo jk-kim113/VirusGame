@@ -20,16 +20,26 @@ public class DetectPlayerAction : MonoBehaviour
             {   
                 PlantAction(true);
             }
+            else if(hit.collider.CompareTag("InventoryBox"))
+            {
+                OpenInventoryBox(true);
+            }
             else
             {
                 PlantAction(false);
+                OpenInventoryBox(false);
             }
         }
     }
 
     private void PlantAction(bool value)
     {
-        MainUIController.Instance.OnOffActionText(value);
+        MainUIController.Instance.OnOffActionText(value, "채집하기");
         Player.Instance.IsPlantAction = value;
+    }
+
+    private void OpenInventoryBox(bool value)
+    {
+        MainUIController.Instance.OnOffActionText(value, "Press 'F' to Open");
     }
 }

@@ -3,23 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum eBehaviorPattern
-{
-    Idle,
-    Move,
-    Eat,
-    Die
-}
-
-public enum eAnimalGrowthType
-{
-    Baby,
-    Adult,
-    Old,
-
-    max
-}
-
 public class Animal : MonoBehaviour
 {
     private BoxCollider mMoveBoundary;

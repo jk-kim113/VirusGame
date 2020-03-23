@@ -1,0 +1,32 @@
+[
+  {
+    "Name": "염소",
+    "ID": 1000,
+    "InitNumber": 12
+  },
+  {
+    "Name": "소",
+    "ID": 1001,
+    "InitNumber": 9
+  },
+  {
+    "Name": "사슴",
+    "ID": 1002,
+    "InitNumber": 9
+  },
+  {
+    "Name": "곰",
+    "ID": 2000,
+    "InitNumber": 6
+  },
+  {
+    "Name": "악어",
+    "ID": 2001,
+    "InitNumber": 8
+  },
+  {
+    "Name": "늑대",
+    "ID": 2002,
+    "InitNumber": 12
+  }
+]

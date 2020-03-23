@@ -2,58 +2,87 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum eHerbivoreKind
-{
-    Goat,
-    Cattle
-}
-
-public enum eCarnivoreKind
-{
-    Bear
-}
-
 public class AnimalController : MonoBehaviour
 {
 #pragma warning disable 0649
-    [Header("Herbivore")]
     [SerializeField]
     private HerbivorePool mHerbivorePool;
     [SerializeField]
-    private int[] mHerbivoreCount;
-    [SerializeField]
-    private BoxCollider[] mMoveBoundaryH;
-
-    [Header("Carnivore")]
-    [SerializeField]
     private CarnivorePool mCarnivorePool;
     [SerializeField]
-    private int[] mCarnivoreCount;
-    [SerializeField]
-    private BoxCollider[] mMoveBoundaryC;
+    private BoxCollider[] mMoveBoundary;
 #pragma warning restore
+
+    private AnimalData[] mAnimalDataArr;
+
+    private void Awake()
+    {
+        JsonDataLoader.Instance.LoadJsonData<AnimalData>(out mAnimalDataArr, "JsonFiles/AnimalData");
+    }
 
     private void Start()
     {
-        for(int i = 0; i < mHerbivoreCount.Length; i++)
+        for(int i = 0; i < mAnimalDataArr.Length; i++)
         {
-            for(int j = 0; j < mHerbivoreCount[i]; j++)
+            eAnimalKind type = IDToEnum(mAnimalDataArr[i].ID);
+            int index = IDToIndex(mAnimalDataArr[i].ID);
+
+            switch(type)
             {
-                mHerbivorePool.SpawnPos = MakeSpawnPos(mMoveBoundaryH[i]);
-                Herbivore herbivore = mHerbivorePool.GetFromPool(i);
-                herbivore.Init(mMoveBoundaryH[i]);
+                case eAnimalKind.Herbivore:
+                    for (int j = 0; j < mAnimalDataArr[i].InitNumber; j++)
+                    {
+                        mHerbivorePool.SpawnPos = MakeSpawnPos(mMoveBoundary[i]);
+                        Herbivore herbivore = mHerbivorePool.GetFromPool(index);
+                        herbivore.Init(mMoveBoundary[i]);
+                    }
+                    break;
+                case eAnimalKind.Carnivore:
+                    for (int j = 0; j < mAnimalDataArr[i].InitNumber; j++)
+                    {
+                        mCarnivorePool.SpawnPos = MakeSpawnPos(mMoveBoundary[i]);
+                        Carnivore carnivore = mCarnivorePool.GetFromPool(index);
+                        carnivore.Init(mMoveBoundary[i]);
+                    }
+                    break;
+                default:
+                    Debug.LogError("Wrong AnimalKind");
+                    break;
             }
+        }
+    }
+
+    private eAnimalKind IDToEnum(int originalID)
+    {
+        string originalStr = originalID.ToString();
+        char[] originalCharArr = originalStr.ToCharArray();
+
+        switch(originalCharArr[0])
+        {
+            case '1':
+                return eAnimalKind.Herbivore;
+                
+            case '2':
+                return eAnimalKind.Carnivore;
+
+            default:
+                return eAnimalKind.max;
+        }
+    }
+
+    private int IDToIndex(int originalID)
+    {
+        string originalStr = originalID.ToString();
+        char[] originalCharArr = originalStr.ToCharArray();
+
+        if (int.Parse(originalCharArr[2].ToString()) == 0)
+        {
+            return int.Parse(originalCharArr[3].ToString());
         }
 
-        for(int i = 0; i < mCarnivoreCount.Length; i++)
-        {
-            for(int j = 0; j < mCarnivoreCount[i]; j++)
-            {
-                mCarnivorePool.SpawnPos = MakeSpawnPos(mMoveBoundaryC[i]);
-                Carnivore carnivore = mCarnivorePool.GetFromPool(i);
-                carnivore.Init(mMoveBoundaryC[i]);
-            }
-        }
+        string Index = originalCharArr[2].ToString() + originalCharArr[3].ToString();
+
+        return int.Parse(Index);
     }
 
     private Vector3 MakeSpawnPos(BoxCollider coll)
