@@ -1,34 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class UIDrag : MonoBehaviour, IDragHandler, IPointerClickHandler, IBeginDragHandler
+public class UIDrag : MonoBehaviour
 {
-    public void OnBeginDrag(PointerEventData eventData)
+    private Image mImg;
+
+    private void Awake()
     {
-        throw new System.NotImplementedException();
+        mImg = GetComponent<Image>();
+        mImg.enabled = false;
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public void OnImage(Sprite value)
     {
-        eventData.pointerEnter = gameObject;
-
-        
-        transform.position = eventData.position;
+        mImg.enabled = true;
+        mImg.sprite = value;
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public void OffImage()
     {
-        eventData.pointerEnter = gameObject;
-        transform.position = eventData.position;
-    }
-
-    private void Update()
-    {
-        if(Input.GetMouseButtonDown(0))
-        {
-            transform.position = Input.mousePosition;
-        }
+        mImg.enabled = false;
     }
 }

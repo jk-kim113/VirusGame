@@ -15,6 +15,8 @@ public class InvenController : MonoBehaviour
     private Inven mPlayerInven;
     [SerializeField]
     private Inven mInvenBox;
+    [SerializeField]
+    private UIDrag mUIDrag;
 #pragma warning restore
 
     private ItemData[] mItemDataArr;
@@ -22,6 +24,8 @@ public class InvenController : MonoBehaviour
     private Sprite[] mTreeSpriteArr;
     private int[] mGrassItemNum;
     private int[] mTreeItemNum;
+
+    public UIDrag UIDragImg { get { return mUIDrag; } }
 
     private void Awake()
     {
