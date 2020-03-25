@@ -18,6 +18,12 @@ public class Player : MonoBehaviour
     private bool bPlantAction;
     public bool IsPlantAction { get { return bPlantAction; } set { bPlantAction = value; } }
 
+    private bool bIsOpenInven;
+    public bool IsOpenInven { set { bIsOpenInven = value; } }
+
+    private bool bStopMove;
+    public bool IsStopMove { get { return bStopMove; } }
+
     private float mStaminaMax;
     private float mStaminaCurrent;
 
@@ -37,6 +43,10 @@ public class Player : MonoBehaviour
 
         mCHControl = GetComponent<CharacterController>();
 
+        bPlantAction = false;
+        bIsOpenInven = false;
+        bStopMove = false;
+
         mStaminaMax = 100f;
         mStaminaCurrent = mStaminaMax;
 
@@ -52,17 +62,20 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        // Player Move
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        Vector3 dir = new Vector3(horizontal, 0, vertical);
-        dir = dir.normalized * mSpeed;
-        dir = transform.TransformDirection(dir);
-        mCHControl.Move(dir * Time.deltaTime);
+        if(!bStopMove)
+        {
+            // Player Move
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
+            Vector3 dir = new Vector3(horizontal, 0, vertical);
+            dir = dir.normalized * mSpeed;
+            dir = transform.TransformDirection(dir);
+            mCHControl.Move(dir * Time.deltaTime);
 
-        // Player X axis Camera rotation
-        float mouseX = Input.GetAxis("Mouse X");
-        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y + mouseX, transform.localEulerAngles.z);
+            // Player X axis Camera rotation
+            float mouseX = Input.GetAxis("Mouse X");
+            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y + mouseX, transform.localEulerAngles.z);
+        }
 
         // Start Plant Action
         if(Input.GetMouseButtonDown(0))
@@ -80,7 +93,18 @@ public class Player : MonoBehaviour
         // Open Inven Box
         if(Input.GetKeyDown(KeyCode.F))
         {
-            InvenController.Instance.OpenInvenBox(true);
+            if(bIsOpenInven)
+            {
+                OpenInvenBox(true);
+            }
+        }
+
+        if(bIsOpenInven)
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                OpenInvenBox(false);
+            }
         }
     }
 
@@ -121,6 +145,12 @@ public class Player : MonoBehaviour
 
         MainUIController.Instance.ShowStaminaGaugeBar(mStaminaMax, mStaminaCurrent);
         MainUIController.Instance.OnOffActionGaugeBar(false);
+    }
+
+    private void OpenInvenBox(bool value)
+    {
+        InvenController.Instance.OpenInvenBox(value);
+        bStopMove = value;
     }
 
     private void GameOver()

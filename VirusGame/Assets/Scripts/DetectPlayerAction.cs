@@ -41,5 +41,6 @@ public class DetectPlayerAction : MonoBehaviour
     private void OpenInventoryBox(bool value)
     {
         MainUIController.Instance.OnOffActionText(value, "Press 'F' to Open");
+        Player.Instance.IsOpenInven = value;
     }
 }

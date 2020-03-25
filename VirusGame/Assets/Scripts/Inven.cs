@@ -17,18 +17,18 @@ public class Inven : MonoBehaviour
         mSlotArr = GetComponentsInChildren<Slot>();
     }
 
-    public void GetItem(Sprite sprite, int num, int originalId)
+    public void GetItem(Sprite sprite, int num, int originalId, string tag)
     {
         for(int i = 0; i < mSlotPoint; i++)
         {
             if(mSlotArr[i].ItemID == originalId)
             {
-                mSlotArr[i].Init(sprite, num, originalId);
+                mSlotArr[i].Init(sprite, num, originalId, tag);
                 return;
             }
         }
         
-        mSlotArr[mSlotPoint].Init(sprite, num, originalId);
+        mSlotArr[mSlotPoint].Init(sprite, num, originalId, tag);
         mSlotPoint++;
     }
 

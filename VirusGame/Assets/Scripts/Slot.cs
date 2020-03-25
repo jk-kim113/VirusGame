@@ -12,17 +12,26 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
     [SerializeField]
     private Text mItemNumText;
 #pragma warning restore
+    public Sprite ItemImg { get { return mItemImg.sprite; } }
 
     private int mItemID;
     public int ItemID { get { return mItemID; } }
+    
+    private int mItemNum;
+    public int ItemNum { get { return mItemNum; } }
+
+    private bool bIsFull;
+    public bool IsFull { get { return bIsFull; } }
 
     private UIDrag mUIDrag;
-    private int mItemNum;
+    private string mItemTag;
+    public string ItemTag { get { return mItemTag; } }
 
     private void Awake()
     {
         mItemImg.enabled = false;
         mItemNumText.enabled = false;
+        bIsFull = false;
         mItemID = -999;
     }
 
@@ -31,14 +40,17 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
         mUIDrag = InvenController.Instance.UIDragImg;
     }
 
-    public void Init(Sprite img, int num, int originalID)
+    public void Init(Sprite img, int num, int originalID, string tag)
     {
         mItemImg.enabled = true;
         mItemNumText.enabled = true;
+        bIsFull = true;
 
         mItemID = originalID;
         mItemImg.sprite = img;
         mItemNum = num;
+
+        mItemTag = tag;
 
         if(num == 1)
         {
@@ -68,18 +80,33 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
     {
         mUIDrag.OffImage();
 
-        RectTransform invPanel = mUIDrag.gameObject.transform as RectTransform;
-
-        if (!RectTransformUtility.RectangleContainsScreenPoint(invPanel, Input.mousePosition))
+        RaycastResult ray = eventData.pointerCurrentRaycast;
+        
+        if(ray.gameObject != null)
         {
-            if (invPanel.CompareTag("Slot"))
+            if (ray.gameObject.CompareTag("Slot"))
             {
-                Debug.Log(invPanel.gameObject.name);
-                Slot slot = invPanel.gameObject.GetComponent<Slot>();
-                slot.Init(mItemImg.sprite, mItemNum, mItemID);
+                Slot slot = ray.gameObject.GetComponent<Slot>();
+
+                if (slot.IsFull)
+                {
+                    Sprite tempSprite = slot.ItemImg;
+                    int tempNum = slot.ItemNum;
+                    int tempID = slot.ItemID;
+                    string tempTag = slot.ItemTag;
+
+                    slot.Init(mItemImg.sprite, mItemNum, mItemID, mItemTag);
+                    Init(tempSprite, tempNum, tempID, tempTag);
+
+
+                }
+                else
+                {
+                    slot.Init(mItemImg.sprite, mItemNum, mItemID, mItemTag);
+                    mItemID = -999;
+                    bIsFull = false;
+                }
             }
         }
     }
-
-    
 }

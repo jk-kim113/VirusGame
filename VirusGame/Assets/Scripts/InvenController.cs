@@ -14,7 +14,7 @@ public class InvenController : MonoBehaviour
     [SerializeField]
     private Inven mPlayerInven;
     [SerializeField]
-    private Inven mInvenBox;
+    private GameObject mInvenBox;
     [SerializeField]
     private UIDrag mUIDrag;
 #pragma warning restore
@@ -94,7 +94,7 @@ public class InvenController : MonoBehaviour
                 for (int i = 0; i < itemNum; i++)
                 {
                     ItemObj item = mItemObjPool.GetFromPool(0);
-                    item.InitObj(mItemDic[tag][0].ID, mItemDataArr[0].Rare, tag);
+                    item.InitObj(mItemDic[tag][0].ID, mItemDic[tag][0].Rare, tag);
                     item.ShowItem(Itempos);
                 }
                 break;
@@ -106,19 +106,19 @@ public class InvenController : MonoBehaviour
                     float probability = Random.value;
                     if(probability <= 0.2)
                     {
-                        item.InitObj(mItemDic[tag][3].ID, mItemDataArr[3].Rare, tag);
+                        item.InitObj(mItemDic[tag][3].ID, mItemDic[tag][3].Rare, tag);
                     }
                     else if(probability <= 0.5)
                     {
-                        item.InitObj(mItemDic[tag][2].ID, mItemDataArr[2].Rare, tag);
+                        item.InitObj(mItemDic[tag][2].ID, mItemDic[tag][2].Rare, tag);
                     }
                     else if(probability <= 1.0)
                     {
-                        item.InitObj(mItemDic[tag][0].ID, mItemDataArr[0].Rare, tag);
+                        item.InitObj(mItemDic[tag][0].ID, mItemDic[tag][0].Rare, tag);
                     }
                     else
                     {
-                        item.InitObj(mItemDic[tag][0].ID, mItemDataArr[0].Rare, tag);
+                        item.InitObj(mItemDic[tag][0].ID, mItemDic[tag][0].Rare, tag);
                     }
 
                     item.ShowItem(Itempos);
@@ -132,27 +132,27 @@ public class InvenController : MonoBehaviour
                     float probability = Random.value;
                     if (probability <= 0.01)
                     {
-                        item.InitObj(mItemDic[tag][5].ID, mItemDataArr[5].Rare, tag);
+                        item.InitObj(mItemDic[tag][5].ID, mItemDic[tag][5].Rare, tag);
                     }
                     else if (probability <= 0.06)
                     {
-                        item.InitObj(mItemDic[tag][4].ID, mItemDataArr[4].Rare, tag);
+                        item.InitObj(mItemDic[tag][4].ID, mItemDic[tag][4].Rare, tag);
                     }
                     else if (probability <= 0.2)
                     {
-                        item.InitObj(mItemDic[tag][3].ID, mItemDataArr[3].Rare, tag);
+                        item.InitObj(mItemDic[tag][3].ID, mItemDic[tag][3].Rare, tag);
                     }
                     else if(probability <= 0.5)
                     {
-                        item.InitObj(mItemDic[tag][2].ID, mItemDataArr[2].Rare, tag);
+                        item.InitObj(mItemDic[tag][2].ID, mItemDic[tag][2].Rare, tag);
                     }
                     else if(probability <= 1.0)
                     {
-                        item.InitObj(mItemDic[tag][0].ID, mItemDataArr[0].Rare, tag);
+                        item.InitObj(mItemDic[tag][0].ID, mItemDic[tag][0].Rare, tag);
                     }
                     else
                     {
-                        item.InitObj(mItemDic[tag][0].ID, mItemDataArr[0].Rare, tag);
+                        item.InitObj(mItemDic[tag][0].ID, mItemDic[tag][0].Rare, tag);
                     }
 
                     item.ShowItem(Itempos);
@@ -162,7 +162,7 @@ public class InvenController : MonoBehaviour
                 for (int i = 0; i < itemNum; i++)
                 {
                     ItemObj item = mItemObjPool.GetFromPool(0);
-                    item.InitObj(mItemDic[tag][1].ID, mItemDataArr[1].Rare, tag);
+                    item.InitObj(mItemDic[tag][1].ID, mItemDic[tag][1].Rare, tag);
                     item.ShowItem(Itempos);
                 }
                 break;
@@ -179,11 +179,11 @@ public class InvenController : MonoBehaviour
         {
             case "Grass":
                 mGrassItemNum[itemId]++;
-                mPlayerInven.GetItem(mGrassSpriteArr[itemId], mGrassItemNum[itemId], originalId);
+                mPlayerInven.GetItem(mGrassSpriteArr[itemId], mGrassItemNum[itemId], originalId, tag);
                 break;
             case "Tree":
                 mTreeItemNum[itemId]++;
-                mPlayerInven.GetItem(mTreeSpriteArr[itemId], mTreeItemNum[itemId], originalId);
+                mPlayerInven.GetItem(mTreeSpriteArr[itemId], mTreeItemNum[itemId], originalId, tag);
                 break;
         }
     }
