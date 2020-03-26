@@ -11,11 +11,14 @@ public class ItemObj : MonoBehaviour
     private int mItemID;
     private Renderer mRend;
     private string mItemType;
+    private int mNumber;
+    private SphereCollider mCollider;
 
     private void Awake()
     {
         mRB = GetComponent<Rigidbody>();
         mRend = GetComponent<Renderer>();
+        mCollider = GetComponent<SphereCollider>();
     }
 
     private void OnEnable()
@@ -23,10 +26,11 @@ public class ItemObj : MonoBehaviour
         mPlayer = null;
     }
 
-    public void InitObj(int originalId, int rare, string tag)
+    public void InitObj(int originalId, int rare, string tag, int num)
     {
         mItemID = originalId;
         mItemType = tag;
+        mNumber = num;
 
         switch(rare)
         {
@@ -57,6 +61,12 @@ public class ItemObj : MonoBehaviour
         mRB.AddForce(Random.insideUnitSphere * 80);
     }
 
+    public void DropItem()
+    { 
+        transform.position = Player.Instance.transform.position + Player.Instance.transform.forward*10;
+        mRB.velocity = new Vector3(0,0,0);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.CompareTag("Player"))
@@ -85,6 +95,6 @@ public class ItemObj : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        InvenController.Instance.SetSpriteToInven(mItemID, mItemType);
+        InvenController.Instance.SetSpriteToInven(mItemID, mItemType, mNumber);
     }
 }

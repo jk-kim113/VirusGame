@@ -107,6 +107,33 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
                     bIsFull = false;
                 }
             }
+            else
+            {
+                mItemImg.enabled = true;
+                mItemNumText.enabled = true;
+                bIsFull = true;
+            }
+        }
+        else
+        {
+            Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(mouseRay, out hit))
+            {
+                if(hit.collider.CompareTag("Ground"))
+                {
+                    InvenController.Instance.DropItem(mItemID, mItemNum, mItemTag);
+                    mItemID = -999;
+                    bIsFull = false;
+                }
+                else
+                {
+                    mItemImg.enabled = true;
+                    mItemNumText.enabled = true;
+                    bIsFull = true;
+                }
+            }
         }
     }
 }

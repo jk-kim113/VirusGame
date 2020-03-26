@@ -11,6 +11,7 @@ TagManager:
   - CombinationTable
   - InventoryBox
   - Slot
+  - Ground
   layers:
   - Default
   - TransparentFX
