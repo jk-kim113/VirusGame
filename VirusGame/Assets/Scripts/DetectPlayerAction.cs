@@ -24,10 +24,15 @@ public class DetectPlayerAction : MonoBehaviour
             {
                 OpenInventoryBox(true);
             }
+            else if(hit.collider.CompareTag("CombinationTable"))
+            {
+                OpenCombinationTable(true);
+            }
             else
             {
                 PlantAction(false);
                 OpenInventoryBox(false);
+                OpenCombinationTable(false);
             }
         }
     }
@@ -40,7 +45,13 @@ public class DetectPlayerAction : MonoBehaviour
 
     private void OpenInventoryBox(bool value)
     {
-        MainUIController.Instance.OnOffActionText(value, "Press 'F' to Open");
+        MainUIController.Instance.OnOffActionText(value, "Press 'F' to Open Inventory Box");
         Player.Instance.IsOpenInven = value;
+    }
+
+    private void OpenCombinationTable(bool value)
+    {
+        MainUIController.Instance.OnOffActionText(value, "Press 'F' to Open Combination Table");
+        Player.Instance.IsOpenCombTable = value;
     }
 }

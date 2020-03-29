@@ -21,6 +21,9 @@ public class Player : MonoBehaviour
     private bool bIsOpenInven;
     public bool IsOpenInven { set { bIsOpenInven = value; } }
 
+    private bool bIsOpenCombTable;
+    public bool IsOpenCombTable { set { bIsOpenCombTable = value; } }
+
     private bool bStopMove;
     public bool IsStopMove { get { return bStopMove; } }
 
@@ -97,6 +100,10 @@ public class Player : MonoBehaviour
             {
                 OpenInvenBox(true);
             }
+            else if(bIsOpenCombTable)
+            {
+                OpenCombTable(true);
+            }
         }
 
         if(bIsOpenInven)
@@ -104,6 +111,7 @@ public class Player : MonoBehaviour
             if(Input.GetKeyDown(KeyCode.Escape))
             {
                 OpenInvenBox(false);
+                OpenCombTable(false);
             }
         }
     }
@@ -150,6 +158,12 @@ public class Player : MonoBehaviour
     private void OpenInvenBox(bool value)
     {
         InvenController.Instance.OpenInvenBox(value);
+        bStopMove = value;
+    }
+
+    private void OpenCombTable(bool value)
+    {
+        CombinationController.Instance.OpenCombTable(value);
         bStopMove = value;
     }
 
