@@ -18,7 +18,7 @@ public class CombinationElement : MonoBehaviour
     private Button mMakingBtn;
 #pragma warning restore
 
-    public void Init(Sprite mainSprite, string name, string content, int[] needsNum)
+    public void Init(Sprite mainSprite, string name, string content, int[] needsNum, int[] needsID)
     {
         mMainImg.sprite = mainSprite;
         mNameText.text = name;
@@ -26,12 +26,28 @@ public class CombinationElement : MonoBehaviour
 
         for(int i = 0; i < mNeedsArr.Length; i++)
         {
-            mNeedsArr[i].SetActive(false);
             if(needsNum[i] > 0)
             {
                 mNeedsArr[i].SetActive(true);
+
+                Image needImg = mNeedsArr[i].GetComponentInChildren<Image>();
+                needImg.sprite = DataGroup.Instance.ItemSpriteDic[needsID[i]];
+
                 Text num = mNeedsArr[i].GetComponentInChildren<Text>();
-                num.text = needsNum[i].ToString();
+                num.text = "x "+ needsNum[i].ToString();
+
+                if(needsNum[i] < DataGroup.Instance.ItemNumDic[needsID[i]])
+                {
+                    num.color = Color.blue;
+                }
+                else
+                {
+                    num.color = Color.red;
+                }
+            }
+            else
+            {
+                mNeedsArr[i].SetActive(false);
             }
         }
     }

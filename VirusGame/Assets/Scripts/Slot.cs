@@ -24,9 +24,7 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
     public bool IsFull { get { return bIsFull; } }
 
     private UIDrag mUIDrag;
-    private string mItemTag;
-    public string ItemTag { get { return mItemTag; } }
-
+    
     private void Awake()
     {
         mItemImg.enabled = false;
@@ -40,7 +38,7 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
         mUIDrag = InvenController.Instance.UIDragImg;
     }
 
-    public void Init(Sprite img, int num, int originalID, string tag)
+    public void Init(Sprite img, int num, int originalID)
     {
         mItemImg.enabled = true;
         mItemNumText.enabled = true;
@@ -49,8 +47,6 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
         mItemID = originalID;
         mItemImg.sprite = img;
         mItemNum = num;
-
-        mItemTag = tag;
 
         if(num == 1)
         {
@@ -93,16 +89,15 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
                     Sprite tempSprite = slot.ItemImg;
                     int tempNum = slot.ItemNum;
                     int tempID = slot.ItemID;
-                    string tempTag = slot.ItemTag;
 
-                    slot.Init(mItemImg.sprite, mItemNum, mItemID, mItemTag);
-                    Init(tempSprite, tempNum, tempID, tempTag);
+                    slot.Init(mItemImg.sprite, mItemNum, mItemID);
+                    Init(tempSprite, tempNum, tempID);
 
 
                 }
                 else
                 {
-                    slot.Init(mItemImg.sprite, mItemNum, mItemID, mItemTag);
+                    slot.Init(mItemImg.sprite, mItemNum, mItemID);
                     mItemID = -999;
                     bIsFull = false;
                 }
@@ -123,7 +118,7 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
             {
                 if(hit.collider.CompareTag("Ground"))
                 {
-                    InvenController.Instance.DropItem(mItemID, mItemNum, mItemTag);
+                    InvenController.Instance.DropItem(mItemID, mItemNum);
                     mItemID = -999;
                     bIsFull = false;
                 }

@@ -6,8 +6,6 @@ public class InvenController : MonoBehaviour
 {
     public static InvenController Instance;
 
-    Dictionary<string, List<ItemData>> mItemDic = new Dictionary<string, List<ItemData>>();
-
 #pragma warning disable 0649
     [SerializeField]
     private ItemObjPool mItemObjPool;
@@ -19,11 +17,6 @@ public class InvenController : MonoBehaviour
     private UIDrag mUIDrag;
 #pragma warning restore
 
-    private ItemData[] mItemDataArr;
-
-    Dictionary<string, int[]> mItemNumDic = new Dictionary<string, int[]>();
-    Dictionary<string, Sprite[]> mItemSpriteDic = new Dictionary<string, Sprite[]>();
-    
     public UIDrag UIDragImg { get { return mUIDrag; } }
 
     private void Awake()
@@ -36,57 +29,6 @@ public class InvenController : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        JsonDataLoader.Instance.LoadJsonData<ItemData>(out mItemDataArr, "JsonFiles/ItemData");
-
-        Sprite[] mGrassSpriteArr = Resources.LoadAll<Sprite>("Sprites/GrassItem");
-        Sprite[] mTreeSpriteArr = Resources.LoadAll<Sprite>("Sprites/TreeItem");
-
-        mItemSpriteDic.Add("Grass", mGrassSpriteArr);
-        mItemSpriteDic.Add("Tree", mTreeSpriteArr);
-
-        int[] GrassItemNum = new int[mItemSpriteDic["Grass"].Length];
-        for (int i = 0; i < mItemSpriteDic["Grass"].Length; i++)
-        {
-            GrassItemNum[i] = 0;
-        }
-
-        int[] TreeItemNum = new int[mItemSpriteDic["Tree"].Length];
-        for (int i = 0; i < mItemSpriteDic["Tree"].Length; i++)
-        {
-            TreeItemNum[i] = 0;
-        }
-
-        mItemNumDic.Add("Grass", GrassItemNum);
-        mItemNumDic.Add("Tree", TreeItemNum);
-    }
-
-    private void Start()
-    {
-        MakeItemList();
-    }
-
-    private void MakeItemList()
-    {
-        List<ItemData> Grass = new List<ItemData>();
-        List<ItemData> Tree = new List<ItemData>();
-
-        for(int i = 0; i < mItemDataArr.Length; i++)
-        {
-            string id = mItemDataArr[i].ID.ToString();
-            char[] idfirst = id.ToCharArray();
-            if(int.Parse(idfirst[0].ToString()) == 1)
-            {
-                Grass.Add(mItemDataArr[i]);
-            }
-            else if(int.Parse(idfirst[0].ToString()) == 2)
-            {
-                Tree.Add(mItemDataArr[i]);
-            }
-        }
-
-        mItemDic.Add("Grass", Grass);
-        mItemDic.Add("Tree", Tree);
     }
 
     public void SpawnItem(Vector3 Itempos, string tag, ePlantGrowthType type)
@@ -99,7 +41,10 @@ public class InvenController : MonoBehaviour
                 for (int i = 0; i < itemNum; i++)
                 {
                     ItemObj item = mItemObjPool.GetFromPool(0);
-                    item.InitObj(mItemDic[tag][0].ID, mItemDic[tag][0].Rare, tag, 1);
+                    item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][0].ID,
+                        DataGroup.Instance.ItemDataDic[tag][0].Rare,
+                        1);
                     item.ShowItem(Itempos);
                 }
                 break;
@@ -111,19 +56,31 @@ public class InvenController : MonoBehaviour
                     float probability = Random.value;
                     if(probability <= 0.2)
                     {
-                        item.InitObj(mItemDic[tag][3].ID, mItemDic[tag][3].Rare, tag, 1);
+                        item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][3].ID,
+                        DataGroup.Instance.ItemDataDic[tag][3].Rare,
+                        1);
                     }
                     else if(probability <= 0.5)
                     {
-                        item.InitObj(mItemDic[tag][2].ID, mItemDic[tag][2].Rare, tag, 1);
+                        item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][2].ID,
+                        DataGroup.Instance.ItemDataDic[tag][2].Rare,
+                        1);
                     }
                     else if(probability <= 1.0)
                     {
-                        item.InitObj(mItemDic[tag][0].ID, mItemDic[tag][0].Rare, tag, 1);
+                        item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][1].ID,
+                        DataGroup.Instance.ItemDataDic[tag][1].Rare,
+                        1);
                     }
                     else
                     {
-                        item.InitObj(mItemDic[tag][0].ID, mItemDic[tag][0].Rare, tag, 1);
+                        item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][0].ID,
+                        DataGroup.Instance.ItemDataDic[tag][0].Rare,
+                        1);
                     }
 
                     item.ShowItem(Itempos);
@@ -137,27 +94,45 @@ public class InvenController : MonoBehaviour
                     float probability = Random.value;
                     if (probability <= 0.01)
                     {
-                        item.InitObj(mItemDic[tag][5].ID, mItemDic[tag][5].Rare, tag, 1);
+                        item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][5].ID,
+                        DataGroup.Instance.ItemDataDic[tag][5].Rare,
+                        1);
                     }
                     else if (probability <= 0.06)
                     {
-                        item.InitObj(mItemDic[tag][4].ID, mItemDic[tag][4].Rare, tag, 1);
+                        item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][4].ID,
+                        DataGroup.Instance.ItemDataDic[tag][4].Rare,
+                        1);
                     }
                     else if (probability <= 0.2)
                     {
-                        item.InitObj(mItemDic[tag][3].ID, mItemDic[tag][3].Rare, tag, 1);
+                        item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][3].ID,
+                        DataGroup.Instance.ItemDataDic[tag][3].Rare,
+                        1);
                     }
                     else if(probability <= 0.5)
                     {
-                        item.InitObj(mItemDic[tag][2].ID, mItemDic[tag][2].Rare, tag, 1);
+                        item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][2].ID,
+                        DataGroup.Instance.ItemDataDic[tag][2].Rare,
+                        1);
                     }
                     else if(probability <= 1.0)
                     {
-                        item.InitObj(mItemDic[tag][0].ID, mItemDic[tag][0].Rare, tag, 1);
+                        item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][0].ID,
+                        DataGroup.Instance.ItemDataDic[tag][0].Rare,
+                        1);
                     }
                     else
                     {
-                        item.InitObj(mItemDic[tag][0].ID, mItemDic[tag][0].Rare, tag, 1);
+                        item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][0].ID,
+                        DataGroup.Instance.ItemDataDic[tag][0].Rare,
+                        1);
                     }
 
                     item.ShowItem(Itempos);
@@ -167,7 +142,10 @@ public class InvenController : MonoBehaviour
                 for (int i = 0; i < itemNum; i++)
                 {
                     ItemObj item = mItemObjPool.GetFromPool(0);
-                    item.InitObj(mItemDic[tag][1].ID, mItemDic[tag][1].Rare, tag, 1);
+                    item.InitObj(
+                        DataGroup.Instance.ItemDataDic[tag][1].ID,
+                        DataGroup.Instance.ItemDataDic[tag][1].Rare,
+                        1);
                     item.ShowItem(Itempos);
                 }
                 break;
@@ -176,12 +154,13 @@ public class InvenController : MonoBehaviour
         }
     }
 
-    public void SetSpriteToInven(int originalId, string tag, int num)
+    public void SetSpriteToInven(int originalId, int num)
     {
-        int itemId = TransformIndex(originalId);
-
-        mItemNumDic[tag][itemId] += num;
-        mPlayerInven.GetItem(mItemSpriteDic[tag][itemId], mItemNumDic[tag][itemId], originalId, tag);
+        DataGroup.Instance.SetItemNumber(originalId, num);
+        mPlayerInven.GetItem(
+            DataGroup.Instance.ItemSpriteDic[originalId],
+            DataGroup.Instance.ItemNumDic[originalId],
+            originalId);
     }
 
     private int TransformIndex(int originalID)
@@ -199,6 +178,25 @@ public class InvenController : MonoBehaviour
         return int.Parse(Index);
     }
 
+    private string IdTostring(int originalID)
+    {
+        string originalStr = originalID.ToString();
+        char[] originalCharArr = originalStr.ToCharArray();
+
+        if (int.Parse(originalCharArr[0].ToString()) == 1)
+        {
+            return "Grass";
+        }
+        else if (int.Parse(originalCharArr[0].ToString()) == 2)
+        {
+            return "Tree";
+        }
+        else
+        {
+            return "";
+        }
+    }
+
     public bool CheckIsFull(int originalId)
     {
         return mPlayerInven.CheckIsFull(originalId);
@@ -209,11 +207,14 @@ public class InvenController : MonoBehaviour
         mInvenBox.gameObject.SetActive(value);
     }
 
-    public void DropItem(int originalID, int num, string tag)
+    public void DropItem(int originalID, int num)
     {
         ItemObj item = mItemObjPool.GetFromPool(0);
         item.DropItem();
-        item.InitObj(mItemDic[tag][TransformIndex(originalID)].ID, mItemDic[tag][TransformIndex(originalID)].Rare, tag, num);
-        mItemNumDic[tag][TransformIndex(originalID)] -= num;
+        item.InitObj(
+            originalID,
+            DataGroup.Instance.ItemDataDic[IdTostring(originalID)][TransformIndex(originalID)].Rare,
+            num);
+        DataGroup.Instance.SetItemNumber(originalID, -num);
     }
 }

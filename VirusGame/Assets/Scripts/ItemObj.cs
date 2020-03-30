@@ -10,7 +10,6 @@ public class ItemObj : MonoBehaviour
     private const float mDistance = 2.5f;
     private int mItemID;
     private Renderer mRend;
-    private string mItemType;
     private int mNumber;
     private SphereCollider mCollider;
 
@@ -26,10 +25,9 @@ public class ItemObj : MonoBehaviour
         mPlayer = null;
     }
 
-    public void InitObj(int originalId, int rare, string tag, int num)
+    public void InitObj(int originalId, int rare, int num)
     {
         mItemID = originalId;
-        mItemType = tag;
         mNumber = num;
 
         switch(rare)
@@ -95,6 +93,6 @@ public class ItemObj : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        InvenController.Instance.SetSpriteToInven(mItemID, mItemType, mNumber);
+        InvenController.Instance.SetSpriteToInven(mItemID, mNumber);
     }
 }

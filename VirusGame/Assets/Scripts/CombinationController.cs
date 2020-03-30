@@ -55,8 +55,39 @@ public class CombinationController : MonoBehaviour
                 }
 
                 CombinationElement element = Instantiate(mCombElement, mScrollTarget);
-                element.Init(null, mCombItemArr[i].Name, mCombItemArr[i].Content, mItemMakingInfoArr[targetID].NeedNumber);
+                element.Init(
+                    null,
+                    mCombItemArr[i].Name,
+                    mCombItemArr[i].Content,
+                    mItemMakingInfoArr[targetID].NeedNumber,
+                    mItemMakingInfoArr[targetID].NeedID);
             }
+        }
+    }
+
+    private void MakeItem(int newItemID)
+    {
+        if(InvenController.Instance.CheckIsFull(newItemID))
+        {
+            // Do not make Item
+        }
+        else
+        {
+            for(int i = 0; i < mItemMakingInfoArr.Length; i++)
+            {
+                if(mItemMakingInfoArr[i].TargetID == newItemID)
+                {
+                    for(int j = 0; j < mItemMakingInfoArr[i].NeedID.Length; j++)
+                    {
+                        if(mItemMakingInfoArr[i].NeedID[j] > 0)
+                        {
+                            DataGroup.Instance.SetItemNumber(mItemMakingInfoArr[i].NeedID[j], -mItemMakingInfoArr[i].NeedNumber[j]);
+                        }
+                    }
+                }
+            }
+
+            //InvenController.Instance.SetSpriteToInven()
         }
     }
 }
