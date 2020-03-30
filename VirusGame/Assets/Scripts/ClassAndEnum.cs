@@ -17,6 +17,20 @@ public class ItemData
     public int Rare;
 }
 
+public class CombItem
+{
+    public string Name;
+    public int ID;
+    public string Content;
+}
+
+public class ItemMakingInfo
+{
+    public int TargetID;
+    public int[] NeedID;
+    public int[] NeedNumber;
+}
+
 public enum ePlantGrowthType
 {
     Early,

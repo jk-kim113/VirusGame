@@ -1333,8 +1333,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mMainImg: {fileID: 1482939099}
-  mName: {fileID: 1043518942}
-  mContents: {fileID: 1126608854}
+  mNameText: {fileID: 1043518942}
+  mContentsText: {fileID: 1126608854}
   mNeedsArr:
   - {fileID: 2098843111}
   - {fileID: 2121462609}

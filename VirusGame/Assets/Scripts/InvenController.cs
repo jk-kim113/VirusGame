@@ -20,10 +20,9 @@ public class InvenController : MonoBehaviour
 #pragma warning restore
 
     private ItemData[] mItemDataArr;
-    private Sprite[] mGrassSpriteArr;
-    private Sprite[] mTreeSpriteArr;
 
     Dictionary<string, int[]> mItemNumDic = new Dictionary<string, int[]>();
+    Dictionary<string, Sprite[]> mItemSpriteDic = new Dictionary<string, Sprite[]>();
     
     public UIDrag UIDragImg { get { return mUIDrag; } }
 
@@ -38,25 +37,28 @@ public class InvenController : MonoBehaviour
             Destroy(gameObject);
         }
 
-        mGrassSpriteArr = Resources.LoadAll<Sprite>("Sprites/GrassItem");
-        mTreeSpriteArr = Resources.LoadAll<Sprite>("Sprites/TreeItem");
+        JsonDataLoader.Instance.LoadJsonData<ItemData>(out mItemDataArr, "JsonFiles/ItemData");
 
-        int[] GrassItemNum = new int[mGrassSpriteArr.Length];
-        for (int i = 0; i < mGrassSpriteArr.Length; i++)
+        Sprite[] mGrassSpriteArr = Resources.LoadAll<Sprite>("Sprites/GrassItem");
+        Sprite[] mTreeSpriteArr = Resources.LoadAll<Sprite>("Sprites/TreeItem");
+
+        mItemSpriteDic.Add("Grass", mGrassSpriteArr);
+        mItemSpriteDic.Add("Tree", mTreeSpriteArr);
+
+        int[] GrassItemNum = new int[mItemSpriteDic["Grass"].Length];
+        for (int i = 0; i < mItemSpriteDic["Grass"].Length; i++)
         {
             GrassItemNum[i] = 0;
         }
 
-        int[] TreeItemNum = new int[mTreeSpriteArr.Length];
-        for (int i = 0; i < mTreeSpriteArr.Length; i++)
+        int[] TreeItemNum = new int[mItemSpriteDic["Tree"].Length];
+        for (int i = 0; i < mItemSpriteDic["Tree"].Length; i++)
         {
             TreeItemNum[i] = 0;
         }
 
         mItemNumDic.Add("Grass", GrassItemNum);
         mItemNumDic.Add("Tree", TreeItemNum);
-
-        JsonDataLoader.Instance.LoadJsonData<ItemData>(out mItemDataArr, "JsonFiles/ItemData");
     }
 
     private void Start()
@@ -179,7 +181,7 @@ public class InvenController : MonoBehaviour
         int itemId = TransformIndex(originalId);
 
         mItemNumDic[tag][itemId] += num;
-        mPlayerInven.GetItem(mGrassSpriteArr[itemId], mItemNumDic[tag][itemId], originalId, tag);
+        mPlayerInven.GetItem(mItemSpriteDic[tag][itemId], mItemNumDic[tag][itemId], originalId, tag);
     }
 
     private int TransformIndex(int originalID)
