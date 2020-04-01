@@ -32,6 +32,17 @@ public class Inven : MonoBehaviour
         }
     }
 
+    public void RenewInven(int originalID)
+    {
+        for(int i = 0; i < mSlotArr.Length; i++)
+        {
+            if(mSlotArr[i].ItemID == originalID)
+            {
+                mSlotArr[i].Renew(DataGroup.Instance.ItemNumDic[originalID]);
+            }
+        }
+    }
+
     public bool CheckIsFull(int originalID)
     {
         for (int i = 0; i < mSlotArr.Length; i++)

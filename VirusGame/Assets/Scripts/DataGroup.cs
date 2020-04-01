@@ -18,8 +18,12 @@ public class DataGroup : MonoBehaviour
     private Dictionary<int, ItemMakingInfo> mItemMakingInfoDic = new Dictionary<int, ItemMakingInfo>();
     public Dictionary<int, ItemMakingInfo> ItemMakingInfoDic { get { return mItemMakingInfoDic; } }
 
+    private Dictionary<int, FoodMakeType> mFoodMakeTypeDic = new Dictionary<int, FoodMakeType>();
+    public Dictionary<int, FoodMakeType> FoodMakeTypeDic { get { return mFoodMakeTypeDic; } }
+
     private ItemData[] mItemDataArr;
     private ItemMakingInfo[] mItemMakingInfoArr;
+    private FoodMakeType[] mFoodMakeTypeArr;
 
     private bool bLoaded;
     public bool Loaded { get { return bLoaded; } }
@@ -36,6 +40,23 @@ public class DataGroup : MonoBehaviour
         }
 
         bLoaded = false;
+
+        mFoodMakeTypeArr = new FoodMakeType[2];
+        mFoodMakeTypeArr[0] = new FoodMakeType();
+        mFoodMakeTypeArr[0].TargetID = 3000;
+        mFoodMakeTypeArr[0].RawValue = 30;
+        mFoodMakeTypeArr[0].FriedValue = 20;
+        mFoodMakeTypeArr[0].SteamedValue = 10;
+        mFoodMakeTypeArr[1] = new FoodMakeType();
+        mFoodMakeTypeArr[1].TargetID = 3001;
+        mFoodMakeTypeArr[1].RawValue = 40;
+        mFoodMakeTypeArr[1].FriedValue = 30;
+        mFoodMakeTypeArr[1].SteamedValue = 20;
+
+        for(int i = 0; i < mFoodMakeTypeArr.Length; i++)
+        {
+            mFoodMakeTypeDic.Add(mFoodMakeTypeArr[i].TargetID, mFoodMakeTypeArr[i]);
+        }
     }
 
     private void Start()
@@ -90,6 +111,8 @@ public class DataGroup : MonoBehaviour
     public void SetItemNumber(int originalID, int value)
     {
         mItemNumDic[originalID] += value;
+
+        InvenController.Instance.RenewInven(originalID);
     }
 
     private int IdToIndex(int originalID)
@@ -114,4 +137,12 @@ public class DataGroup : MonoBehaviour
 
         return int.Parse(originalCharArr[0].ToString());
     }
+}
+
+public class FoodMakeType
+{
+    public int TargetID;
+    public int RawValue;
+    public int FriedValue;
+    public int SteamedValue;
 }

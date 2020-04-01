@@ -46,9 +46,20 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
 
         mItemID = originalID;
         mItemImg.sprite = img;
-        mItemNum = num;
 
-        if(num == 1)
+        Renew(num);
+    }
+
+    public void Renew(int num)
+    {
+        mItemNum = num;
+        if (num == 0)
+        {
+            mItemImg.enabled = false;
+            mItemNumText.enabled = false;
+            bIsFull = false;
+        }
+        else if (num == 1)
         {
             mItemNumText.text = "";
         }

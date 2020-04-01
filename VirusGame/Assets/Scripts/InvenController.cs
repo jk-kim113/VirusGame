@@ -217,4 +217,9 @@ public class InvenController : MonoBehaviour
             num);
         DataGroup.Instance.SetItemNumber(originalID, -num);
     }
+
+    public void RenewInven(int originalID)
+    {
+        mPlayerInven.RenewInven(originalID);
+    }
 }

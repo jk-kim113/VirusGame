@@ -13,9 +13,15 @@ public class CombinationController : MonoBehaviour
     private Transform mScrollTarget;
     [SerializeField]
     private CombinationElement mCombElement;
+    [SerializeField]
+    private GameObject mAskFoodType;
+    [SerializeField]
+    private GameObject mConfirmFoodType;
 #pragma warning restore
 
     private List<CombinationElement> mCombEleList;
+    private int mNewItemID;
+    private eFoodType mFoodType;
 
     private void Awake()
     {
@@ -86,19 +92,53 @@ public class CombinationController : MonoBehaviour
         }
         else
         {
-            for(int i = 0; i < DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedNumber.Length; i++)
-            {
-                if (DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedNumber[i] > 0)
-                {
-                    DataGroup.Instance.SetItemNumber(
-                        DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedID[i], 
-                        -DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedNumber[i]);
-                }
-            }
-
-            InvenController.Instance.SetSpriteToInven(newItemID, 1);
-
-            RenewCombTable();
+            mNewItemID = newItemID;
+            mAskFoodType.SetActive(true);
         }
     }
+
+    public void SelectFoodType(int type)
+    {
+        mAskFoodType.SetActive(false);
+        mConfirmFoodType.SetActive(true);
+        mFoodType = (eFoodType)type;
+    }
+
+    public void ConfirmMakeFood()
+    {
+        for (int i = 0; i < DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber.Length; i++)
+        {
+            if (DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber[i] > 0)
+            {
+                DataGroup.Instance.SetItemNumber(
+                    DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedID[i],
+                    -DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber[i]);
+            }
+        }
+
+        InvenController.Instance.RenewInven(mNewItemID);
+        InvenController.Instance.SetSpriteToInven(mNewItemID, 1);
+
+        RenewCombTable();
+
+        switch (mFoodType)
+        {
+            case eFoodType.Raw:
+                //DataGroup.Instance.FoodMakeTypeDic[mNewItemID].RawValue
+                break;
+            case eFoodType.Fried:
+                break;
+            case eFoodType.Steamed:
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+public enum eFoodType
+{
+    Raw,
+    Fried,
+    Steamed
 }

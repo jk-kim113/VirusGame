@@ -64,25 +64,37 @@ public class Player : MonoBehaviour
         MainUIController.Instance.ShowHungryGaugeBar(mHungryMax, mHungryCurrent);
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        if(!bStopMove)
+        if (!bStopMove)
         {
-            // Player Move
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
-            Vector3 dir = new Vector3(horizontal, 0, vertical);
-            dir = dir.normalized * mSpeed;
-            dir = transform.TransformDirection(dir);
-            mCHControl.Move(dir * Time.deltaTime);
-
             // Player X axis Camera rotation
             float mouseX = Input.GetAxis("Mouse X");
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, transform.localEulerAngles.y + mouseX, transform.localEulerAngles.z);
+            transform.localEulerAngles = new Vector3(
+                transform.localEulerAngles.x,
+                transform.localEulerAngles.y + mouseX,
+                transform.localEulerAngles.z);
+
+            mCHControl.enabled = true;
+        }
+        else
+        {
+            mCHControl.enabled = false;
         }
 
+        // Player Move
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 dir = new Vector3(horizontal, 0, vertical);
+        dir = dir.normalized * mSpeed;
+        dir = transform.TransformDirection(dir);
+        mCHControl.Move(dir * Time.fixedDeltaTime);
+    }
+
+    void Update()
+    {
         // Start Plant Action
-        if(Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
             if(bPlantAction)
             {   
@@ -141,7 +153,10 @@ public class Player : MonoBehaviour
         {
             // Get Item from target Obj
             plantDetected.BeingDestroyed();
-            InvenController.Instance.SpawnItem(plantDetected.gameObject.transform.position, plantDetected.gameObject.tag, plantDetected.GrowthType);
+            InvenController.Instance.SpawnItem(
+                plantDetected.gameObject.transform.position,
+                plantDetected.gameObject.tag,
+                plantDetected.GrowthType);
 
             mStaminaCurrent -= 3;
             
