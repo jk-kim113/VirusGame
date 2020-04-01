@@ -25,7 +25,7 @@ public class Herbivore : Animal
 
         mNav.SetDestination(mPlantPosition);
         transform.LookAt(mPlantPosition);
-        mAnimator.SetBool(AnimatorHash.WALK, true);
+        mAnimator.SetBool(StaticValue.WALK, true);
 
         StartCoroutine(EatPlant(plant));
     }
@@ -39,13 +39,13 @@ public class Herbivore : Animal
             yield return term;
         }
 
-        mAnimator.SetBool(AnimatorHash.WALK, false);
-        mAnimator.SetBool(AnimatorHash.EAT, true);
+        mAnimator.SetBool(StaticValue.WALK, false);
+        mAnimator.SetBool(StaticValue.EAT, true);
 
         yield return new WaitForSeconds(4f);
 
         bIsEating = false;
-        mAnimator.SetBool(AnimatorHash.EAT, false);
+        mAnimator.SetBool(StaticValue.EAT, false);
         plant.BeingDestroyed();
         mDetectRange.ResetList();
     }

@@ -132,14 +132,14 @@ public class Animal : MonoBehaviour
             case eBehaviorPattern.Idle:
 
                 mNav.isStopped = true;
-                mAnimator.SetBool(AnimatorHash.WALK, false);
+                mAnimator.SetBool(StaticValue.WALK, false);
 
                 break;
             case eBehaviorPattern.Move:
 
                 mNav.isStopped = false;
                 mNav.SetDestination(RandomCoordinates());
-                mAnimator.SetBool(AnimatorHash.WALK, true);
+                mAnimator.SetBool(StaticValue.WALK, true);
 
                 break;
             case eBehaviorPattern.Eat:
@@ -151,8 +151,8 @@ public class Animal : MonoBehaviour
             case eBehaviorPattern.Die:
 
                 mNav.isStopped = true;
-                mAnimator.SetBool(AnimatorHash.WALK, false);
-                mAnimator.SetBool(AnimatorHash.DIE, true);
+                mAnimator.SetBool(StaticValue.WALK, false);
+                mAnimator.SetBool(StaticValue.DIE, true);
                 mCollider.enabled = false;
                 StopCoroutine(mMovePatternCoroutine);
                 StopCoroutine(mSpendGrowPeriodCoroutine);

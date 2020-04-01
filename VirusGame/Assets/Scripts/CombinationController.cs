@@ -15,8 +15,7 @@ public class CombinationController : MonoBehaviour
     private CombinationElement mCombElement;
 #pragma warning restore
 
-    private CombItem[] mCombItemArr;
-    private ItemMakingInfo[] mItemMakingInfoArr;
+    private List<CombinationElement> mCombEleList;
 
     private void Awake()
     {
@@ -28,40 +27,54 @@ public class CombinationController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        mCombEleList = new List<CombinationElement>();
     }
 
     private void Start()
     {
-        JsonDataLoader.Instance.LoadJsonData<CombItem>(out mCombItemArr, "JsonFiles/CombItemData");
-        JsonDataLoader.Instance.LoadJsonData<ItemMakingInfo>(out mItemMakingInfoArr, "JsonFiles/CombinationData");
+        StartCoroutine(Load());
+    }
+
+    private IEnumerator Load()
+    {
+        WaitForSeconds term = new WaitForSeconds(.1f);
+
+        while(!DataGroup.Instance.Loaded)
+        {
+            yield return term;
+        }
+
+        for (int i = 0; i < DataGroup.Instance.ItemDataDic["Comb"].Length; i++)
+        {
+            CombinationElement element = Instantiate(mCombElement, mScrollTarget);
+            element.Init(
+                DataGroup.Instance.ItemSpriteDic[DataGroup.Instance.ItemDataDic["Comb"][i].ID],
+                DataGroup.Instance.ItemDataDic["Comb"][i].ID,
+                DataGroup.Instance.ItemDataDic["Comb"][i].Name,
+                DataGroup.Instance.ItemDataDic["Comb"][i].Info,
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Comb"][i].ID].NeedNumber,
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Comb"][i].ID].NeedID,
+                MakeItem);
+            mCombEleList.Add(element);
+        }
     }
 
     public void OpenCombTable(bool value)
     {
         mItemCombTable.SetActive(value);
 
-        if(value)
-        {
-            for(int i = 0; i < mCombItemArr.Length; i++)
-            {
-                int targetID = -1;
-                for(int j = 0; j < mItemMakingInfoArr.Length; j++)
-                {
-                    if(mCombItemArr[i].ID == mItemMakingInfoArr[j].TargetID)
-                    {
-                        targetID = j;
-                        break;
-                    }
-                }
+        RenewCombTable();
+    }
 
-                CombinationElement element = Instantiate(mCombElement, mScrollTarget);
-                element.Init(
-                    null,
-                    mCombItemArr[i].Name,
-                    mCombItemArr[i].Content,
-                    mItemMakingInfoArr[targetID].NeedNumber,
-                    mItemMakingInfoArr[targetID].NeedID);
-            }
+    private void RenewCombTable()
+    {
+        for (int i = 0; i < mCombEleList.Count; i++)
+        {
+            mCombEleList[i].Renew(
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Comb"][i].ID].NeedNumber,
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Comb"][i].ID].NeedID
+                );
         }
     }
 
@@ -73,21 +86,19 @@ public class CombinationController : MonoBehaviour
         }
         else
         {
-            for(int i = 0; i < mItemMakingInfoArr.Length; i++)
+            for(int i = 0; i < DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedNumber.Length; i++)
             {
-                if(mItemMakingInfoArr[i].TargetID == newItemID)
+                if (DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedNumber[i] > 0)
                 {
-                    for(int j = 0; j < mItemMakingInfoArr[i].NeedID.Length; j++)
-                    {
-                        if(mItemMakingInfoArr[i].NeedID[j] > 0)
-                        {
-                            DataGroup.Instance.SetItemNumber(mItemMakingInfoArr[i].NeedID[j], -mItemMakingInfoArr[i].NeedNumber[j]);
-                        }
-                    }
+                    DataGroup.Instance.SetItemNumber(
+                        DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedID[i], 
+                        -DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedNumber[i]);
                 }
             }
 
-            //InvenController.Instance.SetSpriteToInven()
+            InvenController.Instance.SetSpriteToInven(newItemID, 1);
+
+            RenewCombTable();
         }
     }
 }

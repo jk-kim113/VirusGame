@@ -18,15 +18,21 @@ public class CombinationElement : MonoBehaviour
     private Button mMakingBtn;
 #pragma warning restore
 
-    public void Init(Sprite mainSprite, string name, string content, int[] needsNum, int[] needsID)
+    public void Init(Sprite mainSprite, int originalId, string name, string content, int[] needsNum, int[] needsID, StaticValue.OneIntParaCallBack callback)
     {
         mMainImg.sprite = mainSprite;
         mNameText.text = name;
         mContentsText.text = content;
+        mMakingBtn.onClick.AddListener(() => { callback(originalId); });
 
-        for(int i = 0; i < mNeedsArr.Length; i++)
+        Renew(needsNum, needsID);
+    }
+
+    public void Renew(int[] needsNum, int[] needsID)
+    {
+        for (int i = 0; i < mNeedsArr.Length; i++)
         {
-            if(needsNum[i] > 0)
+            if (needsNum[i] > 0)
             {
                 mNeedsArr[i].SetActive(true);
 
@@ -34,9 +40,9 @@ public class CombinationElement : MonoBehaviour
                 needImg.sprite = DataGroup.Instance.ItemSpriteDic[needsID[i]];
 
                 Text num = mNeedsArr[i].GetComponentInChildren<Text>();
-                num.text = "x "+ needsNum[i].ToString();
+                num.text = "x " + needsNum[i].ToString();
 
-                if(needsNum[i] < DataGroup.Instance.ItemNumDic[needsID[i]])
+                if (needsNum[i] < DataGroup.Instance.ItemNumDic[needsID[i]])
                 {
                     num.color = Color.blue;
                 }

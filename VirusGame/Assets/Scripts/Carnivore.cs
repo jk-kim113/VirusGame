@@ -35,7 +35,7 @@ public class Carnivore : Animal
         mNav.speed = 7;
         mNav.isStopped = false;
         mNav.SetDestination(target.transform.position);
-        mAnimator.SetBool(AnimatorHash.RUN, true);
+        mAnimator.SetBool(StaticValue.RUN, true);
 
         while(Vector3.Magnitude(transform.position - target.transform.position) > 5.0f)
         {   
@@ -44,15 +44,15 @@ public class Carnivore : Animal
         }
 
         mNav.isStopped = true;
-        mAnimator.SetBool(AnimatorHash.RUN, false);
-        mAnimator.SetBool(AnimatorHash.ATTACK, true);
+        mAnimator.SetBool(StaticValue.RUN, false);
+        mAnimator.SetBool(StaticValue.ATTACK, true);
         target.SetMovePattern(eBehaviorPattern.Die);
         mDetectRange.Food = null;
         yield return new WaitForSeconds(2.3f);
-        mAnimator.SetBool(AnimatorHash.ATTACK, false);
-        mAnimator.SetBool(AnimatorHash.EAT, true);
+        mAnimator.SetBool(StaticValue.ATTACK, false);
+        mAnimator.SetBool(StaticValue.EAT, true);
         yield return new WaitForSeconds(4.0f);
-        mAnimator.SetBool(AnimatorHash.EAT, false);
+        mAnimator.SetBool(StaticValue.EAT, false);
         mNav.speed = 3.5f;
         bIsEating = false;
         mDetectRange.gameObject.SetActive(true);

@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
 
         bPlantAction = false;
         bIsOpenInven = false;
+        bIsOpenCombTable = false;
         bStopMove = false;
 
         mStaminaMax = 100f;
@@ -99,20 +100,19 @@ public class Player : MonoBehaviour
             if(bIsOpenInven)
             {
                 OpenInvenBox(true);
+                bIsOpenInven = false;
             }
             else if(bIsOpenCombTable)
             {
                 OpenCombTable(true);
+                bIsOpenCombTable = false;
             }
         }
 
-        if(bIsOpenInven)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if(Input.GetKeyDown(KeyCode.Escape))
-            {
-                OpenInvenBox(false);
-                OpenCombTable(false);
-            }
+            OpenInvenBox(false);
+            OpenCombTable(false);
         }
     }
 

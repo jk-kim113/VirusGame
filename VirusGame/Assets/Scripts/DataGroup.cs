@@ -15,7 +15,14 @@ public class DataGroup : MonoBehaviour
     private Dictionary<string, ItemData[]> mItemDataDic = new Dictionary<string, ItemData[]>();
     public Dictionary<string, ItemData[]> ItemDataDic { get { return mItemDataDic; } }
 
+    private Dictionary<int, ItemMakingInfo> mItemMakingInfoDic = new Dictionary<int, ItemMakingInfo>();
+    public Dictionary<int, ItemMakingInfo> ItemMakingInfoDic { get { return mItemMakingInfoDic; } }
+
     private ItemData[] mItemDataArr;
+    private ItemMakingInfo[] mItemMakingInfoArr;
+
+    private bool bLoaded;
+    public bool Loaded { get { return bLoaded; } }
 
     private void Awake()
     {
@@ -27,17 +34,22 @@ public class DataGroup : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        bLoaded = false;
     }
 
     private void Start()
     {
         JsonDataLoader.Instance.LoadJsonData<ItemData>(out mItemDataArr, "JsonFiles/ItemData");
+        JsonDataLoader.Instance.LoadJsonData<ItemMakingInfo>(out mItemMakingInfoArr, "JsonFiles/CombinationData");
 
         Sprite[] GrassSpriteArr = Resources.LoadAll<Sprite>("Sprites/GrassItem");
         Sprite[] TreeSpriteArr = Resources.LoadAll<Sprite>("Sprites/TreeItem");
+        Sprite[] CombSpriteArr = Resources.LoadAll<Sprite>("Sprites/CombItem");
 
         ItemData[] GrassItemDataArr = new ItemData[GrassSpriteArr.Length];
         ItemData[] TreeItemDataArr = new ItemData[TreeSpriteArr.Length];
+        ItemData[] CombItemDataArr = new ItemData[CombSpriteArr.Length];
 
         for (int i = 0; i < mItemDataArr.Length; i++)
         {
@@ -51,15 +63,28 @@ public class DataGroup : MonoBehaviour
                 mItemSpriteDic.Add(mItemDataArr[i].ID, TreeSpriteArr[IdToIndex(mItemDataArr[i].ID)]);
                 TreeItemDataArr[IdToIndex(mItemDataArr[i].ID)] = mItemDataArr[i];
             }
+            else if(CheckItemType(mItemDataArr[i].ID) == 3)
+            {
+                mItemSpriteDic.Add(mItemDataArr[i].ID, CombSpriteArr[IdToIndex(mItemDataArr[i].ID)]);
+                CombItemDataArr[IdToIndex(mItemDataArr[i].ID)] = mItemDataArr[i];
+            }
         }
 
         mItemDataDic.Add("Grass", GrassItemDataArr);
         mItemDataDic.Add("Tree", TreeItemDataArr);
+        mItemDataDic.Add("Comb", CombItemDataArr);
 
         for (int i = 0; i < mItemDataArr.Length; i++)
         {
             mItemNumDic.Add(mItemDataArr[i].ID, 0);
         }
+
+        for (int i = 0; i < mItemMakingInfoArr.Length; i++)
+        {
+            mItemMakingInfoDic.Add(mItemMakingInfoArr[i].TargetID, mItemMakingInfoArr[i]);
+        }
+
+        bLoaded = true;
     }
 
     public void SetItemNumber(int originalID, int value)
