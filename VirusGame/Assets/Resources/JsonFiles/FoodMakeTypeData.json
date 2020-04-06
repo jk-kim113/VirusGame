@@ -1,0 +1,26 @@
+[
+  {
+    "TargetID": 3100,
+    "TypeValue": [
+      30,
+      20,
+      10
+    ]
+  },
+  {
+    "TargetID": 3101,
+    "TypeValue": [
+      40,
+      30,
+      20
+    ]
+  },
+  {
+    "TargetID": 3102,
+    "TypeValue": [
+      50,
+      40,
+      30
+    ]
+  }
+]

@@ -17,11 +17,18 @@ public class ItemData
     public int Rare;
 }
 
-public class CombItem
+public class FoodMenu
 {
     public string Name;
     public int ID;
-    public string Content;
+    public int[] TargetID;
+    public string Info;
+}
+
+public class FoodMakeType
+{
+    public int TargetID;
+    public int[] TypeValue;
 }
 
 public class ItemMakingInfo
@@ -62,4 +69,11 @@ public enum eAnimalKind
     Carnivore,
 
     max
+}
+
+public enum eFoodType
+{
+    Raw,
+    Fried,
+    Steamed
 }

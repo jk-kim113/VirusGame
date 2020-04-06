@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CombinationController : MonoBehaviour
 {
@@ -51,16 +52,16 @@ public class CombinationController : MonoBehaviour
             yield return term;
         }
 
-        for (int i = 0; i < DataGroup.Instance.ItemDataDic["Comb"].Length; i++)
+        for (int i = 0; i < DataGroup.Instance.ItemDataDic["Food"].Length; i++)
         {
             CombinationElement element = Instantiate(mCombElement, mScrollTarget);
             element.Init(
-                DataGroup.Instance.ItemSpriteDic[DataGroup.Instance.ItemDataDic["Comb"][i].ID],
-                DataGroup.Instance.ItemDataDic["Comb"][i].ID,
-                DataGroup.Instance.ItemDataDic["Comb"][i].Name,
-                DataGroup.Instance.ItemDataDic["Comb"][i].Info,
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Comb"][i].ID].NeedNumber,
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Comb"][i].ID].NeedID,
+                DataGroup.Instance.ItemSpriteDic[i],
+                DataGroup.Instance.FoodMenuDic[i].ID,
+                DataGroup.Instance.FoodMenuDic[i].Name,
+                DataGroup.Instance.FoodMenuDic[i].Info,
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Food"][i].ID].NeedNumber,
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Food"][i].ID].NeedID,
                 MakeItem);
             mCombEleList.Add(element);
         }
@@ -78,8 +79,8 @@ public class CombinationController : MonoBehaviour
         for (int i = 0; i < mCombEleList.Count; i++)
         {
             mCombEleList[i].Renew(
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Comb"][i].ID].NeedNumber,
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Comb"][i].ID].NeedID
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Food"][i].ID].NeedNumber,
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Food"][i].ID].NeedID
                 );
         }
     }
@@ -102,6 +103,11 @@ public class CombinationController : MonoBehaviour
         mAskFoodType.SetActive(false);
         mConfirmFoodType.SetActive(true);
         mFoodType = (eFoodType)type;
+
+        Text message = mConfirmFoodType.GetComponentInChildren<Text>();
+        message.text = string.Format("해당 제조법의 음식 효과는 {0} 이고, 소비 전력량은 {1} 입니다.", 
+            DataGroup.Instance.FoodMakeTypeDic[mNewItemID].TypeValue[type],
+            0);
     }
 
     public void ConfirmMakeFood()
@@ -113,10 +119,12 @@ public class CombinationController : MonoBehaviour
                 DataGroup.Instance.SetItemNumber(
                     DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedID[i],
                     -DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber[i]);
+
+                InvenController.Instance.RenewInven(DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedID[i]);
             }
         }
 
-        InvenController.Instance.RenewInven(mNewItemID);
+        
         InvenController.Instance.SetSpriteToInven(mNewItemID, 1);
 
         RenewCombTable();
@@ -134,11 +142,4 @@ public class CombinationController : MonoBehaviour
                 break;
         }
     }
-}
-
-public enum eFoodType
-{
-    Raw,
-    Fried,
-    Steamed
 }
