@@ -16,6 +16,9 @@ public class Animal : MonoBehaviour
     private float mHungerCurrent;
     private float mHungerMax;
     public float HungerMax { set { mHungerMax = value; } }
+    private float mHungerDeacrease;
+    private float mImmunity;
+    private bool bIsLoaded;
 
     private void Awake()
     {
@@ -23,13 +26,20 @@ public class Animal : MonoBehaviour
         mAnimator = GetComponent<Animator>();
         mCollider = GetComponent<BoxCollider>();
         bIsEating = false;
-
-        mHungerMax = mHungerCurrent;
+        bIsLoaded = false;
     }
 
     private void OnEnable()
     {
         mCollider.enabled = true;
+    }
+
+    private void Update()
+    {
+        if(bIsLoaded)
+        {
+            mHungerCurrent -= mHungerDeacrease * Time.deltaTime;
+        }
     }
 
     private Vector3 RandomCoordinates()
@@ -42,9 +52,13 @@ public class Animal : MonoBehaviour
         return new Vector3(xCord, 0, zCord);
     }
 
-    public void Init(BoxCollider boundary)
+    public void Init(BoxCollider boundary, float hungermax, float hungerdeacrease)
     {
         mMoveBoundary = boundary;
+        mHungerMax = mHungerCurrent = hungermax;
+        mHungerDeacrease = hungerdeacrease;
+
+        bIsLoaded = true;
 
         int randomNum = Random.Range(0, (int)eAnimalGrowthType.max);
         SetGrowthType(randomNum);
@@ -105,7 +119,19 @@ public class Animal : MonoBehaviour
 
             if(!bIsEating)
             {
-                int probability = Random.Range(0, 3);
+                int maxRan = 0;
+
+                if(mHungerCurrent < mHungerMax * 0.6)
+                {
+                    maxRan = 3;
+                }
+                else
+                {
+                    maxRan = 2;
+                }
+
+                int probability = Random.Range(0, maxRan);
+
 
                 if (probability == 0)
                 {

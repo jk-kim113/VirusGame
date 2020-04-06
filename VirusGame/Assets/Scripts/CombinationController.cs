@@ -52,16 +52,18 @@ public class CombinationController : MonoBehaviour
             yield return term;
         }
 
-        for (int i = 0; i < DataGroup.Instance.ItemDataDic["Food"].Length; i++)
+        for (int i = 0; i < DataGroup.Instance.FoodMenuDic.Count; i++)
         {
+            int id = DataGroup.Instance.FoodMenuArr[i].ID;
+
             CombinationElement element = Instantiate(mCombElement, mScrollTarget);
             element.Init(
-                DataGroup.Instance.ItemSpriteDic[i],
-                DataGroup.Instance.FoodMenuDic[i].ID,
-                DataGroup.Instance.FoodMenuDic[i].Name,
-                DataGroup.Instance.FoodMenuDic[i].Info,
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Food"][i].ID].NeedNumber,
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Food"][i].ID].NeedID,
+                DataGroup.Instance.ItemSpriteDic[id],
+                DataGroup.Instance.FoodMenuDic[id].ID,
+                DataGroup.Instance.FoodMenuDic[id].Name,
+                DataGroup.Instance.FoodMenuDic[id].Info,
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.FoodMenuDic[id].ID].NeedNumber,
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.FoodMenuDic[id].ID].NeedID,
                 MakeItem);
             mCombEleList.Add(element);
         }
@@ -78,9 +80,11 @@ public class CombinationController : MonoBehaviour
     {
         for (int i = 0; i < mCombEleList.Count; i++)
         {
+            int id = DataGroup.Instance.FoodMenuArr[i].ID;
+
             mCombEleList[i].Renew(
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Food"][i].ID].NeedNumber,
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.ItemDataDic["Food"][i].ID].NeedID
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.FoodMenuDic[id].ID].NeedNumber,
+                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.FoodMenuDic[id].ID].NeedID
                 );
         }
     }
@@ -94,14 +98,14 @@ public class CombinationController : MonoBehaviour
         else
         {
             mNewItemID = newItemID;
-            mAskFoodType.SetActive(true);
+            OnOffAskFoodType(true);
         }
     }
 
     public void SelectFoodType(int type)
     {
-        mAskFoodType.SetActive(false);
-        mConfirmFoodType.SetActive(true);
+        OnOffAskFoodType(false);
+        OnOffConfirmFoodType(true);
         mFoodType = (eFoodType)type;
 
         Text message = mConfirmFoodType.GetComponentInChildren<Text>();
@@ -124,22 +128,22 @@ public class CombinationController : MonoBehaviour
             }
         }
 
-        
-        InvenController.Instance.SetSpriteToInven(mNewItemID, 1);
+        mNewItemID = DataGroup.Instance.FoodMenuDic[mNewItemID].TargetID[(int)mFoodType];
 
         RenewCombTable();
 
-        switch (mFoodType)
-        {
-            case eFoodType.Raw:
-                //DataGroup.Instance.FoodMakeTypeDic[mNewItemID].RawValue
-                break;
-            case eFoodType.Fried:
-                break;
-            case eFoodType.Steamed:
-                break;
-            default:
-                break;
-        }
+        InvenController.Instance.SetSpriteToInven(mNewItemID, 1);
+
+        mConfirmFoodType.SetActive(false);
+    }
+
+    public void OnOffAskFoodType(bool value)
+    {
+        mAskFoodType.SetActive(value);
+    }
+
+    public void OnOffConfirmFoodType(bool value)
+    {
+        mConfirmFoodType.SetActive(value);
     }
 }

@@ -2,31 +2,43 @@
   {
     "Name": "염소",
     "ID": 1000,
+    "HungerMax": 50,
+    "HungerDecrease": 0.3,
     "InitNumber": 12
   },
   {
     "Name": "소",
     "ID": 1001,
+    "HungerMax": 300,
+    "HungerDecrease": 1.5,
     "InitNumber": 9
   },
   {
     "Name": "사슴",
     "ID": 1002,
+    "HungerMax": 100,
+    "HungerDecrease": 0.8,
     "InitNumber": 9
   },
   {
     "Name": "곰",
     "ID": 2000,
+    "HungerMax": 400,
+    "HungerDecrease": 2.3,
     "InitNumber": 6
   },
   {
     "Name": "악어",
     "ID": 2001,
+    "HungerMax": 150,
+    "HungerDecrease": 0.5,
     "InitNumber": 8
   },
   {
     "Name": "늑대",
     "ID": 2002,
+    "HungerMax": 70,
+    "HungerDecrease": 0.2,
     "InitNumber": 12
   }
 ]

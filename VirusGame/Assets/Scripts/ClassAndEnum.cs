@@ -6,6 +6,8 @@ public class AnimalData
 {
     public string Name;
     public int ID;
+    public float HungerMax;
+    public float HungerDecrease;
     public int InitNumber;
 }
 

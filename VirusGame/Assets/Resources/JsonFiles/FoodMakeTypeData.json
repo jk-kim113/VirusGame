@@ -1,6 +1,6 @@
 [
   {
-    "TargetID": 3100,
+    "TargetID": 3000,
     "TypeValue": [
       30,
       20,
@@ -8,19 +8,11 @@
     ]
   },
   {
-    "TargetID": 3101,
+    "TargetID": 3001,
     "TypeValue": [
       40,
       30,
       20
-    ]
-  },
-  {
-    "TargetID": 3102,
-    "TypeValue": [
-      50,
-      40,
-      30
     ]
   }
 ]

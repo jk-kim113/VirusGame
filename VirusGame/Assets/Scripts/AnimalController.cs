@@ -34,7 +34,7 @@ public class AnimalController : MonoBehaviour
                     {
                         mHerbivorePool.SpawnPos = MakeSpawnPos(mMoveBoundary[i]);
                         Herbivore herbivore = mHerbivorePool.GetFromPool(index);
-                        herbivore.Init(mMoveBoundary[i]);
+                        herbivore.Init(mMoveBoundary[i], mAnimalDataArr[i].HungerMax, mAnimalDataArr[i].HungerDecrease);
                     }
                     break;
                 case eAnimalKind.Carnivore:
@@ -42,7 +42,7 @@ public class AnimalController : MonoBehaviour
                     {
                         mCarnivorePool.SpawnPos = MakeSpawnPos(mMoveBoundary[i]);
                         Carnivore carnivore = mCarnivorePool.GetFromPool(index);
-                        carnivore.Init(mMoveBoundary[i]);
+                        carnivore.Init(mMoveBoundary[i], mAnimalDataArr[i].HungerMax, mAnimalDataArr[i].HungerDecrease);
                     }
                     break;
                 default:

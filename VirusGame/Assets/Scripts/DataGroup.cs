@@ -28,6 +28,7 @@ public class DataGroup : MonoBehaviour
     
     private ItemMakingInfo[] mItemMakingInfoArr;
     private FoodMenu[] mFoodMenuArr;
+    public FoodMenu[] FoodMenuArr { get { return mFoodMenuArr; } }
     private FoodMakeType[] mFoodMakeTypeArr;
 
     private bool bLoaded;
@@ -77,16 +78,30 @@ public class DataGroup : MonoBehaviour
 
         mItemDataDic.Add("Grass", GrassItemDataArr);
         mItemDataDic.Add("Tree", TreeItemDataArr);
-        
+
+        // Set Item Num
         for (int i = 0; i < mItemDataArr.Length; i++)
         {
             mItemNumDic.Add(mItemDataArr[i].ID, 0);
         }
-
         for(int i = 0; i < mFoodMenuArr.Length; i++)
         {
-            mFoodMenuDic.Add(i, mFoodMenuArr[i]);
-            mItemSpriteDic.Add(i, FoodSpriteArr[i]);
+            for(int j =0; j < mFoodMenuArr[i].TargetID.Length; j++)
+            {
+                mItemNumDic.Add(mFoodMenuArr[i].TargetID[j], 0);
+            }
+        }
+
+        // Set Food Sprite
+        for(int i = 0; i < mFoodMenuArr.Length; i++)
+        {
+            mFoodMenuDic.Add(mFoodMenuArr[i].ID, mFoodMenuArr[i]);
+            mItemSpriteDic.Add(mFoodMenuArr[i].ID, FoodSpriteArr[i]);
+
+            for (int j = 0; j < mFoodMenuArr[i].TargetID.Length; j++)
+            {   
+                mItemSpriteDic.Add(mFoodMenuArr[i].TargetID[j], FoodSpriteArr[i]);
+            }
         }
 
         for (int i = 0; i < mItemMakingInfoArr.Length; i++)
