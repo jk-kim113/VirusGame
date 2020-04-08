@@ -79,3 +79,10 @@ public enum eFoodType
     Fried,
     Steamed
 }
+
+public enum eItemType
+{
+    Drop,
+    Use,
+    Equip
+}

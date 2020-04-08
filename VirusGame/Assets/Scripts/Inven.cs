@@ -4,11 +4,20 @@ using UnityEngine;
 
 public class Inven : MonoBehaviour
 {
+#pragma warning disable 0649
+    [SerializeField]
+    private GameObject mSelectAreaPos;
+#pragma warning restore
+
     private Slot[] mSlotArr;
+    private int mSelcetAreaPosNum;
 
     private void Start()
     {
         mSlotArr = GetComponentsInChildren<Slot>();
+
+        mSelcetAreaPosNum = 0;
+        mSelectAreaPos.transform.position = mSlotArr[mSelcetAreaPosNum].gameObject.transform.position;
     }
 
     public void GetItem(Sprite sprite, int num, int originalId)
@@ -62,5 +71,23 @@ public class Inven : MonoBehaviour
         }
 
         return true;
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Tab))
+        {
+            mSelcetAreaPosNum++;
+            if(mSelcetAreaPosNum >= mSlotArr.Length)
+            {
+                mSelcetAreaPosNum = 0;
+            }
+            mSelectAreaPos.transform.position = mSlotArr[mSelcetAreaPosNum].gameObject.transform.position;
+        }
+
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            //eItemType type = mSlotArr[mSelcetAreaPosNum].ItemID
+        }
     }
 }

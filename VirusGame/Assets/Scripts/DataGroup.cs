@@ -24,6 +24,9 @@ public class DataGroup : MonoBehaviour
     private Dictionary<int, FoodMakeType> mFoodMakeTypeDic = new Dictionary<int, FoodMakeType>();
     public Dictionary<int, FoodMakeType> FoodMakeTypeDic { get { return mFoodMakeTypeDic; } }
 
+    private Dictionary<int, eItemType> mItemTypeDic = new Dictionary<int, eItemType>();
+    public Dictionary<int, eItemType> ItemTypeDic { get { return mItemTypeDic; } }
+
     private ItemData[] mItemDataArr;
     
     private ItemMakingInfo[] mItemMakingInfoArr;
