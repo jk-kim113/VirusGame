@@ -71,6 +71,7 @@ public class Plant : MonoBehaviour
 
                 break;
             default:
+                Debug.LogError("Wrong Plant Type : " + type);
                 break;
         }
     }
