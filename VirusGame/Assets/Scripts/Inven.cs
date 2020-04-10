@@ -87,7 +87,44 @@ public class Inven : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.C))
         {
-            //eItemType type = mSlotArr[mSelcetAreaPosNum].ItemID
+            if(mSlotArr[mSelcetAreaPosNum].ItemID < 0)
+            {
+                return;
+            }
+
+            DataGroup.Instance.SetItemNumber(mSlotArr[mSelcetAreaPosNum].ItemID, -1);
+
+            eItemType type = DataGroup.Instance.ItemTypeDic[mSlotArr[mSelcetAreaPosNum].ItemID];
+
+            switch(type)
+            {
+                case eItemType.Drop:
+                    
+                    break;
+                case eItemType.Use:
+
+                    eUseTarget target = DataGroup.Instance.FoodMenuDic[IDtoUseType(mSlotArr[mSelcetAreaPosNum].ItemID)].UseTarget;
+
+                    Player.Instance.UseItem(
+                        target,
+                        DataGroup.Instance.FoodMakeTypeDic[IDtoUseType(mSlotArr[mSelcetAreaPosNum].ItemID)].TypeValue[(int)target]);
+
+                    break;
+                case eItemType.Equip:
+                    break;
+                default:
+                    break;
+            }
         }
+    }
+
+    private int IDtoUseType(int targetid)
+    {
+        string targetStr = targetid.ToString();
+        char[] targetCharArr = targetStr.ToCharArray();
+
+        string Index = targetCharArr[0].ToString() + targetCharArr[1].ToString() + targetCharArr[2].ToString() + targetCharArr[3].ToString();
+
+        return int.Parse(Index);
     }
 }

@@ -25,6 +25,7 @@ public class FoodMenu
     public int ID;
     public int[] TargetID;
     public string Info;
+    public eUseTarget UseTarget;
 }
 
 public class FoodMakeType
@@ -78,6 +79,13 @@ public enum eFoodType
     Raw,
     Fried,
     Steamed
+}
+
+public enum eUseTarget
+{
+    Stamina,
+    Hunger,
+    HP
 }
 
 public enum eItemType

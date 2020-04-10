@@ -65,6 +65,7 @@ public class DataGroup : MonoBehaviour
         ItemData[] GrassItemDataArr = new ItemData[GrassSpriteArr.Length];
         ItemData[] TreeItemDataArr = new ItemData[TreeSpriteArr.Length];
 
+        // Drop Item Setting
         for (int i = 0; i < mItemDataArr.Length; i++)
         {
             if (CheckItemType(mItemDataArr[i].ID) == 1)
@@ -77,6 +78,8 @@ public class DataGroup : MonoBehaviour
                 mItemSpriteDic.Add(mItemDataArr[i].ID, TreeSpriteArr[IdToIndex(mItemDataArr[i].ID)]);
                 TreeItemDataArr[IdToIndex(mItemDataArr[i].ID)] = mItemDataArr[i];
             }
+
+            mItemTypeDic.Add(mItemDataArr[i].ID, eItemType.Drop);
         }
 
         mItemDataDic.Add("Grass", GrassItemDataArr);
@@ -92,6 +95,7 @@ public class DataGroup : MonoBehaviour
             for(int j =0; j < mFoodMenuArr[i].TargetID.Length; j++)
             {
                 mItemNumDic.Add(mFoodMenuArr[i].TargetID[j], 0);
+                mItemTypeDic.Add(mFoodMenuArr[i].TargetID[j], eItemType.Use);
             }
         }
 

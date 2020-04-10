@@ -58,6 +58,7 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
             mItemImg.enabled = false;
             mItemNumText.enabled = false;
             bIsFull = false;
+            mItemID = -999;
         }
         else if (num == 1)
         {

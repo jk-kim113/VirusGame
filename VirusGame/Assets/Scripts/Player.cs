@@ -173,6 +173,28 @@ public class Player : MonoBehaviour
         bStopMove = value;
     }
 
+    public void UseItem(eUseTarget target, float value)
+    {
+        switch(target)
+        {
+            case eUseTarget.Stamina:
+                break;
+            case eUseTarget.Hunger:
+
+                mHungryCurrent += value;
+                if(mHungryCurrent >= mHungryMax)
+                {
+                    mHungryCurrent = mHungryMax;
+                }
+
+                break;
+            case eUseTarget.HP:
+                break;
+            default:
+                break;
+        }
+    }
+
     private void GameOver()
     {
         // Game Over!!
