@@ -1,0 +1,8 @@
+[
+  {
+    "Name": "바이러스1",
+    "ID": 1000,
+    "IncubationPeriod": 10.0,
+    "Rank": 1
+  }
+]

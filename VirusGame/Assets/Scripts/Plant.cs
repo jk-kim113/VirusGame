@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Plant : MonoBehaviour
+public class Plant : Virus
 {
     private int mID;
     private RespawnPlant mRespawn;
@@ -17,8 +17,10 @@ public class Plant : MonoBehaviour
     private ePlantGrowthType mGrowthType;
     public ePlantGrowthType GrowthType { get { return mGrowthType; } }
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         mRespawn = GetComponentInParent<RespawnPlant>();
         mTransform = GetComponent<Transform>();
         mRenderer = GetComponent<Renderer>();
@@ -37,6 +39,11 @@ public class Plant : MonoBehaviour
     public void Init(int id)
     {
         mID = id;
+    }
+
+    public override void Infect(int id)
+    {
+        base.Infect(id);
     }
 
     public void GrowUpPlant(ePlantGrowthType type)

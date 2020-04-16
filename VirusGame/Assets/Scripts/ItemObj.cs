@@ -12,6 +12,7 @@ public class ItemObj : MonoBehaviour
     private Renderer mRend;
     private int mNumber;
     private SphereCollider mCollider;
+    private int mVirusID;
 
     private void Awake()
     {
@@ -25,10 +26,11 @@ public class ItemObj : MonoBehaviour
         mPlayer = null;
     }
 
-    public void InitObj(int originalId, int rare, int num)
+    public void InitObj(int originalId, int rare, int num, int virusID)
     {
         mItemID = originalId;
         mNumber = num;
+        mVirusID = virusID;
 
         switch(rare)
         {
@@ -60,8 +62,11 @@ public class ItemObj : MonoBehaviour
     }
 
     public void DropItem()
-    { 
-        transform.position = Player.Instance.transform.position + Player.Instance.transform.forward*10;
+    {
+        float z = Random.Range(8f, 10f);
+        float x = Random.Range(-2f, 2f);
+
+        transform.position = Player.Instance.transform.position + new Vector3(x, 0, z);
         mRB.velocity = new Vector3(0,0,0);
     }
 
@@ -93,6 +98,6 @@ public class ItemObj : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        InvenController.Instance.SetSpriteToInven(mItemID, mNumber);
+        InvenController.Instance.SetSpriteToInven(mItemID, mNumber, mVirusID);
     }
 }

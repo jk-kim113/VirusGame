@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Animal : MonoBehaviour
+public class Animal : Virus
 {
     private BoxCollider mMoveBoundary;
     protected NavMeshAgent mNav;
@@ -17,11 +17,16 @@ public class Animal : MonoBehaviour
     private float mHungerMax;
     public float HungerMax { set { mHungerMax = value; } }
     private float mHungerDeacrease;
-    private float mImmunity;
+    private float mImmunity { get { return ImmunityCoefficient(mGrowthType) * (mHungerCurrent / mHungerMax * 100); } }
     private bool bIsLoaded;
+    private float mIncubationPeriod;
+    private float mSpreadPeriod;
+    private eAnimalGrowthType mGrowthType;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         mNav = GetComponent<NavMeshAgent>();
         mAnimator = GetComponent<Animator>();
         mCollider = GetComponent<BoxCollider>();
@@ -39,6 +44,19 @@ public class Animal : MonoBehaviour
         if(bIsLoaded)
         {
             mHungerCurrent -= mHungerDeacrease * Time.deltaTime;
+        }
+
+        if(bIsInfect)
+        {
+            mIncubationPeriod -= Time.deltaTime;
+
+            if(mIncubationPeriod <= 0)
+            {
+                if (!CheckCurable())
+                {
+                    Invoke("SpreadVirus", mImmunity / 10);
+                }
+            }
         }
     }
 
@@ -68,7 +86,9 @@ public class Animal : MonoBehaviour
 
     private void SetGrowthType(int random)
     {
-        switch((eAnimalGrowthType)random)
+        mGrowthType = (eAnimalGrowthType)(random);
+
+        switch(mGrowthType)
         {
             case eAnimalGrowthType.Baby:
 
@@ -200,5 +220,63 @@ public class Animal : MonoBehaviour
         yield return new WaitForSeconds(360.0f);
         
         gameObject.SetActive(false);
+    }
+
+    public override void Infect(int id)
+    {
+        base.Infect(id);
+
+        mIncubationPeriod = VirusController.Instance.VirusDataDic[id].IncubationPeriod;
+    }
+
+    private void SpreadVirus()
+    {
+        // colliderEnter를 사용할 경우에는 1 frame 씩 밀리므로 SphereCast를 사용하는것이 좋다.
+        RaycastHit[] hitarr = Physics.SphereCastAll(transform.position, 1.5f, Vector3.up, 0f);
+
+        for (int i = 0; i < hitarr.Length; i++)
+        {
+            if (hitarr[i].collider.CompareTag("Grass")
+                || hitarr[i].collider.CompareTag("Grass")
+                || hitarr[i].collider.CompareTag("Carnivore")
+                || hitarr[i].collider.CompareTag("Herbivore"))
+            {
+                Virus virus = hitarr[i].collider.gameObject.GetComponent<Virus>();
+                virus.Infect(mVirusID);
+            }
+        }
+
+        Invoke("SpreadVirus", mImmunity / 10);
+    }
+
+    private bool CheckCurable()
+    {
+        float rand = Random.Range(0, 100f);
+
+        if(rand <= mImmunity)
+        {
+            bIsInfect = false;
+            AnimalController.Instance.InfenctNumber -= 1;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private float ImmunityCoefficient(eAnimalGrowthType type)
+    {
+        switch(type)
+        {
+            case eAnimalGrowthType.Baby:
+                return 0.3f;
+            case eAnimalGrowthType.Adult:
+                return 0.9f;
+            case eAnimalGrowthType.Old:
+                return 0.6f;
+            default:
+                Debug.LogError("Wrong type");
+                return 0;
+        }
     }
 }

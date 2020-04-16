@@ -33,6 +33,10 @@ public class Player : MonoBehaviour
     private float mHungryMax;
     private float mHungryCurrent;
 
+    private int mVirusID;
+
+    private bool bIsInfect;
+
     private void Awake()
     {   
         if(Instance == null)
@@ -50,6 +54,7 @@ public class Player : MonoBehaviour
         bIsOpenInven = false;
         bIsOpenCombTable = false;
         bStopMove = false;
+        bIsInfect = false;
 
         mStaminaMax = 100f;
         mStaminaCurrent = mStaminaMax;
@@ -117,6 +122,11 @@ public class Player : MonoBehaviour
             OpenInvenBox(false);
             OpenCombTable(false);
         }
+
+        if(bIsInfect)
+        {
+
+        }
     }
 
     private IEnumerator DoingAction()
@@ -147,7 +157,8 @@ public class Player : MonoBehaviour
             InvenController.Instance.SpawnItem(
                 plantDetected.gameObject.transform.position,
                 plantDetected.gameObject.tag,
-                plantDetected.GrowthType);
+                plantDetected.GrowthType,
+                plantDetected.VirusID);
 
             mStaminaCurrent -= 3;
             
@@ -173,7 +184,7 @@ public class Player : MonoBehaviour
         bStopMove = value;
     }
 
-    public void UseItem(eUseTarget target, float value)
+    public void UseItem(eUseTarget target, float value, int virusID)
     {
         switch(target)
         {
@@ -193,6 +204,17 @@ public class Player : MonoBehaviour
             default:
                 break;
         }
+
+        if(virusID > 0)
+        {
+            mVirusID = virusID;
+            Infect();
+        }
+    }
+
+    private void Infect()
+    {
+        float term = VirusController.Instance.VirusDataDic[mVirusID].IncubationPeriod;
     }
 
     private void GameOver()

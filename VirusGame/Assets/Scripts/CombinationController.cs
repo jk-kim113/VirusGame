@@ -116,23 +116,47 @@ public class CombinationController : MonoBehaviour
 
     public void ConfirmMakeFood()
     {
+        bool isInfect = false;
+        int virusID = -999;
+
         for (int i = 0; i < DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber.Length; i++)
         {
+            int needID = DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedID[i];
+            int needNum = DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber[i];
+
             if (DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber[i] > 0)
             {
                 DataGroup.Instance.SetItemNumber(
-                    DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedID[i],
-                    -DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber[i]);
+                    needID,
+                    -needNum);
 
                 InvenController.Instance.RenewInven(DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedID[i]);
             }
+
+            int temp = InvenController.Instance.InvenVirusInfoDic[needID].Count;
+
+            for (int j = temp; j > temp - needNum; j--)
+            {
+                if(!isInfect)
+                {
+                    if (InvenController.Instance.InvenVirusInfoDic[needID][temp - 1] > 0)
+                    {
+                        isInfect = true;
+                        virusID = InvenController.Instance.InvenVirusInfoDic[needID][temp - 1];
+                    }
+                }
+            }
+
+            InvenController.Instance.RemoveInvenVirusInfo(needID, needNum);
         }
 
         mNewItemID = DataGroup.Instance.FoodMenuDic[mNewItemID].TargetID[(int)mFoodType];
 
         RenewCombTable();
 
-        InvenController.Instance.SetSpriteToInven(mNewItemID, 1);
+        InvenController.Instance.SetSpriteToInven(mNewItemID, 1, virusID);
+
+        
 
         mConfirmFoodType.SetActive(false);
     }

@@ -41,6 +41,14 @@ public class ItemMakingInfo
     public int[] NeedNumber;
 }
 
+public class VirusData
+{
+    public string Name;
+    public int ID;
+    public float IncubationPeriod;
+    public int Rank;
+}
+
 public enum ePlantGrowthType
 {
     Early,

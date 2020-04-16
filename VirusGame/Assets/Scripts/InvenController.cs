@@ -19,6 +19,9 @@ public class InvenController : MonoBehaviour
 
     public UIDrag UIDragImg { get { return mUIDrag; } }
 
+    private Dictionary<int, List<int>> mInvenVirusInfoDic = new Dictionary<int, List<int>>();
+    public Dictionary<int, List<int>> InvenVirusInfoDic { get { return mInvenVirusInfoDic; } }
+
     private void Awake()
     {
         if (Instance == null)
@@ -31,136 +34,114 @@ public class InvenController : MonoBehaviour
         }
     }
 
-    public void SpawnItem(Vector3 Itempos, string tag, ePlantGrowthType type)
+    public void SpawnItem(Vector3 Itempos, string tag, ePlantGrowthType type, int virusID)
     {
         int itemNum = Random.Range(3, 6);
+        int selectedID = -999;
+        float probability = 0;
 
-        switch (type)
+        for (int i = 0; i < itemNum; i++)
         {
-            case ePlantGrowthType.Early:
-                for (int i = 0; i < itemNum; i++)
-                {
-                    ItemObj item = mItemObjPool.GetFromPool(0);
-                    item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][0].ID,
-                        DataGroup.Instance.ItemDataDic[tag][0].Rare,
-                        1);
-                    item.ShowItem(Itempos);
-                }
-                break;
-            case ePlantGrowthType.MidTerm:
-                for (int i = 0; i < itemNum; i++)
-                {
-                    ItemObj item = mItemObjPool.GetFromPool(0);
+            probability = Random.value;
 
-                    float probability = Random.value;
-                    if(probability <= 0.2)
+            switch (type)
+            {
+                case ePlantGrowthType.Early:
+
+                    selectedID = 0;
+
+                    break;
+                case ePlantGrowthType.MidTerm:
+
+                    if (probability <= 0.2)
                     {
-                        item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][3].ID,
-                        DataGroup.Instance.ItemDataDic[tag][3].Rare,
-                        1);
+                        selectedID = 3;
                     }
-                    else if(probability <= 0.5)
+                    else if (probability <= 0.5)
                     {
-                        item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][2].ID,
-                        DataGroup.Instance.ItemDataDic[tag][2].Rare,
-                        1);
+                        selectedID = 2;
                     }
-                    else if(probability <= 1.0)
+                    else if (probability <= 1.0)
                     {
-                        item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][1].ID,
-                        DataGroup.Instance.ItemDataDic[tag][1].Rare,
-                        1);
+                        selectedID = 0;
                     }
                     else
                     {
-                        item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][0].ID,
-                        DataGroup.Instance.ItemDataDic[tag][0].Rare,
-                        1);
+                        selectedID = 0;
                     }
 
-                    item.ShowItem(Itempos);
-                }
-                break;
-            case ePlantGrowthType.LastPeriod:
-                for (int i = 0; i < itemNum; i++)
-                {
-                    ItemObj item = mItemObjPool.GetFromPool(0);
+                    break;
+                case ePlantGrowthType.LastPeriod:
 
-                    float probability = Random.value;
                     if (probability <= 0.01)
                     {
-                        item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][5].ID,
-                        DataGroup.Instance.ItemDataDic[tag][5].Rare,
-                        1);
+                        selectedID = 5;
                     }
                     else if (probability <= 0.06)
                     {
-                        item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][4].ID,
-                        DataGroup.Instance.ItemDataDic[tag][4].Rare,
-                        1);
+                        selectedID = 4;
                     }
                     else if (probability <= 0.2)
                     {
-                        item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][3].ID,
-                        DataGroup.Instance.ItemDataDic[tag][3].Rare,
-                        1);
+                        selectedID = 3;
                     }
-                    else if(probability <= 0.5)
+                    else if (probability <= 0.5)
                     {
-                        item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][2].ID,
-                        DataGroup.Instance.ItemDataDic[tag][2].Rare,
-                        1);
+                        selectedID = 2;
                     }
-                    else if(probability <= 1.0)
+                    else if (probability <= 1.0)
                     {
-                        item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][0].ID,
-                        DataGroup.Instance.ItemDataDic[tag][0].Rare,
-                        1);
+                        selectedID = 0;
                     }
                     else
                     {
-                        item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][0].ID,
-                        DataGroup.Instance.ItemDataDic[tag][0].Rare,
-                        1);
+                        selectedID = 0;
                     }
 
-                    item.ShowItem(Itempos);
-                }
-                break;
-            case ePlantGrowthType.Rotten:
-                for (int i = 0; i < itemNum; i++)
-                {
-                    ItemObj item = mItemObjPool.GetFromPool(0);
-                    item.InitObj(
-                        DataGroup.Instance.ItemDataDic[tag][1].ID,
-                        DataGroup.Instance.ItemDataDic[tag][1].Rare,
-                        1);
-                    item.ShowItem(Itempos);
-                }
-                break;
-            default:
-                break;
+                    break;
+                case ePlantGrowthType.Rotten:
+
+                    selectedID = 1;
+
+                    break;
+                default:
+
+                    Debug.LogError("Wrong type : " + type);
+
+                    break;
+            }
+
+
+            ItemObj item = mItemObjPool.GetFromPool(0);
+            item.InitObj(
+                DataGroup.Instance.ItemDataDic[tag][selectedID].ID,
+                DataGroup.Instance.ItemDataDic[tag][selectedID].Rare,
+                1,
+                virusID);
+            item.ShowItem(Itempos);
         }
     }
 
-    public void SetSpriteToInven(int originalId, int num)
+    public void SetSpriteToInven(int originalId, int num, int virusID)
     {
         DataGroup.Instance.SetItemNumber(originalId, num);
         mPlayerInven.GetItem(
             DataGroup.Instance.ItemSpriteDic[originalId],
             DataGroup.Instance.ItemNumDic[originalId],
             originalId);
+
+        if(!mInvenVirusInfoDic.ContainsKey(originalId))
+        {
+            List<int> viruslist = new List<int>();
+            viruslist.Add(virusID);
+            mInvenVirusInfoDic.Add(originalId, viruslist);
+        }
+        else
+        {
+            mInvenVirusInfoDic[originalId].Add(virusID);
+        }
+
+        Debug.Log(mInvenVirusInfoDic[originalId].Count);
     }
 
     private int TransformIndex(int originalID)
@@ -197,9 +178,19 @@ public class InvenController : MonoBehaviour
         }
     }
 
+
     public bool CheckIsFull(int originalId)
     {
         return mPlayerInven.CheckIsFull(originalId);
+    }
+
+    public int CheckIsInfected(int originalId)
+    {
+        int id = mInvenVirusInfoDic[originalId][mInvenVirusInfoDic[originalId].Count - 1];
+
+        RemoveInvenVirusInfo(originalId, 1);
+
+        return id;
     }
 
     public void OpenInvenBox(bool value)
@@ -209,17 +200,39 @@ public class InvenController : MonoBehaviour
 
     public void DropItem(int originalID, int num)
     {
-        ItemObj item = mItemObjPool.GetFromPool(0);
-        item.DropItem();
-        item.InitObj(
-            originalID,
-            DataGroup.Instance.ItemDataDic[IdTostring(originalID)][TransformIndex(originalID)].Rare,
-            num);
+        if(mInvenVirusInfoDic.ContainsKey(originalID))
+        {
+            for(int i = 0; i < num; i++)
+            {
+                ItemObj item = mItemObjPool.GetFromPool(0);
+                item.DropItem();
+                item.InitObj(
+                    originalID,
+                    DataGroup.Instance.ItemDataDic[IdTostring(originalID)][TransformIndex(originalID)].Rare,
+                    1,
+                    mInvenVirusInfoDic[originalID][mInvenVirusInfoDic[originalID].Count - 1]);
+
+                mInvenVirusInfoDic[originalID].RemoveAt(mInvenVirusInfoDic[originalID].Count - 1);
+            }
+        }
+        else
+        {
+            Debug.LogError("Wrong Item ID : " + originalID);
+        }
+        
         DataGroup.Instance.SetItemNumber(originalID, -num);
     }
 
     public void RenewInven(int originalID)
     {
         mPlayerInven.RenewInven(originalID);
+    }
+
+    public void RemoveInvenVirusInfo(int originalId, int num)
+    {
+        for(int i = 0; i < num; i++)
+        {
+            mInvenVirusInfoDic[originalId].RemoveAt(mInvenVirusInfoDic[originalId].Count - 1);
+        }
     }
 }

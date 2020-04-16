@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AnimalController : MonoBehaviour
 {
+    public static AnimalController Instance;
+
 #pragma warning disable 0649
     [SerializeField]
     private HerbivorePool mHerbivorePool;
@@ -14,9 +16,22 @@ public class AnimalController : MonoBehaviour
 #pragma warning restore
 
     private AnimalData[] mAnimalDataArr;
+    private List<Virus> mVirusList = new List<Virus>();
+    private float mVirusSpawnPeriod = 5.0f;
+    private int mInfectNumber = 0;
+    public int InfenctNumber { get { return mInfectNumber; } set { mInfectNumber = value; } }
 
     private void Awake()
     {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
         JsonDataLoader.Instance.LoadJsonData<AnimalData>(out mAnimalDataArr, "JsonFiles/AnimalData");
     }
 
@@ -35,6 +50,7 @@ public class AnimalController : MonoBehaviour
                         mHerbivorePool.SpawnPos = MakeSpawnPos(mMoveBoundary[i]);
                         Herbivore herbivore = mHerbivorePool.GetFromPool(index);
                         herbivore.Init(mMoveBoundary[i], mAnimalDataArr[i].HungerMax, mAnimalDataArr[i].HungerDecrease);
+                        mVirusList.Add(herbivore);
                     }
                     break;
                 case eAnimalKind.Carnivore:
@@ -43,11 +59,29 @@ public class AnimalController : MonoBehaviour
                         mCarnivorePool.SpawnPos = MakeSpawnPos(mMoveBoundary[i]);
                         Carnivore carnivore = mCarnivorePool.GetFromPool(index);
                         carnivore.Init(mMoveBoundary[i], mAnimalDataArr[i].HungerMax, mAnimalDataArr[i].HungerDecrease);
+                        mVirusList.Add(carnivore);
                     }
                     break;
                 default:
                     Debug.LogError("Wrong AnimalKind");
                     break;
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if(mInfectNumber == 0)
+        {
+            mVirusSpawnPeriod -= Time.deltaTime;
+            if (mVirusSpawnPeriod <= 0)
+            {
+                int rand = Random.Range(0, mVirusList.Count);
+
+                Debug.Log("Infect");
+                mVirusSpawnPeriod = 5.0f;
+                mVirusList[rand].Infect(VirusController.Instance.GetVirusID());
+                mInfectNumber++;
             }
         }
     }
