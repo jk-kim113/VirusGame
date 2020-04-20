@@ -122,11 +122,6 @@ public class Player : MonoBehaviour
             OpenInvenBox(false);
             OpenCombTable(false);
         }
-
-        if(bIsInfect)
-        {
-
-        }
     }
 
     private IEnumerator DoingAction()
@@ -205,16 +200,23 @@ public class Player : MonoBehaviour
                 break;
         }
 
-        if(virusID > 0)
+        if(virusID > 0 && !bIsInfect)
         {
             mVirusID = virusID;
-            Infect();
+            Invoke("Infect", VirusController.Instance.VirusDataDic[virusID].IncubationPeriod);
         }
     }
 
     private void Infect()
     {
-        float term = VirusController.Instance.VirusDataDic[mVirusID].IncubationPeriod;
+        mStaminaMax *= 0.5f;
+
+        if(mStaminaMax <= mStaminaCurrent)
+        {
+            mStaminaCurrent = mStaminaMax;
+        }
+
+        MainUIController.Instance.ShowStaminaGaugeBar(mStaminaMax, mStaminaCurrent);
     }
 
     private void GameOver()

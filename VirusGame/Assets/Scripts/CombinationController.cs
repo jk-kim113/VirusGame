@@ -156,8 +156,6 @@ public class CombinationController : MonoBehaviour
 
         InvenController.Instance.SetSpriteToInven(mNewItemID, 1, virusID);
 
-        
-
         mConfirmFoodType.SetActive(false);
     }
 
