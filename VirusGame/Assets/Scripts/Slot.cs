@@ -94,25 +94,12 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
         {
             if (ray.gameObject.CompareTag("Slot"))
             {
-                Slot slot = ray.gameObject.GetComponent<Slot>();
-
-                if (slot.IsFull)
-                {
-                    Sprite tempSprite = slot.ItemImg;
-                    int tempNum = slot.ItemNum;
-                    int tempID = slot.ItemID;
-
-                    slot.Init(mItemImg.sprite, mItemNum, mItemID);
-                    Init(tempSprite, tempNum, tempID);
-
-
-                }
-                else
-                {
-                    slot.Init(mItemImg.sprite, mItemNum, mItemID);
-                    mItemID = -999;
-                    bIsFull = false;
-                }
+                MoveItemUI(ray);
+            }
+            else if(ray.gameObject.CompareTag("AnalysisSlot"))
+            {
+                MoveItemUI(ray);
+                AnalysisController.Instance.GetItem(mItemID);
             }
             else
             {
@@ -141,6 +128,29 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
                     bIsFull = true;
                 }
             }
+        }
+    }
+
+    private void MoveItemUI(RaycastResult ray)
+    {
+        Slot slot = ray.gameObject.GetComponent<Slot>();
+
+        if (slot.IsFull)
+        {
+            Sprite tempSprite = slot.ItemImg;
+            int tempNum = slot.ItemNum;
+            int tempID = slot.ItemID;
+
+            slot.Init(mItemImg.sprite, mItemNum, mItemID);
+            Init(tempSprite, tempNum, tempID);
+
+
+        }
+        else
+        {
+            slot.Init(mItemImg.sprite, mItemNum, mItemID);
+            mItemID = -999;
+            bIsFull = false;
         }
     }
 }

@@ -28,11 +28,16 @@ public class DetectPlayerAction : MonoBehaviour
             {
                 OpenCombinationTable(true);
             }
+            else if(hit.collider.CompareTag("AnalysisTable"))
+            {
+                OpenAnalysisObj(true);
+            }
             else
             {
                 PlantAction(false);
                 OpenInventoryBox(false);
                 OpenCombinationTable(false);
+                OpenAnalysisObj(false);
             }
         }
     }
@@ -53,5 +58,11 @@ public class DetectPlayerAction : MonoBehaviour
     {
         MainUIController.Instance.OnOffActionText(value, "Press 'F' to Open Combination Table");
         Player.Instance.IsOpenCombTable = value;
+    }
+
+    private void OpenAnalysisObj(bool value)
+    {
+        MainUIController.Instance.OnOffActionText(value, "Press 'F' to Open AnalysisTable");
+        Player.Instance.IsOpenAnalysisTable = value;
     }
 }

@@ -7,6 +7,7 @@ public class VirusController : MonoBehaviour
 	public static VirusController Instance;
 
     private VirusData[] mVirusDataArr;
+    public VirusData[] VirusDataArr { get { return mVirusDataArr; } }
     private int mVirusRank;
 
     private Dictionary<int, VirusData> mVirusDataDic = new Dictionary<int, VirusData>();

@@ -12,6 +12,8 @@ TagManager:
   - InventoryBox
   - Slot
   - Ground
+  - AnalysisTable
+  - AnalysisSlot
   layers:
   - Default
   - TransparentFX

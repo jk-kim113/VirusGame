@@ -24,6 +24,9 @@ public class Player : MonoBehaviour
     private bool bIsOpenCombTable;
     public bool IsOpenCombTable { set { bIsOpenCombTable = value; } }
 
+    private bool bIsOpenAnalysisTable;
+    public bool IsOpenAnalysisTable { set { bIsOpenAnalysisTable = value; } }
+
     private bool bStopMove;
     public bool IsStopMove { get { return bStopMove; } }
 
@@ -53,6 +56,7 @@ public class Player : MonoBehaviour
         bPlantAction = false;
         bIsOpenInven = false;
         bIsOpenCombTable = false;
+        bIsOpenAnalysisTable = false;
         bStopMove = false;
         bIsInfect = false;
 
@@ -115,12 +119,18 @@ public class Player : MonoBehaviour
                 OpenCombTable(true);
                 bIsOpenCombTable = false;
             }
+            else if(bIsOpenAnalysisTable)
+            {
+                OpenAnalsisTable(true);
+                bIsOpenAnalysisTable = false;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OpenInvenBox(false);
             OpenCombTable(false);
+            OpenAnalsisTable(false);
         }
     }
 
@@ -176,6 +186,12 @@ public class Player : MonoBehaviour
     private void OpenCombTable(bool value)
     {
         CombinationController.Instance.OpenCombTable(value);
+        bStopMove = value;
+    }
+
+    private void OpenAnalsisTable(bool value)
+    {
+        AnalysisController.Instance.OnOffAnalysisObj(value);
         bStopMove = value;
     }
 
