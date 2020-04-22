@@ -25,6 +25,7 @@ public class AnalysisController : MonoBehaviour
     private int mItemID;
 
     private Dictionary<int, float> mVirusAnalysisRateDic = new Dictionary<int, float>();
+    private Dictionary<int, VirusInfoElement> mElementDic = new Dictionary<int, VirusInfoElement>();
 
     private void Awake()
     {
@@ -55,6 +56,7 @@ public class AnalysisController : MonoBehaviour
         {
             VirusInfoElement element = Instantiate(mVirusInfoElement, mScrollTarget);
             element.Init(null, VirusController.Instance.VirusDataArr[i].Name, 0);
+            mElementDic.Add(VirusController.Instance.VirusDataArr[i].ID, element);
         }
     }
 
@@ -81,8 +83,11 @@ public class AnalysisController : MonoBehaviour
             if (virusID > 0)
             {
                 mVirusAnalysisRateDic[virusID] += VirusController.Instance.VirusDataDic[virusID].AnalysisRate;
+                mElementDic[virusID].Renew(mVirusAnalysisRateDic[virusID]);
             }
         }
+
+        mSlot.Renew(0);
 
         DataGroup.Instance.SetItemNumber(mItemID, 0);
     }
@@ -94,7 +99,8 @@ public class AnalysisController : MonoBehaviour
             InvenController.Instance.InvenVirusInfoDic[mItemID][i] = -999;
         }
 
-        // Item To Inven
+        mSlot.Renew(0);
 
+        InvenController.Instance.RenewInven(mItemID);
     }
 }

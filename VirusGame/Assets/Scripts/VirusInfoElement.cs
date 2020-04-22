@@ -25,7 +25,7 @@ public class VirusInfoElement : MonoBehaviour
         Renew(percent);
     }
 
-    private void Renew(float percent)
+    public void Renew(float percent)
     {
         mVirusGaugeBar.ShowGaugeBar(percent);
     }
