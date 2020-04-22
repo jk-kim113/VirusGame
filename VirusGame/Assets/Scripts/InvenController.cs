@@ -125,10 +125,7 @@ public class InvenController : MonoBehaviour
     public void SetSpriteToInven(int originalId, int num, int virusID)
     {
         DataGroup.Instance.SetItemNumber(originalId, num);
-        mPlayerInven.GetItem(
-            DataGroup.Instance.ItemSpriteDic[originalId],
-            DataGroup.Instance.ItemNumDic[originalId],
-            originalId);
+        SetPlayerInven(originalId);
 
         if(!mInvenVirusInfoDic.ContainsKey(originalId))
         {
@@ -140,8 +137,14 @@ public class InvenController : MonoBehaviour
         {
             mInvenVirusInfoDic[originalId].Add(virusID);
         }
+    }
 
-        Debug.Log(mInvenVirusInfoDic[originalId].Count);
+    public void SetPlayerInven(int originalID)
+    {
+        mPlayerInven.GetItem(
+            DataGroup.Instance.ItemSpriteDic[originalID],
+            DataGroup.Instance.ItemNumDic[originalID],
+            originalID);
     }
 
     private int TransformIndex(int originalID)

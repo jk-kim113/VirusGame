@@ -11,6 +11,10 @@ public class AnalysisController : MonoBehaviour
     [SerializeField]
     private GameObject mAnalysisObj;
     [SerializeField]
+    private Text mAnaysisText;
+    [SerializeField]
+    private Text mDisinfectionText;
+    [SerializeField]
     private VirusInfoElement mVirusInfoElement;
     [SerializeField]
     private Transform mScrollTarget;
@@ -48,6 +52,8 @@ public class AnalysisController : MonoBehaviour
         {
             mVirusAnalysisRateDic.Add(VirusController.Instance.VirusDataArr[i].ID, 0);
         }
+
+        Init();
     }
 
     private void Init()
@@ -63,15 +69,28 @@ public class AnalysisController : MonoBehaviour
     public void OnOffAnalysisObj(bool value)
     {
         mAnalysisObj.SetActive(value);
-
-        //Init();
     }
 
     public void GetItem(int originalID)
     {
-        // UI
+        float power = 0f;
 
         mItemID = originalID;
+        Debug.Log(mItemID);
+        for (int i = 0; i < InvenController.Instance.InvenVirusInfoDic[mItemID].Count; i++)
+        {
+            int virusID = InvenController.Instance.InvenVirusInfoDic[mItemID][i];
+
+            if (virusID > 0)
+            {
+                power += VirusController.Instance.VirusDataDic[virusID].PowerConsumption;
+            }
+        }
+        
+        mAnaysisText.text = string.Format("분석 : 전력소비 {0}", power.ToString());
+        mDisinfectionText.text = string.Format("분석 : 전력소비 {0}", (power * 0.3).ToString());
+
+        
     }
 
     private void AnalysisVirus()
@@ -83,6 +102,14 @@ public class AnalysisController : MonoBehaviour
             if (virusID > 0)
             {
                 mVirusAnalysisRateDic[virusID] += VirusController.Instance.VirusDataDic[virusID].AnalysisRate;
+
+                if (mVirusAnalysisRateDic[virusID] >= 100f)
+                {
+                    mVirusAnalysisRateDic[virusID] = 100f;
+
+                    AnimalController.Instance.ShowVirusMap(virusID);
+                }
+
                 mElementDic[virusID].Renew(mVirusAnalysisRateDic[virusID]);
             }
         }
@@ -100,7 +127,7 @@ public class AnalysisController : MonoBehaviour
         }
 
         mSlot.Renew(0);
-
-        InvenController.Instance.RenewInven(mItemID);
+        
+        InvenController.Instance.SetPlayerInven(mItemID);
     }
 }

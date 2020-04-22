@@ -48,6 +48,7 @@ public class VirusData
     public float IncubationPeriod;
     public int Rank;
     public float AnalysisRate;
+    public float PowerConsumption;
 }
 
 public enum ePlantGrowthType

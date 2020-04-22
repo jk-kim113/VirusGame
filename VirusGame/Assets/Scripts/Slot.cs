@@ -98,8 +98,8 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
             }
             else if(ray.gameObject.CompareTag("AnalysisSlot"))
             {
-                MoveItemUI(ray);
                 AnalysisController.Instance.GetItem(mItemID);
+                MoveItemUI(ray);
             }
             else
             {

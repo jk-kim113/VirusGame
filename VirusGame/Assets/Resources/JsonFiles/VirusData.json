@@ -4,6 +4,7 @@
         "ID": 1000,
         "IncubationPeriod": 10.0,
         "Rank": 1,
-        "AnalysisRate": 0.3
+        "AnalysisRate": 0.3,
+        "PowerConsumption" : 10
     }
 ]

@@ -86,6 +86,17 @@ public class AnimalController : MonoBehaviour
         }
     }
 
+    public void ShowVirusMap(int originalID)
+    {
+        for(int i = 0; i < mVirusList.Count; i++)
+        {
+           if(mVirusList[i].VirusID == originalID)
+            {
+                mVirusList[i].ShowVirusMap(true);
+            }
+        }
+    }
+
     private eAnimalKind IDToEnum(int originalID)
     {
         string originalStr = originalID.ToString();
