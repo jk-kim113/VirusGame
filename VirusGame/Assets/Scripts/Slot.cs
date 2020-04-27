@@ -101,6 +101,11 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
                 AnalysisController.Instance.GetItem(mItemID);
                 MoveItemUI(ray);
             }
+            else if(ray.gameObject.CompareTag("DrugMaker"))
+            {
+                DrugMakerController.Instance.GetItem(mItemID);
+                MoveItemUI(ray);
+            }
             else
             {
                 mItemImg.enabled = true;

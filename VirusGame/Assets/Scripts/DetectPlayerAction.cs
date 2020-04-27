@@ -32,12 +32,17 @@ public class DetectPlayerAction : MonoBehaviour
             {
                 OpenAnalysisObj(true);
             }
+            else if(hit.collider.CompareTag("DrugMaker"))
+            {
+                OpenDrugMaker(true);
+            }
             else
             {
                 PlantAction(false);
                 OpenInventoryBox(false);
                 OpenCombinationTable(false);
                 OpenAnalysisObj(false);
+                OpenDrugMaker(false);
             }
         }
     }
@@ -64,5 +69,11 @@ public class DetectPlayerAction : MonoBehaviour
     {
         MainUIController.Instance.OnOffActionText(value, "Press 'F' to Open AnalysisTable");
         Player.Instance.IsOpenAnalysisTable = value;
+    }
+
+    private void OpenDrugMaker(bool value)
+    {
+        MainUIController.Instance.OnOffActionText(value, "Press 'F' to Open DrugMaker");
+        Player.Instance.IsOpenDrugMaker = value;
     }
 }

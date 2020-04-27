@@ -27,6 +27,9 @@ public class Player : MonoBehaviour
     private bool bIsOpenAnalysisTable;
     public bool IsOpenAnalysisTable { set { bIsOpenAnalysisTable = value; } }
 
+    private bool bIsOpenDrugMaker;
+    public bool IsOpenDrugMaker { set { bIsOpenDrugMaker = value; } }
+
     private bool bStopMove;
     public bool IsStopMove { get { return bStopMove; } }
 
@@ -57,6 +60,7 @@ public class Player : MonoBehaviour
         bIsOpenInven = false;
         bIsOpenCombTable = false;
         bIsOpenAnalysisTable = false;
+        bIsOpenDrugMaker = false;
         bStopMove = false;
         bIsInfect = false;
 
@@ -124,6 +128,11 @@ public class Player : MonoBehaviour
                 OpenAnalsisTable(true);
                 bIsOpenAnalysisTable = false;
             }
+            else if(bIsOpenDrugMaker)
+            {
+                OpenDrugMaker(true);
+                bIsOpenDrugMaker = false;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -131,6 +140,7 @@ public class Player : MonoBehaviour
             OpenInvenBox(false);
             OpenCombTable(false);
             OpenAnalsisTable(false);
+            OpenDrugMaker(false);
         }
     }
 
@@ -192,6 +202,12 @@ public class Player : MonoBehaviour
     private void OpenAnalsisTable(bool value)
     {
         AnalysisController.Instance.OnOffAnalysisObj(value);
+        bStopMove = value;
+    }
+
+    private void OpenDrugMaker(bool value)
+    {
+        DrugMakerController.Instance.OpenDrugMaker(value);
         bStopMove = value;
     }
 

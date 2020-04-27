@@ -76,7 +76,7 @@ public class AnalysisController : MonoBehaviour
         float power = 0f;
 
         mItemID = originalID;
-        Debug.Log(mItemID);
+        
         for (int i = 0; i < InvenController.Instance.InvenVirusInfoDic[mItemID].Count; i++)
         {
             int virusID = InvenController.Instance.InvenVirusInfoDic[mItemID][i];
