@@ -206,6 +206,7 @@ public class Animal : Virus
 
                 break;
             default:
+                Debug.LogError("Wrong Behavior Pattern : " + pattern);
                 break;
         }
     }
