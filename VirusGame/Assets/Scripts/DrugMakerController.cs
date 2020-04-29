@@ -48,7 +48,7 @@ public class DrugMakerController : MonoBehaviour
     {
         if(mItemIDList.Count == 0)
         {
-
+            return;
         }
 
         int rareEffi = 0;

@@ -11,6 +11,9 @@ public class Animal : Virus
     private const float mGrowPeriod = 720.0f;
     private Coroutine mMovePatternCoroutine;
     private Coroutine mSpendGrowPeriodCoroutine;
+
+    private bool bStartSpendGrowPeriod;
+
     private BoxCollider mCollider;
     protected bool bIsEating;
     private float mHungerCurrent;
