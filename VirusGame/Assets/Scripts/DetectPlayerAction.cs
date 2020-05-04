@@ -8,6 +8,8 @@ public class DetectPlayerAction : MonoBehaviour
     private GameObject mDetectObj;
     public GameObject DetectObj { get { return mDetectObj; } }
 
+    private Plant mPlantObj;
+
     void Update()
     {
         // Ray to distinguish Object
@@ -18,7 +20,15 @@ public class DetectPlayerAction : MonoBehaviour
 
             if (hit.collider.CompareTag("Grass") || hit.collider.CompareTag("Tree"))
             {   
+                if(mPlantObj != null)
+                {
+                    mPlantObj.OnOffOutline(false);
+                    mPlantObj = null;
+                }
+
                 PlantAction(true);
+                mPlantObj = hit.collider.gameObject.GetComponent<Plant>();
+                mPlantObj.OnOffOutline(true);
             }
             else if(hit.collider.CompareTag("InventoryBox"))
             {
@@ -38,6 +48,12 @@ public class DetectPlayerAction : MonoBehaviour
             }
             else
             {
+                if(mPlantObj != null)
+                {
+                    mPlantObj.OnOffOutline(false);
+                    mPlantObj = null;
+                }
+
                 PlantAction(false);
                 OpenInventoryBox(false);
                 OpenCombinationTable(false);

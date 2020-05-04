@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class Plant : Virus
 {
+#pragma warning disable 0649
+    [SerializeField]
+    private Material NonOutlineMtr;
+    [SerializeField]
+    private Material OutlineMtr;
+#pragma warning restore
+
     private int mID;
     private RespawnPlant mRespawn;
     private Transform mTransform;
     private float mGrowPeriod = 360.0f;
     private Coroutine mSpendGrowPeriodCoroutine;
     private Renderer mRenderer;
+    private bool bIsOutline;
 
     private bool bFoodSelected = false;
     public bool FoodSelected { get { return bFoodSelected; } set { bFoodSelected = value; } }
@@ -90,6 +98,19 @@ public class Plant : Virus
         GrowUpPlant(type);
     }
     
+    public void OnOffOutline(bool value)
+    {
+        if(value)
+        {
+            mRenderer.material = OutlineMtr;
+        }
+        else
+        {
+            mRenderer.material = NonOutlineMtr;
+        }
+        
+    }
+
     public void BeingDestroyed()
     {
         bFoodSelected = false;
