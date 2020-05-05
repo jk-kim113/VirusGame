@@ -149,18 +149,23 @@ public class Player : MonoBehaviour
         WaitForSeconds term = new WaitForSeconds(.1f);
 
         Plant plantDetected = mDetectAction.DetectObj.GetComponent<Plant>();
+        plantDetected.StartFadeOut();
 
         float max = 100f;
         float current = max;
 
+        plantDetected.SetFadeValue(max, current);
+
         MainUIController.Instance.OnOffActionGaugeBar(true);
         MainUIController.Instance.ShowActionGaugeBar(max, current);
 
-        while (bPlantAction && current > 0)
+        while (bPlantAction && (current > 0))
         {
             yield return term;
 
             current -= 5f;
+
+            plantDetected.SetFadeValue(max, current);
 
             MainUIController.Instance.ShowActionGaugeBar(max, current);
         }
@@ -181,6 +186,11 @@ public class Player : MonoBehaviour
             {
                 GameOver();
             }
+        }
+        else
+        {
+            plantDetected.IsFadeOut = false;
+            plantDetected.OnOffOutline(false);
         }
 
         MainUIController.Instance.ShowStaminaGaugeBar(mStaminaMax, mStaminaCurrent);

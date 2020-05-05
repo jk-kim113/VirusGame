@@ -110,6 +110,7 @@ MonoBehaviour:
   mVirusIcon: {fileID: 943555628644458790}
   NonOutlineMtr: {fileID: 2100000, guid: 6378b9f061dce714d91d09687cb75ebb, type: 2}
   OutlineMtr: {fileID: 2100000, guid: 8b7d870b8ef8e4f24a00a9717016c7e4, type: 2}
+  FadeOutMtr: {fileID: 2100000, guid: b2109185040a24c37a1fccc61fbdb901, type: 2}
 --- !u!65 &4915935038885294785
 BoxCollider:
   m_ObjectHideFlags: 0

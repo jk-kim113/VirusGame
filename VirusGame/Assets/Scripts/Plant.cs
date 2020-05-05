@@ -9,6 +9,8 @@ public class Plant : Virus
     private Material NonOutlineMtr;
     [SerializeField]
     private Material OutlineMtr;
+    [SerializeField]
+    private Material FadeOutMtr;
 #pragma warning restore
 
     private int mID;
@@ -17,7 +19,8 @@ public class Plant : Virus
     private float mGrowPeriod = 360.0f;
     private Coroutine mSpendGrowPeriodCoroutine;
     private Renderer mRenderer;
-    private bool bIsOutline;
+    private bool bIsFadeOut;
+    public bool IsFadeOut { set { bIsFadeOut = value; } }
 
     private bool bFoodSelected = false;
     public bool FoodSelected { get { return bFoodSelected; } set { bFoodSelected = value; } }
@@ -100,6 +103,11 @@ public class Plant : Virus
     
     public void OnOffOutline(bool value)
     {
+        if(bIsFadeOut)
+        {
+            return;
+        }
+
         if(value)
         {
             mRenderer.material = OutlineMtr;
@@ -109,6 +117,19 @@ public class Plant : Virus
             mRenderer.material = NonOutlineMtr;
         }
         
+    }
+
+    public void StartFadeOut()
+    {
+        bIsFadeOut = true;
+        mRenderer.material = FadeOutMtr;
+        
+    }
+
+    public void SetFadeValue(float max, float current)
+    {
+        float value = current / max;
+        mRenderer.material.SetFloat("_Fade", value);
     }
 
     public void BeingDestroyed()
