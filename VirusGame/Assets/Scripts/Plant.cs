@@ -123,7 +123,6 @@ public class Plant : Virus
     {
         bIsFadeOut = true;
         mRenderer.material = FadeOutMtr;
-        
     }
 
     public void SetFadeValue(float max, float current)

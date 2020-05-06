@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     private float mSpeed;
     [SerializeField]
     private DetectPlayerAction mDetectAction;
+    [SerializeField]
+    private EffectPool mEffectPool;
 #pragma warning restore
 
     private CharacterController mCHControl;
@@ -150,6 +152,10 @@ public class Player : MonoBehaviour
 
         Plant plantDetected = mDetectAction.DetectObj.GetComponent<Plant>();
         plantDetected.StartFadeOut();
+
+        Timer effect = mEffectPool.GetFromPool(0);
+        effect.gameObject.SetActive(true);
+        effect.transform.position = plantDetected.transform.position;
 
         float max = 100f;
         float current = max;
