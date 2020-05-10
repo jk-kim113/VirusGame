@@ -14,6 +14,8 @@ public class Plant : Virus
 #pragma warning restore
 
     private int mID;
+    public int ID { get { return mID; } }
+
     private RespawnPlant mRespawn;
     private Transform mTransform;
     private float mGrowPeriod = 360.0f;

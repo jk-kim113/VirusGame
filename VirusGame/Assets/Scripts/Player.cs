@@ -45,6 +45,8 @@ public class Player : MonoBehaviour
 
     private bool bIsInfect;
 
+    private Animator mAnim;
+
     private void Awake()
     {   
         if(Instance == null)
@@ -71,6 +73,8 @@ public class Player : MonoBehaviour
 
         mHungryMax = 100f;
         mHungryCurrent = mHungryMax;
+
+        mAnim = GetComponent<Animator>();
     }
 
     private void Start()
@@ -157,6 +161,8 @@ public class Player : MonoBehaviour
         effect.gameObject.SetActive(true);
         effect.transform.position = plantDetected.transform.position;
 
+        mAnim.SetBool("IsCollect", true);
+
         float max = 100f;
         float current = max;
 
@@ -198,6 +204,8 @@ public class Player : MonoBehaviour
             plantDetected.IsFadeOut = false;
             plantDetected.OnOffOutline(false);
         }
+
+        mAnim.SetBool("IsCollect", false);
 
         MainUIController.Instance.ShowStaminaGaugeBar(mStaminaMax, mStaminaCurrent);
         MainUIController.Instance.OnOffActionGaugeBar(false);

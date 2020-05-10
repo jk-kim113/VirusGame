@@ -12,8 +12,6 @@ public class Animal : Virus
     private Coroutine mMovePatternCoroutine;
     private Coroutine mSpendGrowPeriodCoroutine;
 
-    private bool bStartSpendGrowPeriod;
-
     private BoxCollider mCollider;
     protected bool bIsEating;
     private float mHungerCurrent;
@@ -241,7 +239,7 @@ public class Animal : Virus
         for (int i = 0; i < hitarr.Length; i++)
         {
             if (hitarr[i].collider.CompareTag("Grass")
-                || hitarr[i].collider.CompareTag("Grass")
+                || hitarr[i].collider.CompareTag("Tree")
                 || hitarr[i].collider.CompareTag("Carnivore")
                 || hitarr[i].collider.CompareTag("Herbivore"))
             {

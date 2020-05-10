@@ -9,22 +9,33 @@ public class DetectPlayerAction : MonoBehaviour
     public GameObject DetectObj { get { return mDetectObj; } }
 
     private Plant mPlantObj;
+    private int mPlantID;
 
     void Update()
     {
         // Ray to distinguish Object
         RaycastHit hit;
+
         if (Physics.Raycast(transform.position, transform.forward, out hit, mDectectRange))
         {
             mDetectObj = hit.collider.gameObject;
 
             if (hit.collider.CompareTag("Grass") || hit.collider.CompareTag("Tree"))
-            {   
-                if(mPlantObj != null)
+            {
+                if (mPlantObj != null)
                 {
+                    int id = mPlantObj.ID;
+
+                    if(mPlantID == id)
+                    {
+                        return;
+                    }
+
                     mPlantObj.OnOffOutline(false);
                     mPlantObj = null;
                 }
+
+                
 
                 PlantAction(true);
                 mPlantObj = hit.collider.gameObject.GetComponent<Plant>();
