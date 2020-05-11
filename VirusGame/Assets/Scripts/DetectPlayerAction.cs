@@ -13,70 +13,105 @@ public class DetectPlayerAction : MonoBehaviour
 
     void Update()
     {
-        // Ray to distinguish Object
-        RaycastHit hit;
+        RaycastHit[] hitArr = Physics.RaycastAll(transform.position, transform.forward, mDectectRange);
+        float minDis = float.MaxValue;
 
-        if (Physics.Raycast(transform.position, transform.forward, out hit, mDectectRange))
+        for (int i = 0; i < hitArr.Length; i++)
         {
-            mDetectObj = hit.collider.gameObject;
+            float dis = Vector3.Distance(this.transform.position, hitArr[i].collider.transform.position);
 
-            if (hit.collider.CompareTag("Grass") || hit.collider.CompareTag("Tree"))
+            if (dis < minDis)
             {
-                if (mPlantObj != null)
-                {
-                    int id = mPlantObj.ID;
-
-                    if(mPlantID == id)
+                if (hitArr[i].collider.CompareTag("Grass"))
+                {   
+                    if (mPlantObj != null)
                     {
-                        return;
+                        if (mPlantID == mPlantObj.ID)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            mPlantObj.OnOffOutline(false);
+                            mPlantObj = hitArr[i].collider.gameObject.GetComponent<Plant>();
+                            mPlantObj.OnOffOutline(true);
+                        }
+                    }
+                    else
+                    {
+                        mPlantObj = hitArr[i].collider.gameObject.GetComponent<Plant>();
+                        mPlantObj.OnOffOutline(true);
                     }
 
-                    mPlantObj.OnOffOutline(false);
-                    mPlantObj = null;
                 }
-
-                
-
-                PlantAction(true);
-                mPlantObj = hit.collider.gameObject.GetComponent<Plant>();
-                mPlantObj.OnOffOutline(true);
-            }
-            else if(hit.collider.CompareTag("InventoryBox"))
-            {
-                OpenInventoryBox(true);
-            }
-            else if(hit.collider.CompareTag("CombinationTable"))
-            {
-                OpenCombinationTable(true);
-            }
-            else if(hit.collider.CompareTag("AnalysisTable"))
-            {
-                OpenAnalysisObj(true);
-            }
-            else if(hit.collider.CompareTag("DrugMaker"))
-            {
-                OpenDrugMaker(true);
-            }
-            else
-            {
-                if(mPlantObj != null)
-                {
-                    mPlantObj.OnOffOutline(false);
-                    mPlantObj = null;
-                }
-
-                PlantAction(false);
-                OpenInventoryBox(false);
-                OpenCombinationTable(false);
-                OpenAnalysisObj(false);
-                OpenDrugMaker(false);
             }
         }
+
+        // Ray to distinguish Object
+        //RaycastHit hit;
+
+        //if (Physics.Raycast(transform.position, transform.forward, out hit, mDectectRange))
+        //{
+        //    mDetectObj = hit.collider.gameObject;
+        //    Debug.Log(mDetectObj.name);
+            
+        //    if (hit.collider.CompareTag("Grass") || hit.collider.CompareTag("Tree"))
+        //    {
+                
+
+        //        if (mPlantObj != null)
+        //        {
+        //            if(mPlantID == mPlantObj.ID)
+        //            {
+        //                return;
+        //            }
+        //            else
+        //            {
+        //                mPlantObj.OnOffOutline(false);
+        //                mPlantObj = null;
+        //            }
+        //        }
+
+        //        PlantAction(true);
+        //        mPlantObj = hit.collider.gameObject.GetComponent<Plant>();
+        //        mPlantID = mPlantObj.ID;
+        //        mPlantObj.OnOffOutline(true);
+        //    }
+        //    else if(hit.collider.CompareTag("InventoryBox"))
+        //    {
+        //        OpenInventoryBox(true);
+        //    }
+        //    else if(hit.collider.CompareTag("CombinationTable"))
+        //    {
+        //        OpenCombinationTable(true);
+        //    }
+        //    else if(hit.collider.CompareTag("AnalysisTable"))
+        //    {
+        //        OpenAnalysisObj(true);
+        //    }
+        //    else if(hit.collider.CompareTag("DrugMaker"))
+        //    {
+        //        OpenDrugMaker(true);
+        //    }
+        //    else
+        //    {
+        //        if (mPlantObj != null)
+        //        {
+        //            mPlantObj.OnOffOutline(false);
+        //            mPlantObj = null;
+        //        }
+
+        //        PlantAction(false);
+        //        OpenInventoryBox(false);
+        //        OpenCombinationTable(false);
+        //        OpenAnalysisObj(false);
+        //        OpenDrugMaker(false);
+        //    }
+        //}
     }
 
     private void PlantAction(bool value)
     {
-        MainUIController.Instance.OnOffActionText(value, "채집하기");
         Player.Instance.IsPlantAction = value;
     }
 
