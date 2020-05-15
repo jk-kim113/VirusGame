@@ -97,6 +97,11 @@ public class AnimalController : MonoBehaviour
         }
     }
 
+    public void Bleed(Vector3 pos, eAnimalDeathType type)
+    {
+
+    }
+
     private eAnimalKind IDToEnum(int originalID)
     {
         string originalStr = originalID.ToString();

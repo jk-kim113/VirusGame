@@ -224,6 +224,11 @@ public class Animal : Virus
         gameObject.SetActive(false);
     }
 
+    public void Bleed(eAnimalDeathType type)
+    {
+        AnimalController.Instance.Bleed(this.transform.position, type);
+    }
+
     public override void Infect(int id)
     {
         base.Infect(id);

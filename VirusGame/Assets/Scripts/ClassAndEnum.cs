@@ -104,3 +104,9 @@ public enum eItemType
     Use,
     Equip
 }
+
+public enum eAnimalDeathType
+{
+    Natural,
+    Prey
+}

@@ -4,110 +4,131 @@ using UnityEngine;
 
 public class DetectPlayerAction : MonoBehaviour
 {
-    private float mDectectRange = 20.0f;
+#pragma warning disable 0649
+    [SerializeField]
+    private LayerMask mMask;
+#pragma warning restore
+
+    private float mDectectRange = 15.0f;
     private GameObject mDetectObj;
     public GameObject DetectObj { get { return mDetectObj; } }
 
-    private Plant mPlantObj;
-    private int mPlantID;
+    private Dictionary<string, GameObject> mDetectDic = new Dictionary<string, GameObject>();
 
-    void Update()
+    private Plant mPlantObj;
+    private int mCount;
+
+    private List<GameObject> mDetectList = new List<GameObject>();
+
+    private void FixedUpdate()
     {
-        RaycastHit[] hitArr = Physics.RaycastAll(transform.position, transform.forward, mDectectRange);
-        float minDis = float.MaxValue;
+        RaycastHit[] hitArr = Physics.RaycastAll(transform.position, transform.forward, mDectectRange, mMask);
+        int plantNum = 0;
+        List<Plant> plantList = new List<Plant>();
 
         for (int i = 0; i < hitArr.Length; i++)
         {
-            float dis = Vector3.Distance(this.transform.position, hitArr[i].collider.transform.position);
+            mDetectList.Add(hitArr[i].collider.gameObject);
+        }
 
-            if (dis < minDis)
+        mCount++;
+
+        if (mCount < 4)
+        {
+            return;
+        }
+
+        mCount = 0;
+
+        for (int i = 0; i < mDetectList.Count; i++)
+        {
+            if (mDetectList[i].CompareTag("Grass") || mDetectList[i].CompareTag("Tree"))
             {
-                if (hitArr[i].collider.CompareTag("Grass"))
-                {   
-                    if (mPlantObj != null)
-                    {
-                        if (mPlantID == mPlantObj.ID)
-                        {
-                            return;
-                        }
-                        else
-                        {
-                            mPlantObj.OnOffOutline(false);
-                            mPlantObj = hitArr[i].collider.gameObject.GetComponent<Plant>();
-                            mPlantObj.OnOffOutline(true);
-                        }
-                    }
-                    else
-                    {
-                        mPlantObj = hitArr[i].collider.gameObject.GetComponent<Plant>();
-                        mPlantObj.OnOffOutline(true);
-                    }
-
-                }
+                plantNum++;
+                plantList.Add(mDetectList[i].GetComponent<Plant>());
             }
         }
 
+        mDetectList.Clear();
+
+        if (plantNum > 0)
+        {
+            float minDis = float.MaxValue;
+            int minID = 0;
+
+            for (int i = 0; i < plantList.Count; i++)
+            {
+                float dis = Vector3.Distance(transform.position, plantList[i].transform.position);
+
+                if (minDis > dis)
+                {
+                    minID = i;
+                }
+            }
+
+            if (mPlantObj != null)
+            {
+                if (mPlantObj.ID == plantList[minID].ID)
+                {
+                    return;
+                }
+                else
+                {
+                    mPlantObj.OnOffOutline(false);
+                    mPlantObj = null;
+                }
+            }
+
+            mPlantObj = plantList[minID];
+            mDetectObj = mPlantObj.gameObject;
+            PlantAction(true);
+            mPlantObj.OnOffOutline(true);
+        }
+        else
+        {
+            if (mPlantObj != null)
+            {
+                mPlantObj.OnOffOutline(false);
+                mPlantObj = null;
+            }
+
+            PlantAction(false);
+        }
+    }
+
+    void Update()
+    {
         // Ray to distinguish Object
-        //RaycastHit hit;
+        RaycastHit hit;
 
-        //if (Physics.Raycast(transform.position, transform.forward, out hit, mDectectRange))
-        //{
-        //    mDetectObj = hit.collider.gameObject;
-        //    Debug.Log(mDetectObj.name);
-            
-        //    if (hit.collider.CompareTag("Grass") || hit.collider.CompareTag("Tree"))
-        //    {
-                
+        if (Physics.Raycast(transform.position, transform.forward, out hit, mDectectRange))
+        {
+            mDetectObj = hit.collider.gameObject;
 
-        //        if (mPlantObj != null)
-        //        {
-        //            if(mPlantID == mPlantObj.ID)
-        //            {
-        //                return;
-        //            }
-        //            else
-        //            {
-        //                mPlantObj.OnOffOutline(false);
-        //                mPlantObj = null;
-        //            }
-        //        }
-
-        //        PlantAction(true);
-        //        mPlantObj = hit.collider.gameObject.GetComponent<Plant>();
-        //        mPlantID = mPlantObj.ID;
-        //        mPlantObj.OnOffOutline(true);
-        //    }
-        //    else if(hit.collider.CompareTag("InventoryBox"))
-        //    {
-        //        OpenInventoryBox(true);
-        //    }
-        //    else if(hit.collider.CompareTag("CombinationTable"))
-        //    {
-        //        OpenCombinationTable(true);
-        //    }
-        //    else if(hit.collider.CompareTag("AnalysisTable"))
-        //    {
-        //        OpenAnalysisObj(true);
-        //    }
-        //    else if(hit.collider.CompareTag("DrugMaker"))
-        //    {
-        //        OpenDrugMaker(true);
-        //    }
-        //    else
-        //    {
-        //        if (mPlantObj != null)
-        //        {
-        //            mPlantObj.OnOffOutline(false);
-        //            mPlantObj = null;
-        //        }
-
-        //        PlantAction(false);
-        //        OpenInventoryBox(false);
-        //        OpenCombinationTable(false);
-        //        OpenAnalysisObj(false);
-        //        OpenDrugMaker(false);
-        //    }
-        //}
+            if (hit.collider.CompareTag("InventoryBox"))
+            {
+                OpenInventoryBox(true);
+            }
+            else if (hit.collider.CompareTag("CombinationTable"))
+            {
+                OpenCombinationTable(true);
+            }
+            else if (hit.collider.CompareTag("AnalysisTable"))
+            {
+                OpenAnalysisObj(true);
+            }
+            else if (hit.collider.CompareTag("DrugMaker"))
+            {
+                OpenDrugMaker(true);
+            }
+            else
+            {
+                OpenInventoryBox(false);
+                OpenCombinationTable(false);
+                OpenAnalysisObj(false);
+                OpenDrugMaker(false);
+            }
+        }
     }
 
     private void PlantAction(bool value)
