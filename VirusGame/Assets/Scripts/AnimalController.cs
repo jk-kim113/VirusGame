@@ -13,6 +13,8 @@ public class AnimalController : MonoBehaviour
     private CarnivorePool mCarnivorePool;
     [SerializeField]
     private BoxCollider[] mMoveBoundary;
+    [SerializeField]
+    private BloodPool mBloodPool;
 #pragma warning restore
 
     private AnimalData[] mAnimalDataArr;
@@ -99,7 +101,10 @@ public class AnimalController : MonoBehaviour
 
     public void Bleed(Vector3 pos, eAnimalDeathType type)
     {
+        Blood blood = mBloodPool.GetFromPool((int)type);
+        blood.transform.position = pos;
 
+        // Add VirusInfo in the Blood
     }
 
     private eAnimalKind IDToEnum(int originalID)

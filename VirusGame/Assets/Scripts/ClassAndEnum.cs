@@ -108,5 +108,5 @@ public enum eItemType
 public enum eAnimalDeathType
 {
     Natural,
-    Prey
+    Virus
 }

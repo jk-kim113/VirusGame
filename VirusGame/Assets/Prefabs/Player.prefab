@@ -24977,6 +24977,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mSpeed: 10
   mDetectAction: {fileID: 3418396645024516068}
+  mEffectPool: {fileID: 0}
 --- !u!143 &1488301640
 CharacterController:
   m_ObjectHideFlags: 0
@@ -25022,9 +25023,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 12.88, z: 2.34}
-  m_LocalScale: {x: 3.333333, y: 3.333333, z: 3.333333}
+  m_LocalRotation: {x: 0.000000089406946, y: -0.00000007450579, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 12.879999, z: 2.339999}
+  m_LocalScale: {x: 3.3333335, y: 3.3333335, z: 3.3333337}
   m_Children: []
   m_Father: {fileID: 493048}
   m_RootOrder: 5
@@ -25103,6 +25104,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1976c4c0abe321f41b0f6f1dc44f242a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &780185772
 GameObject:
   m_ObjectHideFlags: 0

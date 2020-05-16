@@ -23,6 +23,7 @@ public class Animal : Virus
     private float mIncubationPeriod;
     private float mSpreadPeriod;
     private eAnimalGrowthType mGrowthType;
+    private eAnimalDeathType mAnimalDeathType;
 
     protected override void Awake()
     {
@@ -33,6 +34,7 @@ public class Animal : Virus
         mCollider = GetComponent<BoxCollider>();
         bIsEating = false;
         bIsLoaded = false;
+        mAnimalDeathType = eAnimalDeathType.Natural;
     }
 
     private void OnEnable()
@@ -219,20 +221,17 @@ public class Animal : Virus
 
     private IEnumerator Die()
     {
+        AnimalController.Instance.Bleed(this.transform.position, mAnimalDeathType);
         yield return new WaitForSeconds(360.0f);
         
         gameObject.SetActive(false);
-    }
-
-    public void Bleed(eAnimalDeathType type)
-    {
-        AnimalController.Instance.Bleed(this.transform.position, type);
     }
 
     public override void Infect(int id)
     {
         base.Infect(id);
 
+        mAnimalDeathType = eAnimalDeathType.Virus;
         mIncubationPeriod = VirusController.Instance.VirusDataDic[id].IncubationPeriod;
     }
 
@@ -263,6 +262,7 @@ public class Animal : Virus
         if(rand <= mImmunity)
         {
             bIsInfect = false;
+            mAnimalDeathType = eAnimalDeathType.Natural;
             AnimalController.Instance.InfenctNumber -= 1;
 
             return true;

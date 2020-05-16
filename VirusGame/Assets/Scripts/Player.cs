@@ -85,6 +85,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            mAnim.SetBool("IsCollectBlood", true);
+        }
+
         if (!bStopMove)
         {
             // Player Move

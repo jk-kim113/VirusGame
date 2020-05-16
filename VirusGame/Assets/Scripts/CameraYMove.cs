@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class CameraYMove : MonoBehaviour
 {
+#pragma warning disable 0649
+    [SerializeField]
+    private GameObject mHead;
+#pragma warning restore
+
     void Update()
     {
         if(!Player.Instance.IsStopMove)
