@@ -6,8 +6,27 @@ public class CameraYMove : MonoBehaviour
 {
 #pragma warning disable 0649
     [SerializeField]
-    private GameObject mHead;
+    private Transform mCollectBloodCameraPos;
+    [SerializeField]
+    private Transform mOriginalPos;
 #pragma warning restore
+
+    private bool bIsMove;
+    
+
+    public void SetCameraPos(bool value)
+    {
+        bIsMove = value;
+        if (value)
+            Invoke("SetOriginalPos", 3.5f);
+        else
+            transform.position = mOriginalPos.position;
+    }
+
+    private void SetOriginalPos()
+    {
+        Player.Instance.CollectBlood(false);
+    }
 
     void Update()
     {
@@ -16,6 +35,11 @@ public class CameraYMove : MonoBehaviour
             // Camera Y axis Rotation
             float mouseY = Input.GetAxis("Mouse Y");
             transform.localEulerAngles = new Vector3(transform.localEulerAngles.x - mouseY, transform.localEulerAngles.y, transform.localEulerAngles.z);
+        }
+
+        if(bIsMove)
+        {
+            transform.position = mCollectBloodCameraPos.position;
         }
     }
 }

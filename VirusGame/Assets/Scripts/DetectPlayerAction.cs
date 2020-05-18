@@ -121,12 +121,17 @@ public class DetectPlayerAction : MonoBehaviour
             {
                 OpenDrugMaker(true);
             }
+            else if(hit.collider.CompareTag("Blood"))
+            {
+                CollectBlood(true);
+            }
             else
             {
                 OpenInventoryBox(false);
                 OpenCombinationTable(false);
                 OpenAnalysisObj(false);
                 OpenDrugMaker(false);
+                CollectBlood(false);
             }
         }
     }
@@ -158,5 +163,11 @@ public class DetectPlayerAction : MonoBehaviour
     {
         MainUIController.Instance.OnOffActionText(value, "Press 'F' to Open DrugMaker");
         Player.Instance.IsOpenDrugMaker = value;
+    }
+
+    private void CollectBlood(bool value)
+    {
+        MainUIController.Instance.OnOffActionText(value, "Press 'F' to Collect Blood");
+        Player.Instance.IsCollectBlood = value;
     }
 }

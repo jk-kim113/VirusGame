@@ -15,6 +15,7 @@ TagManager:
   - AnalysisTable
   - AnalysisSlot
   - DrugMaker
+  - Blood
   layers:
   - Default
   - TransparentFX

@@ -13,6 +13,10 @@ public class Player : MonoBehaviour
     private DetectPlayerAction mDetectAction;
     [SerializeField]
     private EffectPool mEffectPool;
+    [SerializeField]
+    private CameraYMove mCameraYMove;
+    [SerializeField]
+    private Transform mHandPos;
 #pragma warning restore
 
     private CharacterController mCHControl;
@@ -31,6 +35,9 @@ public class Player : MonoBehaviour
 
     private bool bIsOpenDrugMaker;
     public bool IsOpenDrugMaker { set { bIsOpenDrugMaker = value; } }
+
+    private bool bIsCollectBlood;
+    public bool IsCollectBlood { set { bIsCollectBlood = value; } }
 
     private bool bStopMove;
     public bool IsStopMove { get { return bStopMove; } }
@@ -65,6 +72,7 @@ public class Player : MonoBehaviour
         bIsOpenCombTable = false;
         bIsOpenAnalysisTable = false;
         bIsOpenDrugMaker = false;
+        bIsCollectBlood = false;
         bStopMove = false;
         bIsInfect = false;
 
@@ -85,11 +93,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            mAnim.SetBool("IsCollectBlood", true);
-        }
-
         if (!bStopMove)
         {
             // Player Move
@@ -106,6 +109,15 @@ public class Player : MonoBehaviour
                 transform.localEulerAngles.x,
                 transform.localEulerAngles.y + mouseX,
                 transform.localEulerAngles.z);
+
+            if(dir.magnitude > 0.1)
+            {
+                mAnim.SetBool("walk", true);
+            }
+            else
+            {
+                mAnim.SetBool("walk", false);
+            }
         }
 
         // Start Plant Action
@@ -144,6 +156,11 @@ public class Player : MonoBehaviour
                 OpenDrugMaker(true);
                 bIsOpenDrugMaker = false;
             }
+            else if(bIsCollectBlood)
+            {
+                CollectBlood(true);
+                bIsCollectBlood = false;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -152,6 +169,7 @@ public class Player : MonoBehaviour
             OpenCombTable(false);
             OpenAnalsisTable(false);
             OpenDrugMaker(false);
+            CollectBlood(false);
         }
     }
 
@@ -238,6 +256,12 @@ public class Player : MonoBehaviour
     {
         DrugMakerController.Instance.OpenDrugMaker(value);
         bStopMove = value;
+    }
+
+    public void CollectBlood(bool value)
+    {
+        mCameraYMove.SetCameraPos(value);
+        mAnim.SetBool("IsCollectBlood", value);
     }
 
     public void UseItem(eUseTarget target, float value, int virusID)
