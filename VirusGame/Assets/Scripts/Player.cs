@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private CameraYMove mCameraYMove;
     [SerializeField]
-    private Transform mHandPos;
+    private Beaker mBeaker;
 #pragma warning restore
 
     private CharacterController mCHControl;
@@ -89,6 +89,8 @@ public class Player : MonoBehaviour
     {
         MainUIController.Instance.ShowStaminaGaugeBar(mStaminaMax, mStaminaCurrent);
         MainUIController.Instance.ShowHungryGaugeBar(mHungryMax, mHungryCurrent);
+
+        mBeaker.gameObject.SetActive(true);
     }
 
     void Update()
@@ -262,6 +264,8 @@ public class Player : MonoBehaviour
     {
         mCameraYMove.SetCameraPos(value);
         mAnim.SetBool("IsCollectBlood", value);
+        float blood = mDetectAction.DetectObj.GetComponent<Blood>().BloodAmount;
+        mBeaker.ShowInside(blood);
     }
 
     public void UseItem(eUseTarget target, float value, int virusID)

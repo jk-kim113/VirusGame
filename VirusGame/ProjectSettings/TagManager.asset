@@ -16,6 +16,7 @@ TagManager:
   - AnalysisSlot
   - DrugMaker
   - Blood
+  - EquipMaker
   layers:
   - Default
   - TransparentFX
