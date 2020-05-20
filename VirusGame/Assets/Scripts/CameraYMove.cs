@@ -18,7 +18,10 @@ public class CameraYMove : MonoBehaviour
     {
         bIsMove = value;
         if (value)
+        {
+            Player.Instance.BloodInBeaker();
             Invoke("SetOriginalPos", 3.5f);
+        }
         else
             transform.position = mOriginalPos.position;
     }

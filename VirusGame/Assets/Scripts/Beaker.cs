@@ -9,19 +9,44 @@ public class Beaker : MonoBehaviour
     private Transform mInsideObj;
 #pragma warning restore
 
-    private Vector3 mOriginSize;
+    private float mBloodAmount;
+    private float mOriginScale;
 
-    private void Awake()
+    private bool mFullBlood;
+    public bool IsFullBlood { get { return mFullBlood; } }
+
+    private void Start()
     {
-        mOriginSize = mInsideObj.localScale;
         mInsideObj.localScale = Vector3.zero;
+        mFullBlood = false;
     }
 
     public void ShowInside(float value)
     {
-        Debug.Log(value);
-        Vector3 originPos = mInsideObj.localPosition;
-        mInsideObj.localScale = new Vector3(mOriginSize.x, value, mOriginSize.z);
-        mInsideObj.localPosition = new Vector3(originPos.x, (value / 2) - (mOriginSize.y / 2), originPos.z);
+        mOriginScale = mInsideObj.localScale.y;
+        mBloodAmount += value;
+        if(mBloodAmount > 2.0f)
+        {
+            // 원래 사이즈를 가지고 곱해주
+            mBloodAmount = 2.0f;
+            mFullBlood = true;
+        }
+
+        StartCoroutine(FillInside(mOriginScale, mBloodAmount));
+
+    }
+
+    private IEnumerator FillInside(float start, float end)
+    {
+        WaitForSeconds term = new WaitForSeconds(.1f);
+
+        while(start < end)
+        {
+            yield return term;
+            start += 0.03f;
+            mInsideObj.localScale = new Vector3(1, start, 1);
+        }
+
+        mInsideObj.localScale = new Vector3(1, end, 1);
     }
 }

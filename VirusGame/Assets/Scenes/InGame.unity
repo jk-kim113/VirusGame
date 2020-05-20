@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5240,7 +5240,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 177430469}
   m_LocalRotation: {x: 0.000000089406946, y: -0.00000007450579, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 12.879999, z: 2.8}
+  m_LocalPosition: {x: 0, y: 12.879999, z: 3.07}
   m_LocalScale: {x: 3.3333335, y: 3.3333335, z: 3.3333337}
   m_Children: []
   m_Father: {fileID: 1759804610}
@@ -21217,6 +21217,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9764dd9c443a6c844a61c529d30772c9, type: 3}
+--- !u!4 &745830026 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8349287028626750266, guid: be3cbaf02f5437e4a8956b882b64ad92,
+    type: 3}
+  m_PrefabInstance: {fileID: 2146574410}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &746077918
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23737,12 +23743,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 609604b2a10f2ee4eb8e801bdb6afbf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &827411918 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3314211370070015729, guid: be3cbaf02f5437e4a8956b882b64ad92,
-    type: 3}
-  m_PrefabInstance: {fileID: 2146574410}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &829241203
 GameObject:
   m_ObjectHideFlags: 0
@@ -59925,6 +59925,50 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2119210790}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2130729618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2130729620}
+  - component: {fileID: 2130729619}
+  m_Layer: 0
+  m_Name: AnimalPool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2130729619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130729618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a97fac2414ad428d9d883bdf744749c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mOriginArr: []
+--- !u!4 &2130729620
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2130729618}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2132737356
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -60539,6 +60583,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 153628, guid: be3cbaf02f5437e4a8956b882b64ad92, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 155996, guid: be3cbaf02f5437e4a8956b882b64ad92, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -61017,7 +61065,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 534669905, guid: be3cbaf02f5437e4a8956b882b64ad92, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.8
+      value: 3.77
+      objectReference: {fileID: 0}
+    - target: {fileID: 534669905, guid: be3cbaf02f5437e4a8956b882b64ad92, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 534669905, guid: be3cbaf02f5437e4a8956b882b64ad92, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 13.41
       objectReference: {fileID: 0}
     - target: {fileID: 780185772, guid: be3cbaf02f5437e4a8956b882b64ad92, type: 3}
       propertyPath: m_IsActive
@@ -61043,7 +61099,7 @@ PrefabInstance:
         type: 3}
       propertyPath: mInsideObj
       value: 
-      objectReference: {fileID: 827411918}
+      objectReference: {fileID: 745830026}
     - target: {fileID: 3305901225005163971, guid: be3cbaf02f5437e4a8956b882b64ad92,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -263,7 +263,18 @@ public class Player : MonoBehaviour
     public void CollectBlood(bool value)
     {
         mCameraYMove.SetCameraPos(value);
-        mAnim.SetBool("IsCollectBlood", value);
+        if(mBeaker.IsFullBlood)
+        {
+            mAnim.SetBool("IsFullBlood", value);
+        }
+        else
+        {
+            mAnim.SetBool("IsCollectBlood", value);
+        }
+    }
+
+    public void BloodInBeaker()
+    {
         float blood = mDetectAction.DetectObj.GetComponent<Blood>().BloodAmount;
         mBeaker.ShowInside(blood);
     }

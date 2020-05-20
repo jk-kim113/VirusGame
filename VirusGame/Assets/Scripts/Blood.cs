@@ -9,6 +9,6 @@ public class Blood : MonoBehaviour
 
     private void Awake()
     {
-        mBloodAmount = Random.Range(0, 0.5f);
+        mBloodAmount = Random.Range(0.3f, 0.8f);
     }
 }

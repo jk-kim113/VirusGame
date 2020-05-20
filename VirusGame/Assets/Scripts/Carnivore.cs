@@ -16,6 +16,15 @@ public class Carnivore : Animal
 
     protected override void Eat()
     {
+        RaycastHit[] hitarr = Physics.SphereCastAll(transform.position, 3.0f, Vector3.up, 0f);
+        for(int i = 0; i < hitarr.Length; i++)
+        {
+            if(hitarr[i].collider.CompareTag("Herbivore"))
+            {
+
+            }
+        }
+
         Herbivore food = mDetectRange.Food;
         
         if(food == null)
