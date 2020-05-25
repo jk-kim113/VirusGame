@@ -93,7 +93,7 @@ public class Player : MonoBehaviour
         mBeaker.gameObject.SetActive(true);
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         if (!bStopMove)
         {
@@ -104,7 +104,7 @@ public class Player : MonoBehaviour
             dir = dir.normalized * mSpeed;
             dir = transform.TransformDirection(dir);
             mCHControl.Move(dir * Time.fixedDeltaTime);
-
+            
             // Player X axis Camera rotation
             float mouseX = Input.GetAxis("Mouse X");
             transform.localEulerAngles = new Vector3(
@@ -112,7 +112,7 @@ public class Player : MonoBehaviour
                 transform.localEulerAngles.y + mouseX,
                 transform.localEulerAngles.z);
 
-            if(dir.magnitude > 0.1)
+            if (dir.magnitude > 0.1)
             {
                 mAnim.SetBool("walk", true);
             }
@@ -121,7 +121,10 @@ public class Player : MonoBehaviour
                 mAnim.SetBool("walk", false);
             }
         }
+    }
 
+    void Update()
+    {
         // Start Plant Action
         if (Input.GetMouseButtonDown(0))
         {

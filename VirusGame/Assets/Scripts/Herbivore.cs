@@ -13,6 +13,8 @@ public class Herbivore : Animal
 
     protected override void Eat()
     {
+        //RaycastHit[] hitArr = Physics.SphereCastAll();
+
         Plant plant = mDetectRange.FoundPlant();
 
         if(plant == null)
