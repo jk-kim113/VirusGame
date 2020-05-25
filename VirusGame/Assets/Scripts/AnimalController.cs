@@ -41,11 +41,6 @@ public class AnimalController : MonoBehaviour
     {
         for(int i = 0; i < mAnimalDataArr.Length; i++)
         {
-            
-        }
-
-        for(int i = 0; i < mAnimalDataArr.Length; i++)
-        {
             eAnimalKind type = IDToEnum(mAnimalDataArr[i].ID);
             int index = IDToIndex(mAnimalDataArr[i].ID);
 
