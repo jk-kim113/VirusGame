@@ -64,6 +64,7 @@ public enum eBehaviorPattern
     Idle,
     Move,
     Eat,
+    Damage,
     Die
 }
 

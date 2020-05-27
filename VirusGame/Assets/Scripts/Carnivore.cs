@@ -7,24 +7,28 @@ public class Carnivore : Animal
 #pragma warning disable 0649
     [SerializeField]
     private DetectRangeC mDetectRange;
+    [SerializeField]
+    private BoxCollider[] mAttackColliderArr;
 #pragma warning restore
+
+    private bool isAttack;
 
     private void Start()
     {
         mDetectRange.Init(this);
+        OnOffAttackCollider(false);
+    }
+
+    private void OnOffAttackCollider(bool value)
+    {
+        for(int i = 0; i < mAttackColliderArr.Length; i++)
+        {
+            mAttackColliderArr[i].enabled = value;
+        }
     }
 
     protected override void Eat()
     {
-        RaycastHit[] hitarr = Physics.SphereCastAll(transform.position, 3.0f, Vector3.up, 0f);
-        for(int i = 0; i < hitarr.Length; i++)
-        {
-            if(hitarr[i].collider.CompareTag("Herbivore"))
-            {
-
-            }
-        }
-
         Herbivore food = mDetectRange.Food;
         
         if(food == null)
@@ -66,4 +70,43 @@ public class Carnivore : Animal
         bIsEating = false;
         mDetectRange.gameObject.SetActive(true);
     }
+
+    protected override void Damage()
+    {
+        if (isAttack)
+            return;
+        
+        StartCoroutine(Attack());
+    }
+
+    private IEnumerator Attack()
+    {
+        WaitForFixedUpdate term = new WaitForFixedUpdate();
+
+        Transform target = Player.Instance.transform;
+        transform.LookAt(target);
+
+        mNav.speed = 7;
+        mNav.isStopped = false;
+        mAnimator.SetBool(StaticValue.RUN, true);
+        OnOffAttackCollider(true);
+
+        while (Vector3.Distance(transform.position, target.position) > 6.0f)
+        {
+            transform.LookAt(target);
+            mNav.SetDestination(target.position);
+            yield return term;
+        }
+        
+        mAnimator.SetBool(StaticValue.RUN, false);
+        mAnimator.SetBool(StaticValue.ATTACK, true);
+        mNav.isStopped = true;
+        yield return new WaitForSeconds(2.3f);
+        OnOffAttackCollider(false);
+        mNav.isStopped = false;
+        mAnimator.SetBool(StaticValue.ATTACK, false);
+        mNav.speed = 3.5f;
+        bIsEating = false;
+    }
+
 }

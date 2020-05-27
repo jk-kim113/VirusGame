@@ -17,6 +17,8 @@ public class Player : MonoBehaviour
     private CameraYMove mCameraYMove;
     [SerializeField]
     private Beaker mBeaker;
+    [SerializeField]
+    private BoxCollider mWeaponCollider;
 #pragma warning restore
 
     private CharacterController mCHControl;
@@ -184,6 +186,17 @@ public class Player : MonoBehaviour
             OpenDrugMaker(false);
             CollectBlood(false);
             OpenEquipMaker(false);
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            mAnim.SetBool("attack01", true);
+            mWeaponCollider.enabled = true;
+        }
+        else
+        {
+            mAnim.SetBool("attack01", false);
+            mWeaponCollider.enabled = false;
         }
     }
 

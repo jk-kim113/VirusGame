@@ -10,11 +10,10 @@ public class Herbivore : Animal
 #pragma warning restore
 
     private Vector3 mPlantPosition;
+    private bool isRunning;
 
     protected override void Eat()
     {
-        //RaycastHit[] hitArr = Physics.SphereCastAll();
-
         Plant plant = mDetectRange.FoundPlant();
 
         if(plant == null)
@@ -50,5 +49,38 @@ public class Herbivore : Animal
         mAnimator.SetBool(StaticValue.EAT, false);
         plant.BeingDestroyed();
         mDetectRange.ResetList();
+    }
+
+    protected override void Damage()
+    {
+        if (isRunning)
+            return;
+
+        isRunning = true;
+        StartCoroutine(Run());
+    }
+
+    private IEnumerator Run()
+    {
+        WaitForFixedUpdate term = new WaitForFixedUpdate();
+
+        mNav.isStopped = false;
+        mAnimator.SetBool(StaticValue.WALK, false);
+        mAnimator.SetBool(StaticValue.RUN, true);
+        mNav.speed = 10.0f;
+        float time = 1.0f;
+
+        while (time > 0)
+        {
+            time -= Time.fixedDeltaTime;
+            mNav.isStopped = false;
+            transform.position += transform.forward * 2 * Time.deltaTime;
+            yield return term;
+        }
+
+        bIsEating = false;
+        mAnimator.SetBool(StaticValue.RUN, false);
+        mNav.speed = 3.5f;
+        isRunning = false;
     }
 }

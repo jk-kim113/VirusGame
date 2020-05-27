@@ -17,6 +17,7 @@ TagManager:
   - DrugMaker
   - Blood
   - EquipMaker
+  - Weapon
   layers:
   - Default
   - TransparentFX

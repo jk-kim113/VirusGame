@@ -63,7 +63,7 @@ public class Animal : Virus
         }
     }
 
-    private Vector3 RandomCoordinates()
+    protected Vector3 RandomCoordinates()
     {   
         float xCord = Random.Range(mMoveBoundary.gameObject.transform.position.x - (mMoveBoundary.size.x /2), 
                                     mMoveBoundary.gameObject.transform.position.x + (mMoveBoundary.size.x / 2));
@@ -197,6 +197,12 @@ public class Animal : Virus
                 Eat();
 
                 break;
+            case eBehaviorPattern.Damage:
+
+                bIsEating = true; //TODO Change value name
+                Damage();
+
+                break;
             case eBehaviorPattern.Die:
 
                 mNav.isStopped = true;
@@ -215,6 +221,11 @@ public class Animal : Virus
     }
 
     protected virtual void Eat()
+    {
+
+    }
+
+    protected virtual void Damage()
     {
 
     }
@@ -284,6 +295,14 @@ public class Animal : Virus
             default:
                 Debug.LogError("Wrong type");
                 return 0;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Weapon"))
+        {
+            SetMovePattern(eBehaviorPattern.Damage);
         }
     }
 }
