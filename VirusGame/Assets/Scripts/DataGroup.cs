@@ -61,9 +61,12 @@ public class DataGroup : MonoBehaviour
         Sprite[] GrassSpriteArr = Resources.LoadAll<Sprite>("Sprites/GrassItem");
         Sprite[] TreeSpriteArr = Resources.LoadAll<Sprite>("Sprites/TreeItem");
         Sprite[] FoodSpriteArr = Resources.LoadAll<Sprite>("Sprites/CombItem");
-
+        Sprite[] EquipSpriteArr = Resources.LoadAll<Sprite>("Sprites/EquipItem");
+        
         ItemData[] GrassItemDataArr = new ItemData[GrassSpriteArr.Length];
         ItemData[] TreeItemDataArr = new ItemData[TreeSpriteArr.Length];
+
+        mItemSpriteDic.Add(5000, EquipSpriteArr[0]);
 
         // Drop Item Setting
         for (int i = 0; i < mItemDataArr.Length; i++)

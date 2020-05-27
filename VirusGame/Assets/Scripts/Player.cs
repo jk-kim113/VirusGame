@@ -39,6 +39,9 @@ public class Player : MonoBehaviour
     private bool bIsCollectBlood;
     public bool IsCollectBlood { set { bIsCollectBlood = value; } }
 
+    private bool bIsOpenEquipMaker;
+    public bool IsOpenEquipMaker { set { bIsOpenEquipMaker = value; } }
+
     private bool bStopMove;
     public bool IsStopMove { get { return bStopMove; } }
 
@@ -166,6 +169,11 @@ public class Player : MonoBehaviour
                 CollectBlood(true);
                 bIsCollectBlood = false;
             }
+            else if(bIsOpenEquipMaker)
+            {
+                OpenEquipMaker(true);
+                bIsOpenEquipMaker = false;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -175,6 +183,7 @@ public class Player : MonoBehaviour
             OpenAnalsisTable(false);
             OpenDrugMaker(false);
             CollectBlood(false);
+            OpenEquipMaker(false);
         }
     }
 
@@ -274,6 +283,12 @@ public class Player : MonoBehaviour
         {
             mAnim.SetBool("IsCollectBlood", value);
         }
+    }
+
+    private void OpenEquipMaker(bool value)
+    {
+        EquipMaker.Instance.OpenEquipMaker(value);
+        bStopMove = value;
     }
 
     public void BloodInBeaker()
