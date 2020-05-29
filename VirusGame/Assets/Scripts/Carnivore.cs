@@ -84,14 +84,17 @@ public class Carnivore : Animal
     {
         WaitForFixedUpdate term = new WaitForFixedUpdate();
 
+        
+
         Transform target = Player.Instance.transform;
         transform.LookAt(target);
 
         mNav.stoppingDistance = 5;
         mNav.speed = 7;
-        mNav.isStopped = false;
+
+        mAnimator.SetBool(StaticValue.WALK, false);
         mAnimator.SetBool(StaticValue.RUN, true);
-        OnOffAttackCollider(true);
+        mNav.isStopped = false;
 
         while (Vector3.Distance(transform.position, target.position) > 6.0f)
         {
@@ -102,6 +105,7 @@ public class Carnivore : Animal
         
         mAnimator.SetBool(StaticValue.RUN, false);
         mAnimator.SetBool(StaticValue.ATTACK, true);
+        OnOffAttackCollider(true);
         mNav.isStopped = true;
         yield return new WaitForSeconds(2.3f);
         OnOffAttackCollider(false);

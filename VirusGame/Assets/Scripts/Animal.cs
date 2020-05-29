@@ -144,7 +144,7 @@ public class Animal : Virus
             {
                 int maxRan = 0;
 
-                if(mHungerCurrent < mHungerMax * 0.6)
+                if (mHungerCurrent < mHungerMax * 0.6)
                 {
                     maxRan = 3;
                 }

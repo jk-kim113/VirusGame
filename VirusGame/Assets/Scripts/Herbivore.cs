@@ -12,8 +12,23 @@ public class Herbivore : Animal
     private Vector3 mPlantPosition;
     private bool isRunning;
 
+    private List<Plant> mPlantList = new List<Plant>();
+
     protected override void Eat()
     {
+        mPlantList.Clear();
+
+        RaycastHit[] hitarr = Physics.SphereCastAll(transform.position, 2.0f, Vector3.up, 0f);
+        for(int i = 0; i < hitarr.Length; i++)
+        {
+            if(hitarr[i].collider.CompareTag("Grass"))
+            {
+                mPlantList.Add(hitarr[i].collider.GetComponent<Plant>());
+            }
+        }
+
+        int selectedID = Random.Range(0, mPlantList.Count);
+
         Plant plant = mDetectRange.FoundPlant();
 
         if(plant == null)
@@ -73,7 +88,6 @@ public class Herbivore : Animal
         while (time > 0)
         {
             time -= Time.fixedDeltaTime;
-            mNav.isStopped = false;
             transform.position += transform.forward * 2 * Time.deltaTime;
             yield return term;
         }
