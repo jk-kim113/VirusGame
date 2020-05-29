@@ -102,6 +102,8 @@ public class DataGroup : MonoBehaviour
             }
         }
 
+        mItemNumDic.Add(5000, 0);
+
         // Set Food Sprite
         for(int i = 0; i < mFoodMenuArr.Length; i++)
         {

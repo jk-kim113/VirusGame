@@ -188,7 +188,7 @@ public class Player : MonoBehaviour
             OpenEquipMaker(false);
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKey(KeyCode.Space))
         {
             mAnim.SetBool("attack01", true);
             mWeaponCollider.enabled = true;

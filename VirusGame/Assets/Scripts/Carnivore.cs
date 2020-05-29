@@ -17,6 +17,7 @@ public class Carnivore : Animal
     {
         mDetectRange.Init(this);
         OnOffAttackCollider(false);
+        isAttack = false;
     }
 
     private void OnOffAttackCollider(bool value)
@@ -86,6 +87,7 @@ public class Carnivore : Animal
         Transform target = Player.Instance.transform;
         transform.LookAt(target);
 
+        mNav.stoppingDistance = 5;
         mNav.speed = 7;
         mNav.isStopped = false;
         mAnimator.SetBool(StaticValue.RUN, true);
@@ -106,6 +108,7 @@ public class Carnivore : Animal
         mNav.isStopped = false;
         mAnimator.SetBool(StaticValue.ATTACK, false);
         mNav.speed = 3.5f;
+        mNav.stoppingDistance = 0;
         bIsEating = false;
     }
 

@@ -18,8 +18,8 @@ public class EquipMaker : MonoBehaviour
     List<CombinationElement> mElementList = new List<CombinationElement>();
 
     private Equip[] mEquipArr;
-    int[] needNum = new int[4];
-    int[] needID = new int[4];
+    int[] needNumArr = new int[4];
+    int[] needIDArr = new int[4];
 
     private void Awake()
     {
@@ -41,16 +41,16 @@ public class EquipMaker : MonoBehaviour
     }
 
     private void Start()
-    {   
-        needNum[0] = 3;
-        needNum[1] = 0;
-        needNum[2] = 0;
-        needNum[3] = 0;
-        
-        needID[0] = 1001;
-        needID[1] = 0;
-        needID[2] = 0;
-        needID[3] = 0;
+    {
+        needNumArr[0] = 3;
+        needNumArr[1] = 0;
+        needNumArr[2] = 0;
+        needNumArr[3] = 0;
+
+        needIDArr[0] = 1001;
+        needIDArr[1] = 0;
+        needIDArr[2] = 0;
+        needIDArr[3] = 0;
 
         StartCoroutine(Load());
     }
@@ -67,7 +67,7 @@ public class EquipMaker : MonoBehaviour
         for (int i = 0; i < mEquipArr.Length; i++)
         {
             CombinationElement element = Instantiate(mElement, mScrollTarget);
-            element.Init(null, mEquipArr[i].ID, mEquipArr[i].Name, mEquipArr[i].Info, needNum, needID, MakeItem);
+            element.Init(null, mEquipArr[i].ID, mEquipArr[i].Name, mEquipArr[i].Info, needNumArr, needIDArr, MakeItem);
             mElementList.Add(element);
         }
     }
@@ -80,23 +80,17 @@ public class EquipMaker : MonoBehaviour
         }
         else
         {
-            for (int i = 0; i < DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedNumber.Length; i++)
-            {
-                int needID = DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedID[i];
-                int needNum = DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedNumber[i];
+            for (int i = 0; i < needNumArr.Length; i++)
+            {   
+                int needID = needIDArr[i];
+                int needNum = needNumArr[i];
 
-                if (DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedNumber[i] > 0)
+                if (needNumArr[i] > 0)
                 {
-                    DataGroup.Instance.SetItemNumber(
-                        needID,
-                        -needNum);
+                    DataGroup.Instance.SetItemNumber(needID,-needNum);
 
-                    InvenController.Instance.RenewInven(DataGroup.Instance.ItemMakingInfoDic[newItemID].NeedID[i]);
+                    InvenController.Instance.RenewInven(needIDArr[i]);
                 }
-
-                int temp = InvenController.Instance.InvenVirusInfoDic[needID].Count;
-
-                InvenController.Instance.RemoveInvenVirusInfo(needID, needNum);
             }
 
             RenewCombTable();
@@ -110,8 +104,8 @@ public class EquipMaker : MonoBehaviour
         for (int i = 0; i < mElementList.Count; i++)
         {
             mElementList[i].Renew(
-                needNum,
-                needID
+                needNumArr,
+                needIDArr
                 );
         }
     }

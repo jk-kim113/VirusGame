@@ -111,7 +111,6 @@ public class InvenController : MonoBehaviour
                     break;
             }
 
-
             ItemObj item = mItemObjPool.GetFromPool(0);
             item.InitObj(
                 DataGroup.Instance.ItemDataDic[tag][selectedID].ID,
