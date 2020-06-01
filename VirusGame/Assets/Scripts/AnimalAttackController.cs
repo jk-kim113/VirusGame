@@ -8,7 +8,7 @@ public class AnimalAttackController : MonoBehaviour
     {
         if(other.CompareTag("Player"))
         {
-            Debug.Log("Hit!!!");
+            Player.Instance.Hit(30);
         }
     }
 }

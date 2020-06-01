@@ -34,7 +34,7 @@ public class InvenController : MonoBehaviour
         }
     }
 
-    public void SpawnItem(Vector3 Itempos, string tag, ePlantGrowthType type, int virusID)
+    public void SpawnPlantItem(Vector3 Itempos, string tag, ePlantGrowthType type, int virusID)
     {
         int itemNum = Random.Range(3, 6);
         int selectedID = -999;

@@ -53,6 +53,9 @@ public class Player : MonoBehaviour
     private float mHungryMax;
     private float mHungryCurrent;
 
+    private float mHPmax;
+    private float mHPcurrent;
+
     private int mVirusID;
 
     private bool bIsInfect;
@@ -87,6 +90,8 @@ public class Player : MonoBehaviour
         mHungryMax = 100f;
         mHungryCurrent = mHungryMax;
 
+        mHPmax = mHPcurrent = 100;
+
         mAnim = GetComponent<Animator>();
     }
 
@@ -94,6 +99,7 @@ public class Player : MonoBehaviour
     {
         MainUIController.Instance.ShowStaminaGaugeBar(mStaminaMax, mStaminaCurrent);
         MainUIController.Instance.ShowHungryGaugeBar(mHungryMax, mHungryCurrent);
+        MainUIController.Instance.ShowHPGaugeBar(mHPmax, mHPcurrent);
 
         mBeaker.gameObject.SetActive(true);
     }
@@ -236,7 +242,7 @@ public class Player : MonoBehaviour
         {
             // Get Item from target Obj
             plantDetected.BeingDestroyed();
-            InvenController.Instance.SpawnItem(
+            InvenController.Instance.SpawnPlantItem(
                 plantDetected.gameObject.transform.position,
                 plantDetected.gameObject.tag,
                 plantDetected.GrowthType,
@@ -283,6 +289,17 @@ public class Player : MonoBehaviour
     {
         DrugMakerController.Instance.OpenDrugMaker(value);
         bStopMove = value;
+    }
+
+    public void Hit(float value)
+    {
+        mHPcurrent -= value;
+        MainUIController.Instance.ShowHPGaugeBar(mHPmax, mHPcurrent);
+        if (mHPcurrent <= 0)
+        {
+            Debug.Log("GameOver!!!");
+            //GameOver();
+        }
     }
 
     public void CollectBlood(bool value)

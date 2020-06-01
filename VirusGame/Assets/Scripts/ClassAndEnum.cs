@@ -8,6 +8,7 @@ public class AnimalData
     public int ID;
     public float HungerMax;
     public float HungerDecrease;
+    public float HP;
     public int InitNumber;
 }
 

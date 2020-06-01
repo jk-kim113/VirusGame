@@ -4,6 +4,7 @@
     "ID": 1000,
     "HungerMax": 50,
     "HungerDecrease": 0.3,
+    "HP" :  10,
     "InitNumber": 12
   },
   {
@@ -11,6 +12,7 @@
     "ID": 1001,
     "HungerMax": 300,
     "HungerDecrease": 1.5,
+    "HP" :  100,
     "InitNumber": 9
   },
   {
@@ -18,6 +20,7 @@
     "ID": 1002,
     "HungerMax": 100,
     "HungerDecrease": 0.8,
+    "HP" :  30,
     "InitNumber": 9
   },
   {
@@ -25,6 +28,7 @@
     "ID": 2000,
     "HungerMax": 400,
     "HungerDecrease": 2.3,
+    "HP" :  250,
     "InitNumber": 6
   },
   {
@@ -32,6 +36,7 @@
     "ID": 2001,
     "HungerMax": 150,
     "HungerDecrease": 0.5,
+    "HP" :  80,
     "InitNumber": 8
   },
   {
@@ -39,6 +44,7 @@
     "ID": 2002,
     "HungerMax": 70,
     "HungerDecrease": 0.2,
+    "HP" :  40,
     "InitNumber": 12
   }
 ]

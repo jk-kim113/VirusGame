@@ -25,6 +25,14 @@ public class Animal : Virus
     private eAnimalGrowthType mGrowthType;
     private eAnimalDeathType mAnimalDeathType;
 
+    private float mHPmax;
+    private float mHPcurrent;
+
+    protected bool bIsAlive;
+    private float mMoveTime = 0;
+
+    private eBehaviorPattern mBehaviorPattern = eBehaviorPattern.Idle;
+
     protected override void Awake()
     {
         base.Awake();
@@ -35,11 +43,14 @@ public class Animal : Virus
         bIsEating = false;
         bIsLoaded = false;
         mAnimalDeathType = eAnimalDeathType.Natural;
+
+        bIsAlive = true;
     }
 
     private void OnEnable()
     {
         mCollider.enabled = true;
+        mHPcurrent = mHPmax;
     }
 
     private void Update()
@@ -61,6 +72,16 @@ public class Animal : Virus
                 }
             }
         }
+
+        if(bIsAlive)
+        {
+            mMoveTime += Time.deltaTime;
+            if(mMoveTime >= 2)
+            {
+                mMoveTime = 0;
+                MovePattern();
+            }
+        }
     }
 
     protected Vector3 RandomCoordinates()
@@ -73,18 +94,18 @@ public class Animal : Virus
         return new Vector3(xCord, 0, zCord);
     }
 
-    public void Init(BoxCollider boundary, float hungermax, float hungerdeacrease)
+    public void Init(BoxCollider boundary, float hungermax, float hungerdeacrease, float hpmax)
     {
         mMoveBoundary = boundary;
         mHungerMax = mHungerCurrent = hungermax;
         mHungerDeacrease = hungerdeacrease;
+        mHPmax = mHPcurrent = hpmax;
 
         bIsLoaded = true;
 
         int randomNum = Random.Range(0, (int)eAnimalGrowthType.max);
         SetGrowthType(randomNum);
         
-        mMovePatternCoroutine = StartCoroutine(MovePattern());
     }
 
     private void SetGrowthType(int random)
@@ -130,47 +151,38 @@ public class Animal : Virus
         }
     }
 
-    private IEnumerator MovePattern()
-    {   
-        WaitForSeconds term = new WaitForSeconds(2f);
-        eBehaviorPattern pattern = eBehaviorPattern.Idle;
-        SetMovePattern(pattern);
-        
-        while (true)
+    private void MovePattern()
+    {
+        if (!bIsEating && bIsAlive)
         {
-            yield return term;
+            int maxRan = 0;
 
-            if(!bIsEating)
+            if (mHungerCurrent < mHungerMax * 0.6)
             {
-                int maxRan = 0;
-
-                if (mHungerCurrent < mHungerMax * 0.6)
-                {
-                    maxRan = 3;
-                }
-                else
-                {
-                    maxRan = 2;
-                }
-
-                int probability = Random.Range(0, maxRan);
-
-
-                if (probability == 0)
-                {
-                    pattern = eBehaviorPattern.Idle;
-                }
-                else if (probability == 1)
-                {
-                    pattern = eBehaviorPattern.Move;
-                }
-                else if (probability == 2)
-                {
-                    pattern = eBehaviorPattern.Eat;
-                }
-
-                SetMovePattern(pattern);
+                maxRan = 3;
             }
+            else
+            {
+                maxRan = 2;
+            }
+
+            int probability = Random.Range(0, maxRan);
+
+
+            if (probability == 0)
+            {
+                mBehaviorPattern = eBehaviorPattern.Idle;
+            }
+            else if (probability == 1)
+            {
+                mBehaviorPattern = eBehaviorPattern.Move;
+            }
+            else if (probability == 2)
+            {
+                mBehaviorPattern = eBehaviorPattern.Eat;
+            }
+
+            SetMovePattern(mBehaviorPattern);
         }
     }
 
@@ -206,12 +218,16 @@ public class Animal : Virus
             case eBehaviorPattern.Die:
 
                 mNav.isStopped = true;
-                mAnimator.SetBool(StaticValue.WALK, false);
-                mAnimator.SetBool(StaticValue.DIE, true);
+                
+                mAnimator.SetTrigger(StaticValue.DIE);
                 mCollider.enabled = false;
-                StopCoroutine(mMovePatternCoroutine);
+                
                 StopCoroutine(mSpendGrowPeriodCoroutine);
                 StartCoroutine(Die());
+                bIsAlive = false;
+
+                Debug.Log("Die");
+                mNav.enabled = false;
 
                 break;
             default:
@@ -300,9 +316,20 @@ public class Animal : Virus
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Weapon"))
+        if(bIsAlive)
         {
-            SetMovePattern(eBehaviorPattern.Damage);
+            if (other.CompareTag("Weapon"))
+            {   
+                mHPcurrent -= 50;
+                if (mHPcurrent <= 0)
+                {
+                    SetMovePattern(eBehaviorPattern.Die);
+                }
+                else
+                {
+                    SetMovePattern(eBehaviorPattern.Damage);
+                }
+            }
         }
     }
 }

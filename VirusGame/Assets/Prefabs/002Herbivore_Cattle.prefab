@@ -527,7 +527,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mVirusIcon: {fileID: 2162889031781627692}
-  mDetectRange: {fileID: 3819194920288589024}
 --- !u!1 &1288326008505868
 GameObject:
   m_ObjectHideFlags: 0
@@ -2092,7 +2091,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2329781453086336776}
   - component: {fileID: 2208398017535538926}
-  - component: {fileID: 3819194920288589024}
   m_Layer: 12
   m_Name: DetectRange
   m_TagString: Untagged
@@ -2127,15 +2125,3 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &3819194920288589024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7607923227521553661}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83154a691e5c18b40b1abde9d3f7f703, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -51,7 +51,11 @@ public class AnimalController : MonoBehaviour
                     {
                         mHerbivorePool.SpawnPos = MakeSpawnPos(mMoveBoundary[i]);
                         Herbivore herbivore = mHerbivorePool.GetFromPool(index);
-                        herbivore.Init(mMoveBoundary[i], mAnimalDataArr[i].HungerMax, mAnimalDataArr[i].HungerDecrease);
+                        herbivore.Init(
+                            mMoveBoundary[i],
+                            mAnimalDataArr[i].HungerMax,
+                            mAnimalDataArr[i].HungerDecrease,
+                            mAnimalDataArr[i].HP);
                         mVirusList.Add(herbivore);
                     }
                     break;
@@ -60,7 +64,11 @@ public class AnimalController : MonoBehaviour
                     {
                         mCarnivorePool.SpawnPos = MakeSpawnPos(mMoveBoundary[i]);
                         Carnivore carnivore = mCarnivorePool.GetFromPool(index);
-                        carnivore.Init(mMoveBoundary[i], mAnimalDataArr[i].HungerMax, mAnimalDataArr[i].HungerDecrease);
+                        carnivore.Init(
+                            mMoveBoundary[i],
+                            mAnimalDataArr[i].HungerMax,
+                            mAnimalDataArr[i].HungerDecrease,
+                            mAnimalDataArr[i].HP);
                         mVirusList.Add(carnivore);
                     }
                     break;

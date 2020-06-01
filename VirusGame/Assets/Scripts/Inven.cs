@@ -83,6 +83,8 @@ public class Inven : MonoBehaviour
                 mSelcetAreaPosNum = 0;
             }
             mSelectAreaPos.transform.position = mSlotArr[mSelcetAreaPosNum].gameObject.transform.position;
+
+
         }
 
         if(Input.GetKeyDown(KeyCode.C))

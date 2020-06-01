@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class Herbivore : Animal
 {
-#pragma warning disable 0649
-    [SerializeField]
-    private DetectRangeH mDetectRange;
-#pragma warning restore
-
     private Vector3 mPlantPosition;
     private bool isRunning;
 
@@ -18,7 +13,7 @@ public class Herbivore : Animal
     {
         mPlantList.Clear();
 
-        RaycastHit[] hitarr = Physics.SphereCastAll(transform.position, 2.0f, Vector3.up, 0f);
+        RaycastHit[] hitarr = Physics.SphereCastAll(transform.position, 3.0f, Vector3.up, 0f);
         for(int i = 0; i < hitarr.Length; i++)
         {
             if(hitarr[i].collider.CompareTag("Grass"))
@@ -27,23 +22,27 @@ public class Herbivore : Animal
             }
         }
 
-        int selectedID = Random.Range(0, mPlantList.Count);
+        Debug.Log("Eat");
 
-        Plant plant = mDetectRange.FoundPlant();
+        if(mPlantList.Count > 0)
+        {
+            int selectedID = Random.Range(0, mPlantList.Count);
 
-        if(plant == null)
+            Plant plant = mPlantList[selectedID];
+
+            mPlantPosition = plant.gameObject.transform.position;
+
+            mNav.SetDestination(mPlantPosition);
+            transform.LookAt(mPlantPosition);
+            mAnimator.SetBool(StaticValue.WALK, true);
+
+            StartCoroutine(EatPlant(plant));
+        }
+        else
         {
             bIsEating = false;
             return;
         }
-
-        mPlantPosition = plant.gameObject.transform.position;
-
-        mNav.SetDestination(mPlantPosition);
-        transform.LookAt(mPlantPosition);
-        mAnimator.SetBool(StaticValue.WALK, true);
-
-        StartCoroutine(EatPlant(plant));
     }
 
     private IEnumerator EatPlant(Plant plant)
@@ -63,7 +62,6 @@ public class Herbivore : Animal
         bIsEating = false;
         mAnimator.SetBool(StaticValue.EAT, false);
         plant.BeingDestroyed();
-        mDetectRange.ResetList();
     }
 
     protected override void Damage()

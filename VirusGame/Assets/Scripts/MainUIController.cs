@@ -16,6 +16,8 @@ public class MainUIController : MonoBehaviour
     private GaugeBar mStaminaGaugeBar;
     [SerializeField]
     private GaugeBar mHungryGaugeBar;
+    [SerializeField]
+    private GaugeBar mHPGaugeBar;
 #pragma warning restore
 
     private void Awake()
@@ -56,5 +58,10 @@ public class MainUIController : MonoBehaviour
     public void ShowHungryGaugeBar(float max, float current)
     {
         mHungryGaugeBar.ShowGaugeBar(current / max);
+    }
+
+    public void ShowHPGaugeBar(float max, float current)
+    {
+        mHPGaugeBar.ShowGaugeBar(current / max);
     }
 }

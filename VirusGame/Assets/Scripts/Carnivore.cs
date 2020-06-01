@@ -6,40 +6,52 @@ public class Carnivore : Animal
 {
 #pragma warning disable 0649
     [SerializeField]
-    private DetectRangeC mDetectRange;
-    [SerializeField]
-    private BoxCollider[] mAttackColliderArr;
+    private BoxCollider mAttackCollider;
 #pragma warning restore
 
     private bool isAttack;
 
+    private List<Herbivore> mFoodList = new List<Herbivore>();
+
     private void Start()
     {
-        mDetectRange.Init(this);
-        OnOffAttackCollider(false);
+        if(mAttackCollider != null)
+        {
+            OnOffAttackCollider(false);
+        }
+        
         isAttack = false;
     }
 
     private void OnOffAttackCollider(bool value)
     {
-        for(int i = 0; i < mAttackColliderArr.Length; i++)
-        {
-            mAttackColliderArr[i].enabled = value;
-        }
+        mAttackCollider.gameObject.SetActive(value);
     }
 
     protected override void Eat()
     {
-        Herbivore food = mDetectRange.Food;
-        
-        if(food == null)
+        mFoodList.Clear();
+
+        RaycastHit[] hitarr = Physics.SphereCastAll(transform.position, 3.0f, Vector3.up, 0f);
+        for (int i = 0; i < hitarr.Length; i++)
+        {
+            if (hitarr[i].collider.CompareTag("Herbivore"))
+            {
+                mFoodList.Add(hitarr[i].collider.GetComponent<Herbivore>());
+            }
+        }
+
+        if(mFoodList.Count > 0)
+        {
+            int selectedID = Random.Range(0, mFoodList.Count);
+            Herbivore food = mFoodList[selectedID];
+            StartCoroutine(Chasing(food));
+        }
+        else
         {
             bIsEating = false;
             return;
         }
-
-        mDetectRange.gameObject.SetActive(false);
-        StartCoroutine(Chasing(food));
     }
 
     private IEnumerator Chasing(Herbivore target)
@@ -61,7 +73,6 @@ public class Carnivore : Animal
         mAnimator.SetBool(StaticValue.RUN, false);
         mAnimator.SetBool(StaticValue.ATTACK, true);
         target.SetMovePattern(eBehaviorPattern.Die);
-        mDetectRange.Food = null;
         yield return new WaitForSeconds(2.3f);
         mAnimator.SetBool(StaticValue.ATTACK, false);
         mAnimator.SetBool(StaticValue.EAT, true);
@@ -69,7 +80,6 @@ public class Carnivore : Animal
         mAnimator.SetBool(StaticValue.EAT, false);
         mNav.speed = 3.5f;
         bIsEating = false;
-        mDetectRange.gameObject.SetActive(true);
     }
 
     protected override void Damage()
@@ -82,9 +92,8 @@ public class Carnivore : Animal
 
     private IEnumerator Attack()
     {
+        isAttack = true;
         WaitForFixedUpdate term = new WaitForFixedUpdate();
-
-        
 
         Transform target = Player.Instance.transform;
         transform.LookAt(target);
@@ -102,7 +111,6 @@ public class Carnivore : Animal
             mNav.SetDestination(target.position);
             yield return term;
         }
-        
         mAnimator.SetBool(StaticValue.RUN, false);
         mAnimator.SetBool(StaticValue.ATTACK, true);
         OnOffAttackCollider(true);
@@ -114,6 +122,7 @@ public class Carnivore : Animal
         mNav.speed = 3.5f;
         mNav.stoppingDistance = 0;
         bIsEating = false;
+        isAttack = false;
     }
 
 }
