@@ -95,7 +95,7 @@ public class EquipMaker : MonoBehaviour
 
             RenewCombTable();
 
-            InvenController.Instance.SetSpriteToInven(newItemID, 1, 0);
+            InvenController.Instance.SetSpriteToInven(newItemID, 1);
         }
     }
 

@@ -20,18 +20,12 @@ public class ItemData
     public int Rare;
 }
 
-public class FoodMenu
+public class UseItemData
 {
     public string Name;
     public int ID;
-    public int[] TargetID;
     public string Info;
     public eUseTarget UseTarget;
-}
-
-public class FoodMakeType
-{
-    public int TargetID;
     public int[] TypeValue;
 }
 

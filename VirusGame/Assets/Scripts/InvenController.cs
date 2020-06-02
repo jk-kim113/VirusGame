@@ -19,9 +19,6 @@ public class InvenController : MonoBehaviour
 
     public UIDrag UIDragImg { get { return mUIDrag; } }
 
-    private Dictionary<int, List<int>> mInvenVirusInfoDic = new Dictionary<int, List<int>>();
-    public Dictionary<int, List<int>> InvenVirusInfoDic { get { return mInvenVirusInfoDic; } }
-
     private void Awake()
     {
         if (Instance == null)
@@ -115,27 +112,15 @@ public class InvenController : MonoBehaviour
             item.InitObj(
                 DataGroup.Instance.ItemDataDic[tag][selectedID].ID,
                 DataGroup.Instance.ItemDataDic[tag][selectedID].Rare,
-                1,
-                virusID);
+                1);
             item.ShowItem(Itempos);
         }
     }
 
-    public void SetSpriteToInven(int originalId, int num, int virusID)
+    public void SetSpriteToInven(int originalId, int num)
     {
         DataGroup.Instance.SetItemNumber(originalId, num);
         SetPlayerInven(originalId);
-
-        if(!mInvenVirusInfoDic.ContainsKey(originalId))
-        {
-            List<int> viruslist = new List<int>();
-            viruslist.Add(virusID);
-            mInvenVirusInfoDic.Add(originalId, viruslist);
-        }
-        else
-        {
-            mInvenVirusInfoDic[originalId].Add(virusID);
-        }
     }
 
     public void SetPlayerInven(int originalID)
@@ -186,15 +171,6 @@ public class InvenController : MonoBehaviour
         return mPlayerInven.CheckIsFull(originalId);
     }
 
-    public int CheckIsInfected(int originalId)
-    {
-        int id = mInvenVirusInfoDic[originalId][mInvenVirusInfoDic[originalId].Count - 1];
-
-        RemoveInvenVirusInfo(originalId, 1);
-
-        return id;
-    }
-
     public void OpenInvenBox(bool value)
     {
         mInvenBox.gameObject.SetActive(value);
@@ -202,24 +178,14 @@ public class InvenController : MonoBehaviour
 
     public void DropItem(int originalID, int num)
     {
-        if(mInvenVirusInfoDic.ContainsKey(originalID))
+        for (int i = 0; i < num; i++)
         {
-            for(int i = 0; i < num; i++)
-            {
-                ItemObj item = mItemObjPool.GetFromPool(0);
-                item.DropItem();
-                item.InitObj(
-                    originalID,
-                    DataGroup.Instance.ItemDataDic[IdTostring(originalID)][TransformIndex(originalID)].Rare,
-                    1,
-                    mInvenVirusInfoDic[originalID][mInvenVirusInfoDic[originalID].Count - 1]);
-
-                mInvenVirusInfoDic[originalID].RemoveAt(mInvenVirusInfoDic[originalID].Count - 1);
-            }
-        }
-        else
-        {
-            Debug.LogError("Wrong Item ID : " + originalID);
+            ItemObj item = mItemObjPool.GetFromPool(0);
+            item.DropItem();
+            item.InitObj(
+                originalID,
+                DataGroup.Instance.ItemDataDic[IdTostring(originalID)][TransformIndex(originalID)].Rare,
+                1);
         }
         
         DataGroup.Instance.SetItemNumber(originalID, -num);
@@ -228,13 +194,5 @@ public class InvenController : MonoBehaviour
     public void RenewInven(int originalID)
     {
         mPlayerInven.RenewInven(originalID);
-    }
-
-    public void RemoveInvenVirusInfo(int originalId, int num)
-    {
-        for(int i = 0; i < num; i++)
-        {
-            mInvenVirusInfoDic[originalId].RemoveAt(mInvenVirusInfoDic[originalId].Count - 1);
-        }
     }
 }

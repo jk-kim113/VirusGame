@@ -95,7 +95,6 @@ public class Inven : MonoBehaviour
             }
 
             DataGroup.Instance.SetItemNumber(mSlotArr[mSelcetAreaPosNum].ItemID, -1);
-            int virusID = InvenController.Instance.CheckIsInfected(mSlotArr[mSelcetAreaPosNum].ItemID);
 
             eItemType type = DataGroup.Instance.ItemTypeDic[mSlotArr[mSelcetAreaPosNum].ItemID];
 
@@ -105,13 +104,13 @@ public class Inven : MonoBehaviour
                     
                     break;
                 case eItemType.Use:
+                    //TODO
+                    //eUseTarget target = DataGroup.Instance.FoodMenuDic[IDtoUseType(mSlotArr[mSelcetAreaPosNum].ItemID)].UseTarget;
 
-                    eUseTarget target = DataGroup.Instance.FoodMenuDic[IDtoUseType(mSlotArr[mSelcetAreaPosNum].ItemID)].UseTarget;
-
-                    Player.Instance.UseItem(
-                        target,
-                        DataGroup.Instance.FoodMakeTypeDic[IDtoUseType(mSlotArr[mSelcetAreaPosNum].ItemID)].TypeValue[(int)target],
-                        virusID);
+                    //Player.Instance.UseItem(
+                    //    target,
+                    //    DataGroup.Instance.FoodMakeTypeDic[IDtoUseType(mSlotArr[mSelcetAreaPosNum].ItemID)].TypeValue[(int)target],
+                    //    virusID);
 
                     break;
                 case eItemType.Equip:

@@ -12,7 +12,6 @@ public class ItemObj : MonoBehaviour
     private Renderer mRend;
     private int mNumber;
     private SphereCollider mCollider;
-    private int mVirusID;
 
     private void Awake()
     {
@@ -26,11 +25,10 @@ public class ItemObj : MonoBehaviour
         mPlayer = null;
     }
 
-    public void InitObj(int originalId, int rare, int num, int virusID)
+    public void InitObj(int originalId, int rare, int num)
     {
         mItemID = originalId;
         mNumber = num;
-        mVirusID = virusID;
 
         switch(rare)
         {
@@ -98,6 +96,6 @@ public class ItemObj : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        InvenController.Instance.SetSpriteToInven(mItemID, mNumber, mVirusID);
+        InvenController.Instance.SetSpriteToInven(mItemID, mNumber);
     }
 }

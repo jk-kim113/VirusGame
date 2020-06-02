@@ -9,7 +9,7 @@ public class Animal : Virus
     protected NavMeshAgent mNav;
     protected Animator mAnimator;
     private const float mGrowPeriod = 720.0f;
-    private Coroutine mMovePatternCoroutine;
+    
     private Coroutine mSpendGrowPeriodCoroutine;
 
     private BoxCollider mCollider;
@@ -84,7 +84,7 @@ public class Animal : Virus
         }
     }
 
-    protected Vector3 RandomCoordinates()
+    private Vector3 RandomCoordinates()
     {   
         float xCord = Random.Range(mMoveBoundary.gameObject.transform.position.x - (mMoveBoundary.size.x /2), 
                                     mMoveBoundary.gameObject.transform.position.x + (mMoveBoundary.size.x / 2));
@@ -105,7 +105,6 @@ public class Animal : Virus
 
         int randomNum = Random.Range(0, (int)eAnimalGrowthType.max);
         SetGrowthType(randomNum);
-        
     }
 
     private void SetGrowthType(int random)

@@ -22,7 +22,10 @@ public class CombinationController : MonoBehaviour
 
     private List<CombinationElement> mCombEleList;
     private int mNewItemID;
-    private eFoodType mFoodType;
+
+    private UseItemData[] mUseItemDataAtrr;
+    private ItemMakingInfo[] mItemMakingInfoArr;
+    private Sprite[] mUseItemSpriteArr;
 
     private void Awake()
     {
@@ -40,6 +43,10 @@ public class CombinationController : MonoBehaviour
 
     private void Start()
     {
+        JsonDataLoader.Instance.LoadJsonData<UseItemData>(out mUseItemDataAtrr, "JsonFiles/UseItemData");
+        JsonDataLoader.Instance.LoadJsonData<ItemMakingInfo>(out mItemMakingInfoArr, "JsonFiles/ItemMakingInfoData");
+        mUseItemSpriteArr = Resources.LoadAll<Sprite>("Sprites/UseItem");
+
         StartCoroutine(Load());
     }
 
@@ -52,23 +59,21 @@ public class CombinationController : MonoBehaviour
             yield return term;
         }
 
-        for (int i = 0; i < DataGroup.Instance.FoodMenuDic.Count; i++)
+        for (int i = 0; i < mUseItemDataAtrr.Length; i++)
         {
-            int id = DataGroup.Instance.FoodMenuArr[i].ID;
-
             CombinationElement element = Instantiate(mCombElement, mScrollTarget);
             element.Init(
-                DataGroup.Instance.ItemSpriteDic[id],
-                DataGroup.Instance.FoodMenuDic[id].ID,
-                DataGroup.Instance.FoodMenuDic[id].Name,
-                DataGroup.Instance.FoodMenuDic[id].Info,
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.FoodMenuDic[id].ID].NeedNumber,
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.FoodMenuDic[id].ID].NeedID,
+                mUseItemSpriteArr[i],
+                mUseItemDataAtrr[i].ID,
+                mUseItemDataAtrr[i].Name,
+                mUseItemDataAtrr[i].Info,
+                mItemMakingInfoArr[i].NeedNumber,
+                mItemMakingInfoArr[i].NeedID,
                 MakeItem);
             mCombEleList.Add(element);
         }
     }
-
+    
     public void OpenCombTable(bool value)
     {
         mItemCombTable.SetActive(value);
@@ -80,11 +85,9 @@ public class CombinationController : MonoBehaviour
     {
         for (int i = 0; i < mCombEleList.Count; i++)
         {
-            int id = DataGroup.Instance.FoodMenuArr[i].ID;
-
             mCombEleList[i].Renew(
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.FoodMenuDic[id].ID].NeedNumber,
-                DataGroup.Instance.ItemMakingInfoDic[DataGroup.Instance.FoodMenuDic[id].ID].NeedID
+                mItemMakingInfoArr[i].NeedNumber,
+                mItemMakingInfoArr[i].NeedID
                 );
         }
     }
@@ -98,74 +101,46 @@ public class CombinationController : MonoBehaviour
         else
         {
             mNewItemID = newItemID;
-            OnOffAskFoodType(true);
+            mAskFoodType.SetActive(true);
         }
     }
 
     public void SelectFoodType(int type)
     {
-        OnOffAskFoodType(false);
-        OnOffConfirmFoodType(true);
-        mFoodType = (eFoodType)type;
+        mConfirmFoodType.SetActive(true);
 
         Text message = mConfirmFoodType.GetComponentInChildren<Text>();
-        message.text = string.Format("해당 제조법의 음식 효과는 {0} 이고, 소비 전력량은 {1} 입니다.", 
-            DataGroup.Instance.FoodMakeTypeDic[mNewItemID].TypeValue[type],
+        message.text = string.Format("해당 제조법의 음식 효과는 {0} 이고, 소비 전력량은 {1} 입니다.",
+            mUseItemDataAtrr[mNewItemID - 3000].TypeValue[type],
             0);
     }
 
     public void ConfirmMakeFood()
     {
-        bool isInfect = false;
-        int virusID = -999;
-
-        for (int i = 0; i < DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber.Length; i++)
+        for (int i = 0; i < mItemMakingInfoArr[mNewItemID - 3000].NeedNumber.Length; i++)
         {
-            int needID = DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedID[i];
-            int needNum = DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber[i];
+            int needID = mItemMakingInfoArr[mNewItemID - 3000].NeedID[i];
+            int needNum = mItemMakingInfoArr[mNewItemID - 3000].NeedNumber[i];
 
-            if (DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedNumber[i] > 0)
+            if (needNum > 0)
             {
+                if (needNum > DataGroup.Instance.ItemNumDic[needID])
+                {
+                    Debug.Log("No Need Item");
+                    return;
+                }
+
                 DataGroup.Instance.SetItemNumber(
                     needID,
                     -needNum);
 
-                InvenController.Instance.RenewInven(DataGroup.Instance.ItemMakingInfoDic[mNewItemID].NeedID[i]);
+                InvenController.Instance.RenewInven(needNum);
             }
-
-            int temp = InvenController.Instance.InvenVirusInfoDic[needID].Count;
-
-            for (int j = temp; j > temp - needNum; j--)
-            {
-                if(!isInfect)
-                {
-                    if (InvenController.Instance.InvenVirusInfoDic[needID][temp - 1] > 0)
-                    {
-                        isInfect = true;
-                        virusID = InvenController.Instance.InvenVirusInfoDic[needID][temp - 1];
-                    }
-                }
-            }
-
-            InvenController.Instance.RemoveInvenVirusInfo(needID, needNum);
         }
 
-        mNewItemID = DataGroup.Instance.FoodMenuDic[mNewItemID].TargetID[(int)mFoodType];
-
         RenewCombTable();
-
-        InvenController.Instance.SetSpriteToInven(mNewItemID, 1, virusID);
 
         mConfirmFoodType.SetActive(false);
     }
 
-    public void OnOffAskFoodType(bool value)
-    {
-        mAskFoodType.SetActive(value);
-    }
-
-    public void OnOffConfirmFoodType(bool value)
-    {
-        mConfirmFoodType.SetActive(value);
-    }
 }

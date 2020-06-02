@@ -15,25 +15,11 @@ public class DataGroup : MonoBehaviour
     private Dictionary<string, ItemData[]> mItemDataDic = new Dictionary<string, ItemData[]>();
     public Dictionary<string, ItemData[]> ItemDataDic { get { return mItemDataDic; } }
 
-    private Dictionary<int, ItemMakingInfo> mItemMakingInfoDic = new Dictionary<int, ItemMakingInfo>();
-    public Dictionary<int, ItemMakingInfo> ItemMakingInfoDic { get { return mItemMakingInfoDic; } }
-
-    private Dictionary<int, FoodMenu> mFoodMenuDic = new Dictionary<int, FoodMenu>();
-    public Dictionary<int, FoodMenu> FoodMenuDic { get { return mFoodMenuDic; } }
-
-    private Dictionary<int, FoodMakeType> mFoodMakeTypeDic = new Dictionary<int, FoodMakeType>();
-    public Dictionary<int, FoodMakeType> FoodMakeTypeDic { get { return mFoodMakeTypeDic; } }
-
     private Dictionary<int, eItemType> mItemTypeDic = new Dictionary<int, eItemType>();
     public Dictionary<int, eItemType> ItemTypeDic { get { return mItemTypeDic; } }
 
     private ItemData[] mItemDataArr;
     
-    private ItemMakingInfo[] mItemMakingInfoArr;
-    private FoodMenu[] mFoodMenuArr;
-    public FoodMenu[] FoodMenuArr { get { return mFoodMenuArr; } }
-    private FoodMakeType[] mFoodMakeTypeArr;
-
     private bool bLoaded;
     public bool Loaded { get { return bLoaded; } }
 
@@ -54,13 +40,10 @@ public class DataGroup : MonoBehaviour
     private void Start()
     {
         JsonDataLoader.Instance.LoadJsonData<ItemData>(out mItemDataArr, "JsonFiles/ItemData");
-        JsonDataLoader.Instance.LoadJsonData<ItemMakingInfo>(out mItemMakingInfoArr, "JsonFiles/CombinationData");
-        JsonDataLoader.Instance.LoadJsonData<FoodMenu>(out mFoodMenuArr, "JsonFiles/FoodMenu");
-        JsonDataLoader.Instance.LoadJsonData<FoodMakeType>(out mFoodMakeTypeArr, "JsonFiles/FoodMakeTypeData");
-
+        
         Sprite[] GrassSpriteArr = Resources.LoadAll<Sprite>("Sprites/GrassItem");
         Sprite[] TreeSpriteArr = Resources.LoadAll<Sprite>("Sprites/TreeItem");
-        Sprite[] FoodSpriteArr = Resources.LoadAll<Sprite>("Sprites/CombItem");
+        
         Sprite[] EquipSpriteArr = Resources.LoadAll<Sprite>("Sprites/EquipItem");
         
         ItemData[] GrassItemDataArr = new ItemData[GrassSpriteArr.Length];
@@ -93,44 +76,16 @@ public class DataGroup : MonoBehaviour
         {
             mItemNumDic.Add(mItemDataArr[i].ID, 0);
         }
-        for(int i = 0; i < mFoodMenuArr.Length; i++)
-        {
-            for(int j =0; j < mFoodMenuArr[i].TargetID.Length; j++)
-            {
-                mItemNumDic.Add(mFoodMenuArr[i].TargetID[j], 0);
-                mItemTypeDic.Add(mFoodMenuArr[i].TargetID[j], eItemType.Use);
-            }
-        }
-
         mItemNumDic.Add(5000, 0);
-
-        // Set Food Sprite
-        for(int i = 0; i < mFoodMenuArr.Length; i++)
-        {
-            mFoodMenuDic.Add(mFoodMenuArr[i].ID, mFoodMenuArr[i]);
-            mItemSpriteDic.Add(mFoodMenuArr[i].ID, FoodSpriteArr[i]);
-
-            for (int j = 0; j < mFoodMenuArr[i].TargetID.Length; j++)
-            {   
-                mItemSpriteDic.Add(mFoodMenuArr[i].TargetID[j], FoodSpriteArr[i]);
-            }
-        }
-
-        for (int i = 0; i < mItemMakingInfoArr.Length; i++)
-        {
-            mItemMakingInfoDic.Add(mItemMakingInfoArr[i].TargetID, mItemMakingInfoArr[i]);
-        }
-
-        for (int i = 0; i < mFoodMakeTypeArr.Length; i++)
-        {
-            mFoodMakeTypeDic.Add(mFoodMakeTypeArr[i].TargetID, mFoodMakeTypeArr[i]);
-        }
 
         bLoaded = true;
     }
 
     public void SetItemNumber(int originalID, int value)
     {
+        if (!mItemNumDic.ContainsKey(originalID))
+            mItemNumDic.Add(originalID, 0);
+
         mItemNumDic[originalID] += value;
 
         InvenController.Instance.RenewInven(originalID);

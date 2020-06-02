@@ -76,17 +76,7 @@ public class AnalysisController : MonoBehaviour
         float power = 0f;
 
         mItemID = originalID;
-        
-        for (int i = 0; i < InvenController.Instance.InvenVirusInfoDic[mItemID].Count; i++)
-        {
-            int virusID = InvenController.Instance.InvenVirusInfoDic[mItemID][i];
 
-            if (virusID > 0)
-            {
-                power += VirusController.Instance.VirusDataDic[virusID].PowerConsumption;
-            }
-        }
-        
         mAnaysisText.text = string.Format("분석 : 전력소비 {0}", power.ToString());
         mDisinfectionText.text = string.Format("분석 : 전력소비 {0}", (power * 0.3).ToString());
 
@@ -95,24 +85,24 @@ public class AnalysisController : MonoBehaviour
 
     private void AnalysisVirus()
     {
-        for(int i = 0; i < InvenController.Instance.InvenVirusInfoDic[mItemID].Count; i++)
-        {
-            int virusID = InvenController.Instance.InvenVirusInfoDic[mItemID][i];
+        //for(int i = 0; i < InvenController.Instance.InvenVirusInfoDic[mItemID].Count; i++)
+        //{
+        //    int virusID = InvenController.Instance.InvenVirusInfoDic[mItemID][i];
 
-            if (virusID > 0)
-            {
-                mVirusAnalysisRateDic[virusID] += VirusController.Instance.VirusDataDic[virusID].AnalysisRate;
+        //    if (virusID > 0)
+        //    {
+        //        mVirusAnalysisRateDic[virusID] += VirusController.Instance.VirusDataDic[virusID].AnalysisRate;
 
-                if (mVirusAnalysisRateDic[virusID] >= 100f)
-                {
-                    mVirusAnalysisRateDic[virusID] = 100f;
+        //        if (mVirusAnalysisRateDic[virusID] >= 100f)
+        //        {
+        //            mVirusAnalysisRateDic[virusID] = 100f;
 
-                    AnimalController.Instance.ShowVirusMap(virusID);
-                }
+        //            AnimalController.Instance.ShowVirusMap(virusID);
+        //        }
 
-                mElementDic[virusID].Renew(mVirusAnalysisRateDic[virusID]);
-            }
-        }
+        //        mElementDic[virusID].Renew(mVirusAnalysisRateDic[virusID]);
+        //    }
+        //}
 
         mSlot.Renew(0);
 
@@ -121,10 +111,10 @@ public class AnalysisController : MonoBehaviour
 
     private void Disinfection()
     {
-        for (int i = 0; i < InvenController.Instance.InvenVirusInfoDic[mItemID].Count; i++)
-        {
-            InvenController.Instance.InvenVirusInfoDic[mItemID][i] = -999;
-        }
+        //for (int i = 0; i < InvenController.Instance.InvenVirusInfoDic[mItemID].Count; i++)
+        //{
+        //    InvenController.Instance.InvenVirusInfoDic[mItemID][i] = -999;
+        //}
 
         mSlot.Renew(0);
         
