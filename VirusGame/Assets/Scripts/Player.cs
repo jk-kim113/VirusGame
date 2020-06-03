@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField]
     private Beaker mBeaker;
     [SerializeField]
-    private BoxCollider mWeaponCollider;
+    private Transform mWeaponPos;
 #pragma warning restore
 
     private CharacterController mCHControl;
@@ -159,7 +159,7 @@ public class Player : MonoBehaviour
             }
             else if(bIsOpenCombTable)
             {
-                OpenCombTable(true);
+                OpenUseItemMaker(true);
                 bIsOpenCombTable = false;
             }
             else if(bIsOpenAnalysisTable)
@@ -179,7 +179,7 @@ public class Player : MonoBehaviour
             }
             else if(bIsOpenEquipMaker)
             {
-                OpenEquipMaker(true);
+                OpenEquipItemMaker(true);
                 bIsOpenEquipMaker = false;
             }
         }
@@ -187,22 +187,22 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             OpenInvenBox(false);
-            OpenCombTable(false);
+            OpenUseItemMaker(false);
             OpenAnalsisTable(false);
             OpenDrugMaker(false);
             CollectBlood(false);
-            OpenEquipMaker(false);
+            OpenEquipItemMaker(false);
         }
 
         if(Input.GetKey(KeyCode.Space))
         {
             mAnim.SetBool("attack01", true);
-            mWeaponCollider.enabled = true;
+            //mWeaponCollider.enabled = true;
         }
         else
         {
             mAnim.SetBool("attack01", false);
-            mWeaponCollider.enabled = false;
+            //mWeaponCollider.enabled = false;
         }
     }
 
@@ -273,9 +273,9 @@ public class Player : MonoBehaviour
         bStopMove = value;
     }
 
-    private void OpenCombTable(bool value)
+    private void OpenUseItemMaker(bool value)
     {
-        CombinationController.Instance.OpenCombTable(value);
+        MakeItemController.Instance.OpenUseItemMaker(value);
         bStopMove = value;
     }
 
@@ -315,9 +315,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OpenEquipMaker(bool value)
+    private void OpenEquipItemMaker(bool value)
     {
-        EquipMaker.Instance.OpenEquipMaker(value);
+        MakeItemController.Instance.OpenUseItemMaker(value);
         bStopMove = value;
     }
 

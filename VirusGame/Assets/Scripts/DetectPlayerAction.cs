@@ -9,11 +9,9 @@ public class DetectPlayerAction : MonoBehaviour
     private LayerMask mMask;
 #pragma warning restore
 
-    private float mDectectRange = 15.0f;
+    private float mDectectRange = 7.0f;
     private GameObject mDetectObj;
     public GameObject DetectObj { get { return mDetectObj; } }
-
-    private Dictionary<string, GameObject> mDetectDic = new Dictionary<string, GameObject>();
 
     private Plant mPlantObj;
     private int mCount;

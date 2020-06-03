@@ -37,7 +37,19 @@ public class CameraYMove : MonoBehaviour
         {
             // Camera Y axis Rotation
             float mouseY = Input.GetAxis("Mouse Y");
-            transform.localEulerAngles = new Vector3(transform.localEulerAngles.x - mouseY, transform.localEulerAngles.y, transform.localEulerAngles.z);
+            transform.localEulerAngles = new Vector3(
+                transform.localEulerAngles.x - mouseY,
+                transform.localEulerAngles.y,
+                transform.localEulerAngles.z);
+
+
+            if (transform.localEulerAngles.x > 45)
+            {
+                transform.localEulerAngles = new Vector3(
+                45,
+                transform.localEulerAngles.y,
+                transform.localEulerAngles.z);
+            }
         }
 
         if(bIsMove)

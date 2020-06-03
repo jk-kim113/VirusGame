@@ -20,6 +20,14 @@ public class ItemData
     public int Rare;
 }
 
+public class EquipItemData
+{
+    public string Name;
+    public int ID;
+    public string Info;
+    public int Attack;
+}
+
 public class UseItemData
 {
     public string Name;
