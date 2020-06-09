@@ -20,24 +20,43 @@ public class Inven : MonoBehaviour
         mSelectAreaPos.transform.position = mSlotArr[mSelcetAreaPosNum].gameObject.transform.position;
     }
 
-    public void GetItem(Sprite sprite, int num, int originalId)
+    public void GetItem(Sprite img, int originalId, int num, eItemType itemType)
     {
-        for(int i = 0; i < mSlotArr.Length; i++)
+        switch(itemType)
         {
-            if (mSlotArr[i].ItemID == originalId)
-            {
-                mSlotArr[i].Init(sprite, num, originalId);
-                return;
-            }
-        }
+            case eItemType.Drop:
+            case eItemType.Use:
+                for (int i = 0; i < mSlotArr.Length; i++)
+                {
+                    if (mSlotArr[i].ItemID == originalId)
+                    {
+                        mSlotArr[i].Init(img, num, originalId);
+                        return;
+                    }
+                }
 
-        for (int i = 0; i < mSlotArr.Length; i++)
-        {
-            if (!mSlotArr[i].IsFull)
-            {
-                mSlotArr[i].Init(sprite, num, originalId);
-                return;
-            }
+                for (int i = 0; i < mSlotArr.Length; i++)
+                {
+                    if (!mSlotArr[i].IsFull)
+                    {
+                        mSlotArr[i].Init(img, num, originalId);
+                        return;
+                    }
+                }
+                break;
+            case eItemType.Equip:
+                for (int i = 0; i < mSlotArr.Length; i++)
+                {
+                    if (!mSlotArr[i].IsFull)
+                    {
+                        mSlotArr[i].Init(img, num, originalId);
+                        return;
+                    }
+                }
+                break;
+            default:
+                Debug.LogError("Wrong item type : " + itemType);
+                break;
         }
     }
 

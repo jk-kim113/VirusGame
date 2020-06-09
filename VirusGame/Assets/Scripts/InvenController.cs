@@ -31,7 +31,7 @@ public class InvenController : MonoBehaviour
         }
     }
 
-    public void SpawnPlantItem(Vector3 Itempos, string tag, ePlantGrowthType type, int virusID)
+    public void SpawnPlantItem(Vector3 Itempos, string tag, ePlantGrowthType type)
     {
         int itemNum = Random.Range(3, 6);
         int selectedID = -999;
@@ -117,18 +117,9 @@ public class InvenController : MonoBehaviour
         }
     }
 
-    public void SetSpriteToInven(int originalId, int num)
+    public void SetSpriteToInven(Sprite img, int originalId, int num ,eItemType itemType)
     {
-        DataGroup.Instance.SetItemNumber(originalId, num);
-        SetPlayerInven(originalId);
-    }
-
-    public void SetPlayerInven(int originalID)
-    {
-        mPlayerInven.GetItem(
-            DataGroup.Instance.ItemSpriteDic[originalID],
-            DataGroup.Instance.ItemNumDic[originalID],
-            originalID);
+        mPlayerInven.GetItem(img, originalId, num, itemType);
     }
 
     private int TransformIndex(int originalID)

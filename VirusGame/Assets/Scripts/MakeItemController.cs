@@ -27,7 +27,7 @@ public class MakeItemController : MonoBehaviour
 #pragma warning restore
 
     private List<CombinationElement> mUseItemEleList = new List<CombinationElement>();
-    List<CombinationElement> mEquipItemEleList = new List<CombinationElement>();
+    private List<CombinationElement> mEquipItemEleList = new List<CombinationElement>();
 
     private int mNewItemID;
 
@@ -37,7 +37,7 @@ public class MakeItemController : MonoBehaviour
     private Sprite[] mUseItemSpriteArr;
     private Sprite[] mEquipItemSpriteArr;
 
-    private ItemMakingInfo[] mItemMakingInfoArr;
+    private Dictionary<int, ItemMakingInfo> mItemMakingInfoDic = new Dictionary<int, ItemMakingInfo>();
 
     private void Awake()
     {
@@ -50,14 +50,19 @@ public class MakeItemController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    
     private void Start()
     {
+        ItemMakingInfo[] itemMakingInfoArr;
+
         JsonDataLoader.Instance.LoadJsonData<UseItemData>(out mUseItemDataArr, "JsonFiles/UseItemData");
         JsonDataLoader.Instance.LoadJsonData<EquipItemData>(out mEquipItemDataArr, "JsonFiles/EquipItemData");
-        JsonDataLoader.Instance.LoadJsonData<ItemMakingInfo>(out mItemMakingInfoArr, "JsonFiles/ItemMakingInfoData");
+        JsonDataLoader.Instance.LoadJsonData<ItemMakingInfo>(out itemMakingInfoArr, "JsonFiles/ItemMakingInfoData");
         mUseItemSpriteArr = Resources.LoadAll<Sprite>("Sprites/UseItem");
         mEquipItemSpriteArr = Resources.LoadAll<Sprite>("Sprites/EquipItem");
+
+        for (int i = 0; i < itemMakingInfoArr.Length; i++)
+            mItemMakingInfoDic.Add(itemMakingInfoArr[i].TargetID, itemMakingInfoArr[i]);
 
         StartCoroutine(Load());
     }
@@ -85,8 +90,8 @@ public class MakeItemController : MonoBehaviour
                 mUseItemDataArr[i].ID,
                 mUseItemDataArr[i].Name,
                 mUseItemDataArr[i].Info,
-                mItemMakingInfoArr[i].NeedNumber,
-                mItemMakingInfoArr[i].NeedID,
+                mItemMakingInfoDic[mUseItemDataArr[i].ID].NeedNumber,
+                mItemMakingInfoDic[mUseItemDataArr[i].ID].NeedID,
                 MakeUseItem);
             mUseItemEleList.Add(element);
         }
@@ -102,14 +107,14 @@ public class MakeItemController : MonoBehaviour
                 mEquipItemDataArr[i].ID,
                 mEquipItemDataArr[i].Name,
                 mEquipItemDataArr[i].Info,
-                mItemMakingInfoArr[i + 2].NeedNumber,
-                mItemMakingInfoArr[i + 2].NeedID,
+                mItemMakingInfoDic[mEquipItemDataArr[i].ID].NeedNumber,
+                mItemMakingInfoDic[mEquipItemDataArr[i].ID].NeedID,
                 MakeEquipItem);
             mEquipItemEleList.Add(element);
         }
     }
 
-    #region  UseItem Part
+    #region  "UseItem Part"
     private void MakeUseItem(int newItemID)
     {
         if (InvenController.Instance.CheckIsFull(newItemID))
@@ -129,16 +134,16 @@ public class MakeItemController : MonoBehaviour
 
         Text message = mConfirmFoodType.GetComponentInChildren<Text>();
         message.text = string.Format("해당 제조법의 음식 효과는 {0} 이고, 소비 전력량은 {1} 입니다.",
-            mUseItemDataArr[mNewItemID - 3000].TypeValue[type],
+            mUseItemDataArr[mNewItemID].TypeValue[type],
             0);
     }
 
     public void ConfirmMakeFood()
     {
-        for (int i = 0; i < mItemMakingInfoArr[mNewItemID - 3000].NeedNumber.Length; i++)
+        for (int i = 0; i < mItemMakingInfoDic[mNewItemID].NeedNumber.Length; i++)
         {
-            int needID = mItemMakingInfoArr[mNewItemID - 3000].NeedID[i];
-            int needNum = mItemMakingInfoArr[mNewItemID - 3000].NeedNumber[i];
+            int needID = mItemMakingInfoDic[mNewItemID].NeedID[i];
+            int needNum = mItemMakingInfoDic[mNewItemID].NeedNumber[i];
 
             if (needNum > 0)
             {
@@ -173,14 +178,14 @@ public class MakeItemController : MonoBehaviour
         for (int i = 0; i < mUseItemEleList.Count; i++)
         {
             mUseItemEleList[i].Renew(
-                mItemMakingInfoArr[i].NeedNumber,
-                mItemMakingInfoArr[i].NeedID
+                mItemMakingInfoDic[i + 3000].NeedNumber,
+                mItemMakingInfoDic[i + 3000].NeedID
                 );
         }
     }
     #endregion
 
-    #region EquipItem Part
+    #region "EquipItem Part"
 
     private void MakeEquipItem(int newItemID)
     {
@@ -192,10 +197,10 @@ public class MakeItemController : MonoBehaviour
         {
             mNewItemID = newItemID;
 
-            for (int i = 0; i < mItemMakingInfoArr[newItemID - 4000 + 2].NeedNumber.Length; i++)
+            for (int i = 0; i < mItemMakingInfoDic[mNewItemID].NeedNumber.Length; i++)
             {
-                int needID = mItemMakingInfoArr[newItemID - 4000 + 2].NeedID[i];
-                int needNum = mItemMakingInfoArr[newItemID - 4000 + 2].NeedNumber[i];
+                int needID = mItemMakingInfoDic[mNewItemID].NeedID[i];
+                int needNum = mItemMakingInfoDic[mNewItemID].NeedNumber[i];
 
                 if (needNum > 0)
                 {
@@ -207,7 +212,7 @@ public class MakeItemController : MonoBehaviour
 
             RenewEquipItemElement();
 
-            InvenController.Instance.SetSpriteToInven(newItemID, 1);
+            //InvenController.Instance.SetSpriteToInven(mNewItemID, 1);
         }
     }
 
@@ -216,8 +221,8 @@ public class MakeItemController : MonoBehaviour
         for (int i = 0; i < mEquipItemEleList.Count; i++)
         {
             mEquipItemEleList[i].Renew(
-                mItemMakingInfoArr[mNewItemID - 4000 + 2].NeedNumber,
-                mItemMakingInfoArr[mNewItemID - 4000 + 2].NeedID
+                mItemMakingInfoDic[i + 4000].NeedNumber,
+                mItemMakingInfoDic[i + 4000].NeedID
                 );
         }
     }

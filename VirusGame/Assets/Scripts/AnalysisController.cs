@@ -118,6 +118,6 @@ public class AnalysisController : MonoBehaviour
 
         mSlot.Renew(0);
         
-        InvenController.Instance.SetPlayerInven(mItemID);
+        //InvenController.Instance.SetPlayerInven(mItemID);
     }
 }

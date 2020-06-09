@@ -245,8 +245,8 @@ public class Player : MonoBehaviour
             InvenController.Instance.SpawnPlantItem(
                 plantDetected.gameObject.transform.position,
                 plantDetected.gameObject.tag,
-                plantDetected.GrowthType,
-                plantDetected.VirusID);
+                plantDetected.GrowthType
+                );
 
             mStaminaCurrent -= 3;
             
@@ -317,7 +317,7 @@ public class Player : MonoBehaviour
 
     private void OpenEquipItemMaker(bool value)
     {
-        MakeItemController.Instance.OpenUseItemMaker(value);
+        MakeItemController.Instance.OpenEquipItemMaker(value);
         bStopMove = value;
     }
 
