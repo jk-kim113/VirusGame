@@ -18,10 +18,14 @@ public class CombinationElement : MonoBehaviour
     private Button mMakingBtn;
 #pragma warning restore
 
+    private int mID;
+    public int ID { get { return mID; } }
+
     public void Init(Sprite mainSprite, int originalId, string name, string content, int[] needsNum, int[] needsID,
         StaticValue.OneIntParaCallBack callback)
     {
         mMainImg.sprite = mainSprite;
+        mID = originalId;
         mNameText.text = name;
         mContentsText.text = content;
         mMakingBtn.onClick.AddListener(() => { callback(originalId); });
@@ -38,19 +42,27 @@ public class CombinationElement : MonoBehaviour
                 mNeedsArr[i].SetActive(true);
 
                 Image needImg = mNeedsArr[i].GetComponentInChildren<Image>();
-                needImg.sprite = DataGroup.Instance.ItemSpriteDic[needsID[i]];
+                needImg.sprite = DataGroup.Instance.SpriteDataDic[eItemType.Drop][needsID[i]];
 
                 Text num = mNeedsArr[i].GetComponentInChildren<Text>();
                 num.text = "x " + needsNum[i].ToString();
 
-                if (needsNum[i] > DataGroup.Instance.ItemNumDic[needsID[i]])
+                if(InvenController.Instance.ItemNumberDic[eItemType.Drop].ContainsKey(needsID[i]))
                 {
-                    num.color = Color.red;
+                    if (needsNum[i] > InvenController.Instance.ItemNumberDic[eItemType.Drop][needsID[i]])
+                    {
+                        num.color = Color.red;
+                    }
+                    else
+                    {
+                        num.color = Color.black;
+                    }
                 }
                 else
                 {
-                    num.color = Color.black;
+                    num.color = Color.red;
                 }
+                
             }
             else
             {

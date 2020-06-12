@@ -106,103 +106,109 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!bStopMove)
+        if(IngameManager.Instance.CurrentGameState == IngameManager.eGameState.PlayGame)
         {
-            // Player Move
-            float horizontal = Input.GetAxis("Horizontal");
-            float vertical = Input.GetAxis("Vertical");
-            Vector3 dir = new Vector3(horizontal, 0, vertical);
-            dir = dir.normalized * mSpeed;
-            dir = transform.TransformDirection(dir);
-            mCHControl.Move(dir * Time.fixedDeltaTime);
-            
-            // Player X axis Camera rotation
-            float mouseX = Input.GetAxis("Mouse X");
-            transform.localEulerAngles = new Vector3(
-                transform.localEulerAngles.x,
-                transform.localEulerAngles.y + mouseX,
-                transform.localEulerAngles.z);
+            if (!bStopMove)
+            {
+                // Player Move
+                float horizontal = Input.GetAxis("Horizontal");
+                float vertical = Input.GetAxis("Vertical");
+                Vector3 dir = new Vector3(horizontal, 0, vertical);
+                dir = dir.normalized * mSpeed;
+                dir = transform.TransformDirection(dir);
+                mCHControl.Move(dir * Time.fixedDeltaTime);
 
-            if (dir.magnitude > 0.1)
-            {
-                mAnim.SetBool("walk", true);
-            }
-            else
-            {
-                mAnim.SetBool("walk", false);
+                // Player X axis Camera rotation
+                float mouseX = Input.GetAxis("Mouse X");
+                transform.localEulerAngles = new Vector3(
+                    transform.localEulerAngles.x,
+                    transform.localEulerAngles.y + mouseX,
+                    transform.localEulerAngles.z);
+
+                if (dir.magnitude > 0.1)
+                {
+                    mAnim.SetBool("walk", true);
+                }
+                else
+                {
+                    mAnim.SetBool("walk", false);
+                }
             }
         }
     }
 
     void Update()
     {
-        // Start Plant Action
-        if (Input.GetMouseButtonDown(0))
+        if(IngameManager.Instance.CurrentGameState == IngameManager.eGameState.PlayGame)
         {
-            if(bPlantAction)
-            {   
-                StartCoroutine(DoingAction());
+            // Start Plant Action
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (bPlantAction)
+                {
+                    StartCoroutine(DoingAction());
+                }
             }
-        }
 
-        // Player Hungry decrease
-        mHungryCurrent -= 0.5f * Time.deltaTime;
-        MainUIController.Instance.ShowHungryGaugeBar(mHungryMax, mHungryCurrent);
+            // Player Hungry decrease
+            mHungryCurrent -= 0.5f * Time.deltaTime;
+            MainUIController.Instance.ShowHungryGaugeBar(mHungryMax, mHungryCurrent);
 
-        // Open Inven Box
-        if(Input.GetKeyDown(KeyCode.F))
-        {
-            if(bIsOpenInven)
+            // Open Inven Box
+            if (Input.GetKeyDown(KeyCode.F))
             {
-                OpenInvenBox(true);
-                bIsOpenInven = false;
+                if (bIsOpenInven)
+                {
+                    OpenInvenBox(true);
+                    bIsOpenInven = false;
+                }
+                else if (bIsOpenCombTable)
+                {
+                    OpenUseItemMaker(true);
+                    bIsOpenCombTable = false;
+                }
+                else if (bIsOpenAnalysisTable)
+                {
+                    OpenAnalsisTable(true);
+                    bIsOpenAnalysisTable = false;
+                }
+                else if (bIsOpenDrugMaker)
+                {
+                    OpenDrugMaker(true);
+                    bIsOpenDrugMaker = false;
+                }
+                else if (bIsCollectBlood)
+                {
+                    CollectBlood(true);
+                    bIsCollectBlood = false;
+                }
+                else if (bIsOpenEquipMaker)
+                {
+                    OpenEquipItemMaker(true);
+                    bIsOpenEquipMaker = false;
+                }
             }
-            else if(bIsOpenCombTable)
-            {
-                OpenUseItemMaker(true);
-                bIsOpenCombTable = false;
-            }
-            else if(bIsOpenAnalysisTable)
-            {
-                OpenAnalsisTable(true);
-                bIsOpenAnalysisTable = false;
-            }
-            else if(bIsOpenDrugMaker)
-            {
-                OpenDrugMaker(true);
-                bIsOpenDrugMaker = false;
-            }
-            else if(bIsCollectBlood)
-            {
-                CollectBlood(true);
-                bIsCollectBlood = false;
-            }
-            else if(bIsOpenEquipMaker)
-            {
-                OpenEquipItemMaker(true);
-                bIsOpenEquipMaker = false;
-            }
-        }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            OpenInvenBox(false);
-            OpenUseItemMaker(false);
-            OpenAnalsisTable(false);
-            OpenDrugMaker(false);
-            CollectBlood(false);
-            OpenEquipItemMaker(false);
-        }
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                OpenInvenBox(false);
+                OpenUseItemMaker(false);
+                OpenAnalsisTable(false);
+                OpenDrugMaker(false);
+                CollectBlood(false);
+                OpenEquipItemMaker(false);
+            }
 
-        if(Input.GetKey(KeyCode.Space))
-        {
-            mAnim.SetBool("attack01", true);
-            //mWeaponCollider.enabled = true;
-        }
-        else
-        {
-            mAnim.SetBool("attack01", false);
-            //mWeaponCollider.enabled = false;
+            if (Input.GetKey(KeyCode.Space))
+            {
+                mAnim.SetBool("attack01", true);
+                //mWeaponCollider.enabled = true;
+            }
+            else
+            {
+                mAnim.SetBool("attack01", false);
+                //mWeaponCollider.enabled = false;
+            }
         }
     }
 
@@ -327,7 +333,7 @@ public class Player : MonoBehaviour
         mBeaker.ShowInside(blood);
     }
 
-    public void UseItem(eUseTarget target, float value, int virusID)
+    public void UseItem(eUseTarget target, float value)
     {
         switch(target)
         {
@@ -346,12 +352,6 @@ public class Player : MonoBehaviour
                 break;
             default:
                 break;
-        }
-
-        if(virusID > 0 && !bIsInfect)
-        {
-            mVirusID = virusID;
-            Invoke("Infect", VirusController.Instance.VirusDataDic[virusID].IncubationPeriod);
         }
     }
 

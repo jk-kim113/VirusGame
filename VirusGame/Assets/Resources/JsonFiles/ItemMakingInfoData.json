@@ -1,23 +1,25 @@
 [
-  {
-    "TargetID": 3000,
-    "NeedID": [
-      1000,
-      0,
-      0,
-      0
-    ],
-    "NeedNumber": [
-      3,
-      0,
-      0,
-      0
-    ]
-  },
     {
-        "TargetID": 3001,
+        "ItemType": "Use",
+        "TargetID": 1,
         "NeedID": [
-            1002,
+            1,
+            0,
+            0,
+            0
+        ],
+        "NeedNumber": [
+            3,
+            0,
+            0,
+            0
+        ]
+    },
+    {
+        "ItemType": "Use",
+        "TargetID": 2,
+        "NeedID": [
+            3,
             0,
             0,
             0
@@ -30,9 +32,10 @@
         ]
     },
     {
-        "TargetID": 4000,
+        "ItemType": "Equip",
+        "TargetID": 1,
         "NeedID": [
-            1000,
+            1,
             0,
             0,
             0
@@ -45,9 +48,10 @@
         ]
     },
     {
-        "TargetID": 4001,
+        "ItemType": "Equip",
+        "TargetID": 2,
         "NeedID": [
-            1002,
+            3,
             0,
             0,
             0
@@ -60,9 +64,10 @@
         ]
     },
     {
-        "TargetID": 4002,
+        "ItemType": "Equip",
+        "TargetID": 3,
         "NeedID": [
-            1000,
+            1,
             0,
             0,
             0

@@ -20,6 +20,9 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
     private int mItemNum;
     public int ItemNum { get { return mItemNum; } }
 
+    private eItemType mItemType;
+    public eItemType ItemType { get { return mItemType; } }
+
     private bool bIsFull;
     public bool IsFull { get { return bIsFull; } }
 
@@ -38,13 +41,14 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
         mUIDrag = InvenController.Instance.UIDragImg;
     }
 
-    public void Init(Sprite img, int num, int originalID)
+    public void Init(Sprite img, int num, int originalID, eItemType itemType)
     {
         mItemImg.enabled = true;
         mItemNumText.enabled = true;
         bIsFull = true;
 
         mItemID = originalID;
+        mItemType = itemType;
         mItemImg.sprite = img;
 
         Renew(num);
@@ -145,15 +149,16 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
             Sprite tempSprite = slot.ItemImg;
             int tempNum = slot.ItemNum;
             int tempID = slot.ItemID;
+            eItemType tempType = slot.ItemType;
 
-            slot.Init(mItemImg.sprite, mItemNum, mItemID);
-            Init(tempSprite, tempNum, tempID);
+            slot.Init(mItemImg.sprite, mItemNum, mItemID, mItemType);
+            Init(tempSprite, tempNum, tempID, tempType);
 
 
         }
         else
         {
-            slot.Init(mItemImg.sprite, mItemNum, mItemID);
+            slot.Init(mItemImg.sprite, mItemNum, mItemID, mItemType);
             mItemID = -999;
             bIsFull = false;
         }

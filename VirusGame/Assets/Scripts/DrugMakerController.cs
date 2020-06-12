@@ -56,15 +56,15 @@ public class DrugMakerController : MonoBehaviour
 
         for(int i = 0; i < mItemIDList.Count; i++)
         {
-            rareEffi += DataGroup.Instance.ItemDataDic[IdTostring(mItemIDList[i])][mItemIDList[i]].Rare;
-            itemNum += DataGroup.Instance.ItemNumDic[mItemIDList[i]];
+            rareEffi += DataGroup.Instance.DropItemDataDic[mItemIDList[i]].Rare;
+            itemNum += InvenController.Instance.ItemNumberDic[eItemType.Drop][mItemIDList[i]];
 
-            DataGroup.Instance.SetItemNumber(mItemIDList[i], 0);
+            InvenController.Instance.SettingItemNumber(eItemType.Drop, mItemIDList[i], -itemNum);
         }
 
         float drugRare = rareEffi * itemNum / 30;
 
-        mResultSlot.Init(null, 1, 1);
+        mResultSlot.Init(null, 1, 1, eItemType.Use);
 
         for(int i = 0; i < mSlotArr.Length; i++)
         {
@@ -72,24 +72,5 @@ public class DrugMakerController : MonoBehaviour
         }
 
         mItemIDList.Clear();
-    }
-
-    private string IdTostring(int originalID)
-    {
-        string originalStr = originalID.ToString();
-        char[] originalCharArr = originalStr.ToCharArray();
-
-        if (int.Parse(originalCharArr[0].ToString()) == 1)
-        {
-            return "Grass";
-        }
-        else if (int.Parse(originalCharArr[0].ToString()) == 2)
-        {
-            return "Tree";
-        }
-        else
-        {
-            return "";
-        }
     }
 }

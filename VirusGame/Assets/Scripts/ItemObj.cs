@@ -12,6 +12,7 @@ public class ItemObj : MonoBehaviour
     private Renderer mRend;
     private int mNumber;
     private SphereCollider mCollider;
+    private eItemType mItemType;
 
     private void Awake()
     {
@@ -25,12 +26,13 @@ public class ItemObj : MonoBehaviour
         mPlayer = null;
     }
 
-    public void InitObj(int originalId, int rare, int num)
+    public void InitObj(int originalId, int rare, int num, eItemType itemType)
     {
         mItemID = originalId;
         mNumber = num;
+        mItemType = itemType;
 
-        switch(rare)
+        switch (rare)
         {
             case 0:
                 mRend.material.SetColor("_Color", Color.black);
@@ -96,6 +98,6 @@ public class ItemObj : MonoBehaviour
         }
 
         gameObject.SetActive(false);
-        InvenController.Instance.SetSpriteToInven(mItemID, mNumber);
+        InvenController.Instance.SetSpriteToInven(mItemID, mNumber, mItemType);
     }
 }

@@ -106,7 +106,7 @@ public class AnalysisController : MonoBehaviour
 
         mSlot.Renew(0);
 
-        DataGroup.Instance.SetItemNumber(mItemID, 0);
+        //TODO make Item Number Setting
     }
 
     private void Disinfection()

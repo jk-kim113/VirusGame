@@ -31,14 +31,6 @@ public class MakeItemController : MonoBehaviour
 
     private int mNewItemID;
 
-    private UseItemData[] mUseItemDataArr;
-    private EquipItemData[] mEquipItemDataArr;
-    
-    private Sprite[] mUseItemSpriteArr;
-    private Sprite[] mEquipItemSpriteArr;
-
-    private Dictionary<int, ItemMakingInfo> mItemMakingInfoDic = new Dictionary<int, ItemMakingInfo>();
-
     private void Awake()
     {
         if(Instance == null)
@@ -53,17 +45,6 @@ public class MakeItemController : MonoBehaviour
     
     private void Start()
     {
-        ItemMakingInfo[] itemMakingInfoArr;
-
-        JsonDataLoader.Instance.LoadJsonData<UseItemData>(out mUseItemDataArr, "JsonFiles/UseItemData");
-        JsonDataLoader.Instance.LoadJsonData<EquipItemData>(out mEquipItemDataArr, "JsonFiles/EquipItemData");
-        JsonDataLoader.Instance.LoadJsonData<ItemMakingInfo>(out itemMakingInfoArr, "JsonFiles/ItemMakingInfoData");
-        mUseItemSpriteArr = Resources.LoadAll<Sprite>("Sprites/UseItem");
-        mEquipItemSpriteArr = Resources.LoadAll<Sprite>("Sprites/EquipItem");
-
-        for (int i = 0; i < itemMakingInfoArr.Length; i++)
-            mItemMakingInfoDic.Add(itemMakingInfoArr[i].TargetID, itemMakingInfoArr[i]);
-
         StartCoroutine(Load());
     }
 
@@ -82,16 +63,16 @@ public class MakeItemController : MonoBehaviour
 
     private void InitUseItemElement()
     {
-        for (int i = 0; i < mUseItemDataArr.Length; i++)
+        foreach(UseItemData data in DataGroup.Instance.UseItemDataDic.Values)
         {
             CombinationElement element = Instantiate(mCombElement, mUseItemScrollTarget);
             element.Init(
-                mUseItemSpriteArr[i],
-                mUseItemDataArr[i].ID,
-                mUseItemDataArr[i].Name,
-                mUseItemDataArr[i].Info,
-                mItemMakingInfoDic[mUseItemDataArr[i].ID].NeedNumber,
-                mItemMakingInfoDic[mUseItemDataArr[i].ID].NeedID,
+                DataGroup.Instance.SpriteDataDic[eItemType.Use][data.ID],
+                data.ID,
+                data.Name,
+                data.Info,
+                DataGroup.Instance.ItemMakingInfoDic[eItemType.Use][data.ID].NeedNumber,
+                DataGroup.Instance.ItemMakingInfoDic[eItemType.Use][data.ID].NeedID,
                 MakeUseItem);
             mUseItemEleList.Add(element);
         }
@@ -99,16 +80,16 @@ public class MakeItemController : MonoBehaviour
 
     private void InitEquipItemElement()
     {
-        for (int i = 0; i < mEquipItemDataArr.Length; i++)
+        foreach(EquipItemData data in DataGroup.Instance.EquipItemDataDic.Values)
         {
             CombinationElement element = Instantiate(mCombElement, mEquipItemScrollTarget);
             element.Init(
-                mEquipItemSpriteArr[i],
-                mEquipItemDataArr[i].ID,
-                mEquipItemDataArr[i].Name,
-                mEquipItemDataArr[i].Info,
-                mItemMakingInfoDic[mEquipItemDataArr[i].ID].NeedNumber,
-                mItemMakingInfoDic[mEquipItemDataArr[i].ID].NeedID,
+                DataGroup.Instance.SpriteDataDic[eItemType.Equip][data.ID],
+                data.ID,
+                data.Name,
+                data.Info,
+                DataGroup.Instance.ItemMakingInfoDic[eItemType.Equip][data.ID].NeedNumber,
+                DataGroup.Instance.ItemMakingInfoDic[eItemType.Equip][data.ID].NeedID,
                 MakeEquipItem);
             mEquipItemEleList.Add(element);
         }
@@ -134,30 +115,36 @@ public class MakeItemController : MonoBehaviour
 
         Text message = mConfirmFoodType.GetComponentInChildren<Text>();
         message.text = string.Format("해당 제조법의 음식 효과는 {0} 이고, 소비 전력량은 {1} 입니다.",
-            mUseItemDataArr[mNewItemID].TypeValue[type],
+            DataGroup.Instance.UseItemDataDic[mNewItemID].TypeValue[type],
             0);
     }
 
     public void ConfirmMakeFood()
     {
-        for (int i = 0; i < mItemMakingInfoDic[mNewItemID].NeedNumber.Length; i++)
+        for (int i = 0; i < DataGroup.Instance.ItemMakingInfoDic[eItemType.Use][mNewItemID].NeedNumber.Length; i++)
         {
-            int needID = mItemMakingInfoDic[mNewItemID].NeedID[i];
-            int needNum = mItemMakingInfoDic[mNewItemID].NeedNumber[i];
+            int needID = DataGroup.Instance.ItemMakingInfoDic[eItemType.Use][mNewItemID].NeedID[i];
+            int needNum = DataGroup.Instance.ItemMakingInfoDic[eItemType.Use][mNewItemID].NeedNumber[i];
 
             if (needNum > 0)
             {
-                if (needNum > DataGroup.Instance.ItemNumDic[needID])
+                if(InvenController.Instance.ItemNumberDic[eItemType.Use].ContainsKey(needID))
+                {
+                    if (needNum > InvenController.Instance.ItemNumberDic[eItemType.Use][needID])
+                    {
+                        Debug.Log("No Need Item");
+                        return;
+                    }
+
+                    InvenController.Instance.SettingItemNumber(eItemType.Use, mNewItemID, -needNum);
+                    InvenController.Instance.RenewInven(needNum); //TODO 
+                }
+                else
                 {
                     Debug.Log("No Need Item");
                     return;
                 }
-
-                DataGroup.Instance.SetItemNumber(
-                    needID,
-                    -needNum);
-
-                InvenController.Instance.RenewInven(needNum);
+                
             }
         }
 
@@ -178,8 +165,8 @@ public class MakeItemController : MonoBehaviour
         for (int i = 0; i < mUseItemEleList.Count; i++)
         {
             mUseItemEleList[i].Renew(
-                mItemMakingInfoDic[i + 3000].NeedNumber,
-                mItemMakingInfoDic[i + 3000].NeedID
+                DataGroup.Instance.ItemMakingInfoDic[eItemType.Use][mUseItemEleList[i].ID].NeedNumber,
+                DataGroup.Instance.ItemMakingInfoDic[eItemType.Use][mUseItemEleList[i].ID].NeedID
                 );
         }
     }
@@ -197,16 +184,29 @@ public class MakeItemController : MonoBehaviour
         {
             mNewItemID = newItemID;
 
-            for (int i = 0; i < mItemMakingInfoDic[mNewItemID].NeedNumber.Length; i++)
+            for (int i = 0; i < DataGroup.Instance.ItemMakingInfoDic[eItemType.Equip][mNewItemID].NeedNumber.Length; i++)
             {
-                int needID = mItemMakingInfoDic[mNewItemID].NeedID[i];
-                int needNum = mItemMakingInfoDic[mNewItemID].NeedNumber[i];
+                int needID = DataGroup.Instance.ItemMakingInfoDic[eItemType.Equip][mNewItemID].NeedID[i];
+                int needNum = DataGroup.Instance.ItemMakingInfoDic[eItemType.Equip][mNewItemID].NeedNumber[i];
 
                 if (needNum > 0)
                 {
-                    DataGroup.Instance.SetItemNumber(needID, -needNum);
+                    if(InvenController.Instance.ItemNumberDic[eItemType.Use].ContainsKey(needID))
+                    {
+                        if (needNum > InvenController.Instance.ItemNumberDic[eItemType.Use][needID])
+                        {
+                            Debug.Log("No Need Item");
+                            return;
+                        }
 
-                    InvenController.Instance.RenewInven(needID);
+                        InvenController.Instance.SettingItemNumber(eItemType.Equip, mNewItemID, -needNum);
+                        InvenController.Instance.RenewInven(needID); //TODO
+                    }
+                    else
+                    {
+                        Debug.Log("No Need Item");
+                        return;
+                    }
                 }
             }
 
@@ -221,8 +221,8 @@ public class MakeItemController : MonoBehaviour
         for (int i = 0; i < mEquipItemEleList.Count; i++)
         {
             mEquipItemEleList[i].Renew(
-                mItemMakingInfoDic[i + 4000].NeedNumber,
-                mItemMakingInfoDic[i + 4000].NeedID
+                DataGroup.Instance.ItemMakingInfoDic[eItemType.Equip][mEquipItemEleList[i].ID].NeedNumber,
+                DataGroup.Instance.ItemMakingInfoDic[eItemType.Equip][mEquipItemEleList[i].ID].NeedID
                 );
         }
     }

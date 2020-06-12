@@ -12,12 +12,13 @@ public class AnimalData
     public int InitNumber;
 }
 
-public class ItemData
+public class DropItemData
 {
     public string Name;
     public int ID;
     public string Info;
     public int Rare;
+    public eDropItemSubject Subject;
 }
 
 public class EquipItemData
@@ -39,6 +40,7 @@ public class UseItemData
 
 public class ItemMakingInfo
 {
+    public eItemType ItemType;
     public int TargetID;
     public int[] NeedID;
     public int[] NeedNumber;
@@ -106,11 +108,25 @@ public enum eItemType
 {
     Drop,
     Use,
-    Equip
+    Equip,
+
+    max
 }
 
 public enum eAnimalDeathType
 {
     Natural,
     Virus
+}
+
+public enum eDropItemSubject
+{
+    Grass,
+    Tree,
+    Goat,
+    Bear,
+    Crocodile,
+    Cattle,
+    Wolf,
+    Deer
 }

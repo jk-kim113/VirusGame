@@ -19,6 +19,9 @@ public class InvenController : MonoBehaviour
 
     public UIDrag UIDragImg { get { return mUIDrag; } }
 
+    private Dictionary<eItemType, Dictionary<int, int>> mItemNumberDic = new Dictionary<eItemType, Dictionary<int, int>>();
+    public Dictionary<eItemType, Dictionary<int, int>> ItemNumberDic { get { return mItemNumberDic; } }
+
     private void Awake()
     {
         if (Instance == null)
@@ -28,6 +31,26 @@ public class InvenController : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+
+        Dictionary<int, int> itemNumInit = new Dictionary<int, int>();
+        itemNumInit.Add(-999, -999);
+        mItemNumberDic.Add(eItemType.Drop, itemNumInit);
+        mItemNumberDic.Add(eItemType.Use, itemNumInit);
+        mItemNumberDic.Add(eItemType.Equip, itemNumInit);
+    }
+
+    public void SettingItemNumber(eItemType type, int id, int num)
+    {
+        if (mItemNumberDic[type].ContainsKey(id))
+        {
+            mItemNumberDic[type][id] += num;
+        }
+        else
+        {
+            Dictionary<int, int> itemNum = new Dictionary<int, int>();
+            itemNum.Add(id, num);
+            mItemNumberDic.Add(type, itemNum);
         }
     }
 
@@ -110,52 +133,18 @@ public class InvenController : MonoBehaviour
 
             ItemObj item = mItemObjPool.GetFromPool(0);
             item.InitObj(
-                DataGroup.Instance.ItemDataDic[tag][selectedID].ID,
-                DataGroup.Instance.ItemDataDic[tag][selectedID].Rare,
-                1);
+                DataGroup.Instance.DropItemDataDic[selectedID + 1].ID,
+                DataGroup.Instance.DropItemDataDic[selectedID + 1].Rare,
+                1,
+                eItemType.Drop);
             item.ShowItem(Itempos);
         }
     }
 
-    public void SetSpriteToInven(Sprite img, int originalId, int num ,eItemType itemType)
+    public void SetSpriteToInven(int originalId, int num ,eItemType itemType)
     {
-        mPlayerInven.GetItem(img, originalId, num, itemType);
+        mPlayerInven.GetItem(originalId, num, itemType);
     }
-
-    private int TransformIndex(int originalID)
-    {
-        string originalStr = originalID.ToString();
-        char[] originalCharArr = originalStr.ToCharArray();
-
-        if (int.Parse(originalCharArr[2].ToString()) == 0)
-        {
-            return int.Parse(originalCharArr[3].ToString());
-        }
-
-        string Index = originalCharArr[2].ToString() + originalCharArr[3].ToString();
-
-        return int.Parse(Index);
-    }
-
-    private string IdTostring(int originalID)
-    {
-        string originalStr = originalID.ToString();
-        char[] originalCharArr = originalStr.ToCharArray();
-
-        if (int.Parse(originalCharArr[0].ToString()) == 1)
-        {
-            return "Grass";
-        }
-        else if (int.Parse(originalCharArr[0].ToString()) == 2)
-        {
-            return "Tree";
-        }
-        else
-        {
-            return "";
-        }
-    }
-
 
     public bool CheckIsFull(int originalId)
     {
@@ -175,11 +164,12 @@ public class InvenController : MonoBehaviour
             item.DropItem();
             item.InitObj(
                 originalID,
-                DataGroup.Instance.ItemDataDic[IdTostring(originalID)][TransformIndex(originalID)].Rare,
-                1);
+                DataGroup.Instance.DropItemDataDic[originalID].Rare,
+                1,
+                eItemType.Drop);
         }
-        
-        DataGroup.Instance.SetItemNumber(originalID, -num);
+
+        SettingItemNumber(eItemType.Drop, originalID, -num);
     }
 
     public void RenewInven(int originalID)

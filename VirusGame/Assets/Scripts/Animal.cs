@@ -55,28 +55,31 @@ public class Animal : Virus
 
     private void Update()
     {
-        if(bIsLoaded)
+        if(IngameManager.Instance.CurrentGameState == IngameManager.eGameState.PlayGame)
         {
-            mHungerCurrent -= mHungerDeacrease * Time.deltaTime;
-        }
-
-        if(bIsInfect)
-        {
-            mIncubationPeriod -= Time.deltaTime;
-
-            if(mIncubationPeriod <= 0)
+            if (bIsLoaded)
             {
-                if (!CheckCurable())
+                mHungerCurrent -= mHungerDeacrease * Time.deltaTime;
+            }
+
+            if (bIsInfect)
+            {
+                mIncubationPeriod -= Time.deltaTime;
+
+                if (mIncubationPeriod <= 0)
                 {
-                    Invoke("SpreadVirus", mImmunity / 10);
+                    if (!CheckCurable())
+                    {
+                        Invoke("SpreadVirus", mImmunity / 10);
+                    }
                 }
             }
         }
 
-        if(bIsAlive)
+        if (bIsAlive)
         {
             mMoveTime += Time.deltaTime;
-            if(mMoveTime >= 2)
+            if (mMoveTime >= 2)
             {
                 mMoveTime = 0;
                 MovePattern();

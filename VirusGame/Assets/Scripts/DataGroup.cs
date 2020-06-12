@@ -6,20 +6,18 @@ public class DataGroup : MonoBehaviour
 {
     public static DataGroup Instance;
 
-    private Dictionary<int, Sprite> mItemSpriteDic = new Dictionary<int, Sprite>();
-    public Dictionary<int, Sprite> ItemSpriteDic { get { return mItemSpriteDic; } }
+    private Dictionary<eItemType, Dictionary<int, Sprite>> mSpriteDataDic = new Dictionary<eItemType, Dictionary<int, Sprite>>();
+    private Dictionary<int, DropItemData> mDropItemDataDic = new Dictionary<int, DropItemData>();
+    private Dictionary<int, UseItemData> mUseItemDataDic = new Dictionary<int, UseItemData>();
+    private Dictionary<int, EquipItemData> mEquipItemDataDic = new Dictionary<int, EquipItemData>();
+    private Dictionary<eItemType, Dictionary<int, ItemMakingInfo>> mItemMakingInfoDic = new Dictionary<eItemType, Dictionary<int, ItemMakingInfo>>();
 
-    private Dictionary<int, int> mItemNumDic = new Dictionary<int, int>();
-    public Dictionary<int, int> ItemNumDic { get { return mItemNumDic; } }
+    public Dictionary<eItemType, Dictionary<int, Sprite>> SpriteDataDic { get { return mSpriteDataDic; } }
+    public Dictionary<int, DropItemData> DropItemDataDic { get { return mDropItemDataDic; } }
+    public Dictionary<int, UseItemData> UseItemDataDic { get { return mUseItemDataDic; } }
+    public Dictionary<int, EquipItemData> EquipItemDataDic { get { return mEquipItemDataDic; } }
+    public Dictionary<eItemType, Dictionary<int, ItemMakingInfo>> ItemMakingInfoDic { get { return mItemMakingInfoDic; } }
 
-    private Dictionary<string, ItemData[]> mItemDataDic = new Dictionary<string, ItemData[]>();
-    public Dictionary<string, ItemData[]> ItemDataDic { get { return mItemDataDic; } }
-
-    private Dictionary<int, eItemType> mItemTypeDic = new Dictionary<int, eItemType>();
-    public Dictionary<int, eItemType> ItemTypeDic { get { return mItemTypeDic; } }
-
-    private ItemData[] mItemDataArr;
-    
     private bool bLoaded;
     public bool Loaded { get { return bLoaded; } }
 
@@ -39,78 +37,58 @@ public class DataGroup : MonoBehaviour
 
     private void Start()
     {
-        JsonDataLoader.Instance.LoadJsonData<ItemData>(out mItemDataArr, "JsonFiles/ItemData");
-        
-        Sprite[] GrassSpriteArr = Resources.LoadAll<Sprite>("Sprites/GrassItem");
-        Sprite[] TreeSpriteArr = Resources.LoadAll<Sprite>("Sprites/TreeItem");
-        
-        Sprite[] EquipSpriteArr = Resources.LoadAll<Sprite>("Sprites/EquipItem");
-        
-        ItemData[] GrassItemDataArr = new ItemData[GrassSpriteArr.Length];
-        ItemData[] TreeItemDataArr = new ItemData[TreeSpriteArr.Length];
+        Sprite[] dropItemSpriteArr = Resources.LoadAll<Sprite>("Sprites/DropItem");
+        Sprite[] useItemSpriteArr = Resources.LoadAll<Sprite>("Sprites/UseItem");
+        Sprite[] equipItemSpriteArr = Resources.LoadAll<Sprite>("Sprites/EquipItem");
 
-        mItemSpriteDic.Add(5000, EquipSpriteArr[0]);
+        DropItemData[] dropItemDataArr;
+        UseItemData[] useItemDataArr;
+        EquipItemData[] equipItemDataArr;
+        ItemMakingInfo[] itemMakingInfoArr;
+        JsonDataLoader.Instance.LoadJsonData<DropItemData>(out dropItemDataArr, "JsonFiles/DropItemData");
+        JsonDataLoader.Instance.LoadJsonData<UseItemData>(out useItemDataArr, "JsonFiles/UseItemData");
+        JsonDataLoader.Instance.LoadJsonData<EquipItemData>(out equipItemDataArr, "JsonFiles/EquipItemData");
+        JsonDataLoader.Instance.LoadJsonData<ItemMakingInfo>(out itemMakingInfoArr, "JsonFiles/ItemMakingInfoData");
 
-        // Drop Item Setting
-        for (int i = 0; i < mItemDataArr.Length; i++)
+        Dictionary<int, Sprite> dropSpriteData = new Dictionary<int, Sprite>();
+        Dictionary<int, Sprite> useSpriteData = new Dictionary<int, Sprite>();
+        Dictionary<int, Sprite> equipSpriteData = new Dictionary<int, Sprite>();
+        for (int i = 0; i < dropItemDataArr.Length; i++)
         {
-            if (CheckItemType(mItemDataArr[i].ID) == 1)
-            {
-                mItemSpriteDic.Add(mItemDataArr[i].ID, GrassSpriteArr[IdToIndex(mItemDataArr[i].ID)]);
-                GrassItemDataArr[IdToIndex(mItemDataArr[i].ID)] = mItemDataArr[i];
-            }
-            else if (CheckItemType(mItemDataArr[i].ID) == 2)
-            {
-                mItemSpriteDic.Add(mItemDataArr[i].ID, TreeSpriteArr[IdToIndex(mItemDataArr[i].ID)]);
-                TreeItemDataArr[IdToIndex(mItemDataArr[i].ID)] = mItemDataArr[i];
-            }
+            dropSpriteData.Add(dropItemDataArr[i].ID, dropItemSpriteArr[i]);
+            mDropItemDataDic.Add(dropItemDataArr[i].ID, dropItemDataArr[i]);
+        }
+        mSpriteDataDic.Add(eItemType.Drop, dropSpriteData);
+        for (int i = 0; i < useItemDataArr.Length; i++)
+        {
+            useSpriteData.Add(useItemDataArr[i].ID, useItemSpriteArr[i]);
+            mUseItemDataDic.Add(useItemDataArr[i].ID, useItemDataArr[i]);
+        }
+        mSpriteDataDic.Add(eItemType.Use, useSpriteData);
+        for (int i = 0; i < equipItemDataArr.Length; i++)
+        {
+            equipSpriteData.Add(equipItemDataArr[i].ID, equipItemSpriteArr[i]);
+            mEquipItemDataDic.Add(equipItemDataArr[i].ID, equipItemDataArr[i]);
+        }
+        mSpriteDataDic.Add(eItemType.Equip, equipSpriteData);
 
-            mItemTypeDic.Add(mItemDataArr[i].ID, eItemType.Drop);
+        Dictionary<int, ItemMakingInfo> UseItemMakingInfo = new Dictionary<int, ItemMakingInfo>();
+        Dictionary<int, ItemMakingInfo> EquipItemMakingInfo = new Dictionary<int, ItemMakingInfo>();
+        for(int i = 0; i < itemMakingInfoArr.Length; i++)
+        {
+            if (itemMakingInfoArr[i].ItemType == eItemType.Use)
+            {
+                UseItemMakingInfo.Add(itemMakingInfoArr[i].TargetID, itemMakingInfoArr[i]);
+            }
+            else if (itemMakingInfoArr[i].ItemType == eItemType.Equip)
+            {
+                EquipItemMakingInfo.Add(itemMakingInfoArr[i].TargetID, itemMakingInfoArr[i]);
+            }
         }
 
-        mItemDataDic.Add("Grass", GrassItemDataArr);
-        mItemDataDic.Add("Tree", TreeItemDataArr);
-
-        // Set Item Num
-        for (int i = 0; i < mItemDataArr.Length; i++)
-        {
-            mItemNumDic.Add(mItemDataArr[i].ID, 0);
-        }
-        mItemNumDic.Add(5000, 0);
-
+        mItemMakingInfoDic.Add(eItemType.Use, UseItemMakingInfo);
+        mItemMakingInfoDic.Add(eItemType.Equip, EquipItemMakingInfo);
+        
         bLoaded = true;
-    }
-
-    public void SetItemNumber(int originalID, int value)
-    {
-        if (!mItemNumDic.ContainsKey(originalID))
-            mItemNumDic.Add(originalID, 0);
-
-        mItemNumDic[originalID] += value;
-
-        InvenController.Instance.RenewInven(originalID);
-    }
-
-    private int IdToIndex(int originalID)
-    {
-        string originalStr = originalID.ToString();
-        char[] originalCharArr = originalStr.ToCharArray();
-
-        if (int.Parse(originalCharArr[2].ToString()) == 0)
-        {
-            return int.Parse(originalCharArr[3].ToString());
-        }
-
-        string Index = originalCharArr[2].ToString() + originalCharArr[3].ToString();
-
-        return int.Parse(Index);
-    }
-
-    private int CheckItemType(int originalID)
-    {
-        string originalStr = originalID.ToString();
-        char[] originalCharArr = originalStr.ToCharArray();
-
-        return int.Parse(originalCharArr[0].ToString());
     }
 }

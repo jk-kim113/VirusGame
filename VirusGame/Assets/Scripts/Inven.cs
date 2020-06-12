@@ -10,19 +10,21 @@ public class Inven : MonoBehaviour
 #pragma warning restore
 
     private Slot[] mSlotArr;
-    private int mSelcetAreaPosNum;
+    private int mSelectAreaPosNum;
 
     private void Start()
     {
         mSlotArr = GetComponentsInChildren<Slot>();
 
-        mSelcetAreaPosNum = 0;
-        mSelectAreaPos.transform.position = mSlotArr[mSelcetAreaPosNum].gameObject.transform.position;
+        mSelectAreaPosNum = 0;
+        mSelectAreaPos.transform.position = mSlotArr[mSelectAreaPosNum].gameObject.transform.position;
     }
 
-    public void GetItem(Sprite img, int originalId, int num, eItemType itemType)
+    public void GetItem(int originalId, int num, eItemType itemType)
     {
-        switch(itemType)
+        Sprite img = DataGroup.Instance.SpriteDataDic[itemType][originalId];
+
+        switch (itemType)
         {
             case eItemType.Drop:
             case eItemType.Use:
@@ -30,7 +32,7 @@ public class Inven : MonoBehaviour
                 {
                     if (mSlotArr[i].ItemID == originalId)
                     {
-                        mSlotArr[i].Init(img, num, originalId);
+                        mSlotArr[i].Init(img, num, originalId, itemType);
                         return;
                     }
                 }
@@ -39,7 +41,7 @@ public class Inven : MonoBehaviour
                 {
                     if (!mSlotArr[i].IsFull)
                     {
-                        mSlotArr[i].Init(img, num, originalId);
+                        mSlotArr[i].Init(img, num, originalId, itemType);
                         return;
                     }
                 }
@@ -49,7 +51,7 @@ public class Inven : MonoBehaviour
                 {
                     if (!mSlotArr[i].IsFull)
                     {
-                        mSlotArr[i].Init(img, num, originalId);
+                        mSlotArr[i].Init(img, num, originalId, itemType);
                         return;
                     }
                 }
@@ -66,7 +68,9 @@ public class Inven : MonoBehaviour
         {
             if(mSlotArr[i].ItemID == originalID)
             {
-                mSlotArr[i].Renew(DataGroup.Instance.ItemNumDic[originalID]);
+                eItemType type = mSlotArr[i].ItemType;
+                mSlotArr[i].Renew(InvenController.Instance.ItemNumberDic[type][originalID]);
+                return;
             }
         }
     }
@@ -96,57 +100,29 @@ public class Inven : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Tab))
         {
-            mSelcetAreaPosNum++;
-            if(mSelcetAreaPosNum >= mSlotArr.Length)
+            mSelectAreaPosNum++;
+            if(mSelectAreaPosNum >= mSlotArr.Length)
             {
-                mSelcetAreaPosNum = 0;
+                mSelectAreaPosNum = 0;
             }
-            mSelectAreaPos.transform.position = mSlotArr[mSelcetAreaPosNum].gameObject.transform.position;
-
-
+            mSelectAreaPos.transform.position = mSlotArr[mSelectAreaPosNum].gameObject.transform.position;
         }
 
         if(Input.GetKeyDown(KeyCode.C))
         {
-            if(mSlotArr[mSelcetAreaPosNum].ItemID < 0)
+            if (mSlotArr[mSelectAreaPosNum].ItemID < 0)
             {
                 return;
             }
 
-            DataGroup.Instance.SetItemNumber(mSlotArr[mSelcetAreaPosNum].ItemID, -1);
-
-            eItemType type = DataGroup.Instance.ItemTypeDic[mSlotArr[mSelcetAreaPosNum].ItemID];
-
-            switch(type)
+            if (mSlotArr[mSelectAreaPosNum].ItemType == eItemType.Use)
             {
-                case eItemType.Drop:
-                    
-                    break;
-                case eItemType.Use:
-                    //TODO
-                    //eUseTarget target = DataGroup.Instance.FoodMenuDic[IDtoUseType(mSlotArr[mSelcetAreaPosNum].ItemID)].UseTarget;
-
-                    //Player.Instance.UseItem(
-                    //    target,
-                    //    DataGroup.Instance.FoodMakeTypeDic[IDtoUseType(mSlotArr[mSelcetAreaPosNum].ItemID)].TypeValue[(int)target],
-                    //    virusID);
-
-                    break;
-                case eItemType.Equip:
-                    break;
-                default:
-                    break;
+                InvenController.Instance.SettingItemNumber(eItemType.Use, mSlotArr[mSelectAreaPosNum].ItemID, -1);
+                eUseTarget target = DataGroup.Instance.UseItemDataDic[mSlotArr[mSelectAreaPosNum].ItemID].UseTarget;
+                Player.Instance.UseItem(
+                    target,
+                    DataGroup.Instance.UseItemDataDic[mSlotArr[mSelectAreaPosNum].ItemID].TypeValue[(int)target]);
             }
         }
-    }
-
-    private int IDtoUseType(int targetid)
-    {
-        string targetStr = targetid.ToString();
-        char[] targetCharArr = targetStr.ToCharArray();
-
-        string Index = targetCharArr[0].ToString() + targetCharArr[1].ToString() + targetCharArr[2].ToString() + targetCharArr[3].ToString();
-
-        return int.Parse(Index);
     }
 }
