@@ -31,6 +31,7 @@ public class IngameManager : MonoBehaviour
     public eGameState CurrentGameState { get { return mCurrentGameState; } }
 
     private Image mFadeOutImg;
+    private GameObject mIntroUICanvasObj;
 
     private void Awake()
     {
@@ -55,7 +56,7 @@ public class IngameManager : MonoBehaviour
     {
         if(mCurrentGameState == eGameState.NewGame)
         {
-            mFadeOutImg.color = new Color(mFadeOutImg.color.r, mFadeOutImg.color.g, mFadeOutImg.color.b, mFadeOutImg.color.a + .2f * Time.deltaTime);
+            mFadeOutImg.color = new Color(mFadeOutImg.color.r, mFadeOutImg.color.g, mFadeOutImg.color.b, mFadeOutImg.color.a + .4f * Time.deltaTime);
             if(mFadeOutImg.color.a >= 0.9f)
             {
                 PlayGame();
@@ -67,7 +68,8 @@ public class IngameManager : MonoBehaviour
     {
         mCurrentGameState = eGameState.Intro;
 
-        Instantiate(mIntroUICanvas);
+        mIntroUICanvasObj = Instantiate(mIntroUICanvas);
+        mIntroUICanvasObj.SetActive(true);
         mIntroCamera.cullingMask &= ~(1 << LayerMask.NameToLayer("Icon"));
     }
 
@@ -85,6 +87,7 @@ public class IngameManager : MonoBehaviour
     {
         mCurrentGameState = eGameState.PlayGame;
 
+        mIntroUICanvasObj.SetActive(false);
         mIntroCamera.gameObject.SetActive(false);
         mFadeOutCanvas.gameObject.SetActive(false);
         mIngameUICanvas.gameObject.SetActive(true);

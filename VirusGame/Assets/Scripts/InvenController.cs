@@ -47,10 +47,8 @@ public class InvenController : MonoBehaviour
             mItemNumberDic[type][id] += num;
         }
         else
-        {
-            Dictionary<int, int> itemNum = new Dictionary<int, int>();
-            itemNum.Add(id, num);
-            mItemNumberDic.Add(type, itemNum);
+        {   
+            mItemNumberDic[type].Add(id, num);
         }
     }
 
@@ -143,7 +141,8 @@ public class InvenController : MonoBehaviour
 
     public void SetSpriteToInven(int originalId, int num ,eItemType itemType)
     {
-        mPlayerInven.GetItem(originalId, num, itemType);
+        SettingItemNumber(itemType, originalId, num);
+        mPlayerInven.GetItem(originalId, mItemNumberDic[itemType][originalId], itemType);
     }
 
     public bool CheckIsFull(int originalId)
@@ -172,8 +171,8 @@ public class InvenController : MonoBehaviour
         SettingItemNumber(eItemType.Drop, originalID, -num);
     }
 
-    public void RenewInven(int originalID)
+    public void RenewInven(int originalID, eItemType itemType)
     {
-        mPlayerInven.RenewInven(originalID);
+        mPlayerInven.RenewInven(originalID, itemType);
     }
 }

@@ -62,14 +62,13 @@ public class Inven : MonoBehaviour
         }
     }
 
-    public void RenewInven(int originalID)
+    public void RenewInven(int originalID, eItemType itemType)
     {
         for(int i = 0; i < mSlotArr.Length; i++)
         {
-            if(mSlotArr[i].ItemID == originalID)
-            {
-                eItemType type = mSlotArr[i].ItemType;
-                mSlotArr[i].Renew(InvenController.Instance.ItemNumberDic[type][originalID]);
+            if(mSlotArr[i].ItemID == originalID && mSlotArr[i].ItemType == itemType)
+            {   
+                mSlotArr[i].Renew(InvenController.Instance.ItemNumberDic[itemType][originalID]);
                 return;
             }
         }

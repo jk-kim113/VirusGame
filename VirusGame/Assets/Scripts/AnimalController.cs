@@ -81,19 +81,22 @@ public class AnimalController : MonoBehaviour
 
     private void Update()
     {
-        if(mInfectNumber == 0)
+        if (IngameManager.Instance.CurrentGameState == IngameManager.eGameState.PlayGame)
         {
-            mVirusSpawnPeriod -= Time.deltaTime;
-            if (mVirusSpawnPeriod <= 0)
+            if (mInfectNumber == 0)
             {
-                int rand = Random.Range(0, mVirusList.Count);
+                mVirusSpawnPeriod -= Time.deltaTime;
+                if (mVirusSpawnPeriod <= 0)
+                {
+                    int rand = Random.Range(0, mVirusList.Count);
 
-                Debug.Log("Infect");
-                mVirusSpawnPeriod = 5.0f;
-                mVirusList[rand].Infect(VirusController.Instance.GetVirusID());
-                mInfectNumber++;
+                    Debug.Log("Infect");
+                    mVirusSpawnPeriod = 5.0f;
+                    mVirusList[rand].Infect(VirusController.Instance.GetVirusID());
+                    mInfectNumber++;
+                }
             }
-        }
+        }   
     }
 
     public void ShowVirusMap(int originalID)

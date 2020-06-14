@@ -235,6 +235,10 @@ public class Player : MonoBehaviour
 
         while (bPlantAction && (current > 0))
         {
+            effect = mEffectPool.GetFromPool(0);
+            effect.gameObject.SetActive(true);
+            effect.transform.position = plantDetected.transform.position;
+
             yield return term;
 
             current -= 5f;

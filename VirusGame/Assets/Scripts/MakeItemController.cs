@@ -137,7 +137,7 @@ public class MakeItemController : MonoBehaviour
                     }
 
                     InvenController.Instance.SettingItemNumber(eItemType.Use, mNewItemID, -needNum);
-                    InvenController.Instance.RenewInven(needNum); //TODO 
+                    InvenController.Instance.RenewInven(needNum, eItemType.Use);
                 }
                 else
                 {
@@ -200,7 +200,7 @@ public class MakeItemController : MonoBehaviour
                         }
 
                         InvenController.Instance.SettingItemNumber(eItemType.Equip, mNewItemID, -needNum);
-                        InvenController.Instance.RenewInven(needID); //TODO
+                        InvenController.Instance.RenewInven(needID, eItemType.Equip);
                     }
                     else
                     {
