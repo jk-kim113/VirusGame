@@ -57,7 +57,7 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
     public void Renew(int num)
     {
         mItemNum = num;
-        if (num == 0)
+        if (     == 0)
         {
             mItemImg.enabled = false;
             mItemNumText.enabled = false;
@@ -102,7 +102,7 @@ public class Slot : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUp
             }
             else if(ray.gameObject.CompareTag("AnalysisSlot"))
             {
-                AnalysisController.Instance.GetItem(mItemID);
+                AnalysisController.Instance.GetItem(mItemID, mItemType);
                 MoveItemUI(ray);
             }
             else if(ray.gameObject.CompareTag("DrugMaker"))

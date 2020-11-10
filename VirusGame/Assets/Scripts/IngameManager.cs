@@ -25,6 +25,8 @@ public class IngameManager : MonoBehaviour
     private GameObject mFadeOutCanvas;
     [SerializeField]
     private GameObject mIngameUICanvas;
+    [SerializeField]
+    private EffectPool mEffectPool;
 #pragma warning restore
 
     private eGameState mCurrentGameState;
@@ -32,6 +34,8 @@ public class IngameManager : MonoBehaviour
 
     private Image mFadeOutImg;
     private GameObject mIntroUICanvasObj;
+
+    private float mPlayTime;
 
     private void Awake()
     {
@@ -62,6 +66,12 @@ public class IngameManager : MonoBehaviour
                 PlayGame();
             }
         }
+
+        if(mCurrentGameState == eGameState.PlayGame)
+        {
+            mPlayTime += Time.deltaTime;
+            MainUIController.Instance.ShowPlayTime(mPlayTime);
+        }
     }
 
     public void IntroGame()
@@ -91,5 +101,10 @@ public class IngameManager : MonoBehaviour
         mIntroCamera.gameObject.SetActive(false);
         mFadeOutCanvas.gameObject.SetActive(false);
         mIngameUICanvas.gameObject.SetActive(true);
+    }
+
+    public Timer GetEffect(eEffectType type)
+    {
+        return mEffectPool.GetFromPool((int)type);
     }
 }

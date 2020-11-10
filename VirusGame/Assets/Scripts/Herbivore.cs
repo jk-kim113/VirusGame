@@ -22,8 +22,6 @@ public class Herbivore : Animal
             }
         }
 
-        Debug.Log("Eat");
-
         if(mPlantList.Count > 0)
         {
             int selectedID = Random.Range(0, mPlantList.Count);

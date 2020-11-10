@@ -27,7 +27,6 @@ public class Beaker : MonoBehaviour
         mBloodAmount += value;
         if(mBloodAmount > 2.0f)
         {
-            // 원래 사이즈를 가지고 곱해주
             mBloodAmount = 2.0f;
             mFullBlood = true;
         }

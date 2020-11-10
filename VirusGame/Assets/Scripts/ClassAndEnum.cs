@@ -27,6 +27,7 @@ public class EquipItemData
     public int ID;
     public string Info;
     public int Attack;
+    public eEquipType EquipType;
 }
 
 public class UseItemData
@@ -53,7 +54,7 @@ public class VirusData
     public float IncubationPeriod;
     public int Rank;
     public float AnalysisRate;
-    public float PowerConsumption;
+    public float CureProbability;
 }
 
 public enum ePlantGrowthType
@@ -109,6 +110,7 @@ public enum eItemType
     Drop,
     Use,
     Equip,
+    Drug,
 
     max
 }
@@ -129,4 +131,17 @@ public enum eDropItemSubject
     Cattle,
     Wolf,
     Deer
+}
+
+public enum eEffectType
+{
+    CollectPlant        = 0,
+    HitAnimal
+}
+
+public enum eEquipType
+{
+    Weapon,
+    Beaker,
+    Syringe
 }

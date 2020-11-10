@@ -7,8 +7,12 @@ public class Blood : MonoBehaviour
     private float mBloodAmount;
     public float BloodAmount { get { return mBloodAmount; } }
 
-    private void Awake()
+    private int mVirusID;
+    public int VirusID { get { return mVirusID;  } }
+
+    public void InitBlood(int virusID)
     {
+        mVirusID = virusID;
         mBloodAmount = Random.Range(0.3f, 0.8f);
     }
 }

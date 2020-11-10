@@ -98,7 +98,7 @@ public class MakeItemController : MonoBehaviour
     #region  "UseItem Part"
     private void MakeUseItem(int newItemID)
     {
-        if (InvenController.Instance.CheckIsFull(newItemID))
+        if (InvenController.Instance.CheckIsFull(newItemID, eItemType.Use))
         {
             // Do not make Item
         }
@@ -114,9 +114,8 @@ public class MakeItemController : MonoBehaviour
         mConfirmFoodType.SetActive(true);
 
         Text message = mConfirmFoodType.GetComponentInChildren<Text>();
-        message.text = string.Format("해당 제조법의 음식 효과는 {0} 이고, 소비 전력량은 {1} 입니다.",
-            DataGroup.Instance.UseItemDataDic[mNewItemID].TypeValue[type],
-            0);
+        message.text = string.Format("해당 제조법의 음식 효과는 {0}입니다.",
+            DataGroup.Instance.UseItemDataDic[mNewItemID].TypeValue[type]);
     }
 
     public void ConfirmMakeFood()
@@ -128,16 +127,16 @@ public class MakeItemController : MonoBehaviour
 
             if (needNum > 0)
             {
-                if(InvenController.Instance.ItemNumberDic[eItemType.Use].ContainsKey(needID))
+                if(InvenController.Instance.ItemNumberDic[eItemType.Drop].ContainsKey(needID))
                 {
-                    if (needNum > InvenController.Instance.ItemNumberDic[eItemType.Use][needID])
+                    if (needNum > InvenController.Instance.ItemNumberDic[eItemType.Drop][needID])
                     {
                         Debug.Log("No Need Item");
                         return;
                     }
 
-                    InvenController.Instance.SettingItemNumber(eItemType.Use, mNewItemID, -needNum);
-                    InvenController.Instance.RenewInven(needNum, eItemType.Use);
+                    InvenController.Instance.SettingItemNumber(eItemType.Drop, needID, -needNum);
+                    InvenController.Instance.RenewInven(needID, eItemType.Drop);
                 }
                 else
                 {
@@ -149,6 +148,8 @@ public class MakeItemController : MonoBehaviour
         }
 
         RenewUseItemElement();
+
+        InvenController.Instance.SetSpriteToInven(mNewItemID, 1, eItemType.Use);
 
         mConfirmFoodType.SetActive(false);
     }
@@ -176,7 +177,7 @@ public class MakeItemController : MonoBehaviour
 
     private void MakeEquipItem(int newItemID)
     {
-        if (InvenController.Instance.CheckIsFull(newItemID))
+        if (InvenController.Instance.CheckIsFull(newItemID, eItemType.Equip))
         {
             // Do not make Item
         }
@@ -212,7 +213,7 @@ public class MakeItemController : MonoBehaviour
 
             RenewEquipItemElement();
 
-            //InvenController.Instance.SetSpriteToInven(mNewItemID, 1);
+            InvenController.Instance.SetSpriteToInven(mNewItemID, 1, eItemType.Equip);
         }
     }
 

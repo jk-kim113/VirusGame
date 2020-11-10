@@ -20,13 +20,13 @@ public class VirusInfoElement : MonoBehaviour
     {
         mVirusImg.sprite = img;
         mName.text = name;
-        mPercent.text = string.Format("{0}%", percent);
-
+        
         Renew(percent);
     }
 
     public void Renew(float percent)
     {
+        mPercent.text = string.Format("{0}%", percent);
         mVirusGaugeBar.ShowGaugeBar(percent);
     }
 }

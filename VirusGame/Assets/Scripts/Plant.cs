@@ -29,6 +29,7 @@ public class Plant : Virus
 
     private ePlantGrowthType mGrowthType;
     public ePlantGrowthType GrowthType { get { return mGrowthType; } }
+    public bool IsInfect { get { return bIsInfect; } }
 
     protected override void Awake()
     {

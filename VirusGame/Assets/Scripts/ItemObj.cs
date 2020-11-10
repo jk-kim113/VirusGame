@@ -77,7 +77,7 @@ public class ItemObj : MonoBehaviour
             if(mPlayer == null)
             {
                 mPlayer = other.gameObject.GetComponent<Player>();
-                if(!InvenController.Instance.CheckIsFull(mItemID))
+                if(!InvenController.Instance.CheckIsFull(mItemID, mItemType))
                 {
                     StartCoroutine(MoveItemToPlayer());
                 }

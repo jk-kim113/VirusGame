@@ -2,19 +2,29 @@
     {
         "Name": "도끼",
         "ID": 1,
-        "Info" : "날카롭고 빠른 무기",
-        "Attack" : 5
+        "Info": "날카롭고 빠른 무기",
+        "Attack": 5,
+        "EquipType" : "Weapon"
     },
     {
         "Name": "해머",
         "ID": 2,
         "Info": "뭉툭하고 느린 무기",
-        "Attack": 7
+        "Attack": 7,
+        "EquipType" : "Weapon"
     },
     {
         "Name": "비커",
         "ID": 3,
         "Info": "혈액을 담을 수 있는 도구",
-        "Attack": 0
+        "Attack": 0,
+        "EquipType": "Beaker"
+    },
+    {
+        "Name": "주사기",
+        "ID": 4,
+        "Info": "치료제를 쓸 수 있게 하는 도구",
+        "Attack": 0,
+        "EquipType": "Syringe"
     }
 ]

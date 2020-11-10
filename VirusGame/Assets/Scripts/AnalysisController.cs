@@ -11,10 +11,6 @@ public class AnalysisController : MonoBehaviour
     [SerializeField]
     private GameObject mAnalysisObj;
     [SerializeField]
-    private Text mAnaysisText;
-    [SerializeField]
-    private Text mDisinfectionText;
-    [SerializeField]
     private VirusInfoElement mVirusInfoElement;
     [SerializeField]
     private Transform mScrollTarget;
@@ -22,13 +18,12 @@ public class AnalysisController : MonoBehaviour
     private Slot mSlot;
     [SerializeField]
     private Button mAnalysisBtn;
-    [SerializeField]
-    private Button mDisinfectionBtn;
 #pragma warning restore
 
     private int mItemID;
+    private bool isOnSlot;
 
-    private Dictionary<int, float> mVirusAnalysisRateDic = new Dictionary<int, float>();
+    private Dictionary<int, float> mAnalysisDic = new Dictionary<int, float>();
     private Dictionary<int, VirusInfoElement> mElementDic = new Dictionary<int, VirusInfoElement>();
 
     private void Awake()
@@ -43,17 +38,25 @@ public class AnalysisController : MonoBehaviour
         }
 
         mAnalysisBtn.onClick.AddListener(() => { AnalysisVirus(); });
-        mDisinfectionBtn.onClick.AddListener(() => { Disinfection(); });
+        isOnSlot = false;
+        mAnalysisBtn.interactable = isOnSlot;
     }
 
     private void Start()
     {
-        for(int i = 0; i < VirusController.Instance.VirusDataArr.Length; i++)
-        {
-            mVirusAnalysisRateDic.Add(VirusController.Instance.VirusDataArr[i].ID, 0);
-        }
-
         Init();
+    }
+
+    private void Update()
+    {
+        if(isOnSlot)
+        {
+            if (mSlot.ItemID < 0)
+            {
+                isOnSlot = false;
+                mAnalysisBtn.interactable = false;
+            }
+        }
     }
 
     private void Init()
@@ -71,53 +74,35 @@ public class AnalysisController : MonoBehaviour
         mAnalysisObj.SetActive(value);
     }
 
-    public void GetItem(int originalID)
+    public void GetItem(int originalID, eItemType itemType)
     {
-        float power = 0f;
+        if (itemType != eItemType.Equip || originalID != 3)
+            return;
 
-        mItemID = originalID;
-
-        mAnaysisText.text = string.Format("분석 : 전력소비 {0}", power.ToString());
-        mDisinfectionText.text = string.Format("분석 : 전력소비 {0}", (power * 0.3).ToString());
-
-        
+        if(!isOnSlot)
+        {
+            isOnSlot = true;
+            mAnalysisBtn.interactable = true;
+        }
     }
 
     private void AnalysisVirus()
     {
-        //for(int i = 0; i < InvenController.Instance.InvenVirusInfoDic[mItemID].Count; i++)
-        //{
-        //    int virusID = InvenController.Instance.InvenVirusInfoDic[mItemID][i];
+        foreach(int key in Player.Instance.BeakerInfoDic.Keys)
+        {
+            if(!mAnalysisDic.ContainsKey(key))
+            {
+                mAnalysisDic.Add(key, Player.Instance.BeakerInfoDic[key] * VirusController.Instance.VirusDataDic[key].AnalysisRate);
+            }
+            else
+            {
+                mAnalysisDic[key] += Player.Instance.BeakerInfoDic[key] * VirusController.Instance.VirusDataDic[key].AnalysisRate;
+            }
 
-        //    if (virusID > 0)
-        //    {
-        //        mVirusAnalysisRateDic[virusID] += VirusController.Instance.VirusDataDic[virusID].AnalysisRate;
-
-        //        if (mVirusAnalysisRateDic[virusID] >= 100f)
-        //        {
-        //            mVirusAnalysisRateDic[virusID] = 100f;
-
-        //            AnimalController.Instance.ShowVirusMap(virusID);
-        //        }
-
-        //        mElementDic[virusID].Renew(mVirusAnalysisRateDic[virusID]);
-        //    }
-        //}
+            mElementDic[key].Renew(mAnalysisDic[key]);
+        }
 
         mSlot.Renew(0);
-
-        //TODO make Item Number Setting
-    }
-
-    private void Disinfection()
-    {
-        //for (int i = 0; i < InvenController.Instance.InvenVirusInfoDic[mItemID].Count; i++)
-        //{
-        //    InvenController.Instance.InvenVirusInfoDic[mItemID][i] = -999;
-        //}
-
-        mSlot.Renew(0);
-        
-        //InvenController.Instance.SetPlayerInven(mItemID);
+        Player.Instance.BeakerInfoDic.Clear();
     }
 }

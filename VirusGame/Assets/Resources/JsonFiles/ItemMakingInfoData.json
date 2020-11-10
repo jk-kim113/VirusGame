@@ -51,14 +51,14 @@
         "ItemType": "Equip",
         "TargetID": 2,
         "NeedID": [
+            1,
             3,
-            0,
             0,
             0
         ],
         "NeedNumber": [
             12,
-            0,
+            4,
             0,
             0
         ]
@@ -68,15 +68,31 @@
         "TargetID": 3,
         "NeedID": [
             1,
-            0,
-            0,
+            3,
+            4,
             0
         ],
         "NeedNumber": [
             7,
-            0,
-            0,
+            2,
+            1,
             0
+        ]
+    },
+    {
+        "ItemType": "Equip",
+        "TargetID": 4,
+        "NeedID": [
+            1,
+            3,
+            4,
+            7
+        ],
+        "NeedNumber": [
+            3,
+            5,
+            1,
+            5
         ]
     }
 ]

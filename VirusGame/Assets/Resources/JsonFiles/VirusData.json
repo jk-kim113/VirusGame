@@ -5,6 +5,6 @@
         "IncubationPeriod": 10.0,
         "Rank": 1,
         "AnalysisRate": 0.3,
-        "PowerConsumption" : 10
+        "CureProbability" : 80.0
     }
 ]

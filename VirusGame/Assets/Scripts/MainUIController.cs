@@ -18,6 +18,8 @@ public class MainUIController : MonoBehaviour
     private GaugeBar mHungryGaugeBar;
     [SerializeField]
     private GaugeBar mHPGaugeBar;
+    [SerializeField]
+    private Text mPlayTimeText;
 #pragma warning restore
 
     private void Awake()
@@ -63,5 +65,10 @@ public class MainUIController : MonoBehaviour
     public void ShowHPGaugeBar(float max, float current)
     {
         mHPGaugeBar.ShowGaugeBar(current / max);
+    }
+
+    public void ShowPlayTime(float time)
+    {
+        mPlayTimeText.text = string.Format("{0:F2}", time);
     }
 }

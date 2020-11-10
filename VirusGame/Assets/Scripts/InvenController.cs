@@ -38,6 +38,7 @@ public class InvenController : MonoBehaviour
         mItemNumberDic.Add(eItemType.Drop, itemNumInit);
         mItemNumberDic.Add(eItemType.Use, itemNumInit);
         mItemNumberDic.Add(eItemType.Equip, itemNumInit);
+        mItemNumberDic.Add(eItemType.Drug, itemNumInit);
     }
 
     public void SettingItemNumber(eItemType type, int id, int num)
@@ -145,9 +146,9 @@ public class InvenController : MonoBehaviour
         mPlayerInven.GetItem(originalId, mItemNumberDic[itemType][originalId], itemType);
     }
 
-    public bool CheckIsFull(int originalId)
+    public bool CheckIsFull(int originalId, eItemType itemType)
     {
-        return mPlayerInven.CheckIsFull(originalId);
+        return mPlayerInven.CheckIsFull(originalId, itemType);
     }
 
     public void OpenInvenBox(bool value)
@@ -174,5 +175,10 @@ public class InvenController : MonoBehaviour
     public void RenewInven(int originalID, eItemType itemType)
     {
         mPlayerInven.RenewInven(originalID, itemType);
+    }
+
+    public bool CheckDrug()
+    {
+        return mPlayerInven.CheckDrug();
     }
 }

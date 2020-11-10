@@ -33,6 +33,8 @@ public class Animal : Virus
 
     private eBehaviorPattern mBehaviorPattern = eBehaviorPattern.Idle;
 
+    private float mVirusTimeCheck = 0;
+
     protected override void Awake()
     {
         base.Awake();
@@ -64,13 +66,14 @@ public class Animal : Virus
 
             if (bIsInfect)
             {
-                mIncubationPeriod -= Time.deltaTime;
+                mVirusTimeCheck += Time.deltaTime;
 
-                if (mIncubationPeriod <= 0)
+                if (mIncubationPeriod <= mVirusTimeCheck)
                 {
+                    mVirusTimeCheck = 0;
                     if (!CheckCurable())
                     {
-                        Invoke("SpreadVirus", mImmunity / 10);
+                        SpreadVirus();
                     }
                 }
             }
@@ -227,8 +230,6 @@ public class Animal : Virus
                 StopCoroutine(mSpendGrowPeriodCoroutine);
                 StartCoroutine(Die());
                 bIsAlive = false;
-
-                Debug.Log("Die");
                 mNav.enabled = false;
 
                 break;
@@ -250,7 +251,7 @@ public class Animal : Virus
 
     private IEnumerator Die()
     {
-        AnimalController.Instance.Bleed(this.transform.position, mAnimalDeathType);
+        AnimalController.Instance.Bleed(this.transform.position, mAnimalDeathType, mVirusID);
         yield return new WaitForSeconds(360.0f);
         
         gameObject.SetActive(false);
@@ -280,8 +281,20 @@ public class Animal : Virus
                 virus.Infect(mVirusID);
             }
         }
+    }
 
-        Invoke("SpreadVirus", mImmunity / 10);
+    public void CureVirusBySyringe()
+    {
+        if(mVirusID > 0)
+        {
+            float curableNum = Random.Range(0, 1) * 100;
+            if(curableNum < VirusController.Instance.VirusDataDic[mVirusID].CureProbability)
+            {
+                mVirusID = -999;
+                GameObject effect = Resources.Load("Effects/VirusCureEffect") as GameObject;
+                effect.transform.position = transform.position;
+            }
+        }
     }
 
     private bool CheckCurable()
@@ -293,6 +306,7 @@ public class Animal : Virus
             bIsInfect = false;
             mAnimalDeathType = eAnimalDeathType.Natural;
             AnimalController.Instance.InfenctNumber -= 1;
+            mVirusID = -999;
 
             return true;
         }
@@ -321,7 +335,9 @@ public class Animal : Virus
         if(bIsAlive)
         {
             if (other.CompareTag("Weapon"))
-            {   
+            {
+                Timer effect = IngameManager.Instance.GetEffect(eEffectType.HitAnimal);
+                effect.transform.position = other.transform.position;
                 mHPcurrent -= 50;
                 if (mHPcurrent <= 0)
                 {

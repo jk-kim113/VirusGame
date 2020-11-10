@@ -63,10 +63,10 @@ public class DrugMakerController : MonoBehaviour
         }
 
         float drugRare = rareEffi * itemNum / 30;
+        mResultSlot.Init(null, 1, 1, eItemType.Drug);
+        InvenController.Instance.SettingItemNumber(eItemType.Drug, 1, 1);
 
-        mResultSlot.Init(null, 1, 1, eItemType.Use);
-
-        for(int i = 0; i < mSlotArr.Length; i++)
+        for (int i = 0; i < mSlotArr.Length; i++)
         {
             mSlotArr[i].Renew(0);
         }

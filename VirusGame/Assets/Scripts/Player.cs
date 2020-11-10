@@ -12,13 +12,11 @@ public class Player : MonoBehaviour
     [SerializeField]
     private DetectPlayerAction mDetectAction;
     [SerializeField]
-    private EffectPool mEffectPool;
-    [SerializeField]
     private CameraYMove mCameraYMove;
     [SerializeField]
-    private Beaker mBeaker;
+    private Transform[] mEquipPos;
     [SerializeField]
-    private Transform mWeaponPos;
+    private GameObject[] mEquipPrefabs;
 #pragma warning restore
 
     private CharacterController mCHControl;
@@ -56,11 +54,20 @@ public class Player : MonoBehaviour
     private float mHPmax;
     private float mHPcurrent;
 
+    private float mImmunity { get { return (mHungryCurrent / mHungryMax); } }
+
     private int mVirusID;
 
     private bool bIsInfect;
 
     private Animator mAnim;
+
+    private Weapon mWeapon;
+    private Beaker mBeaker;
+    private Syringe mSyringe;
+
+    private Dictionary<int, float> mBeakerInfoDic = new Dictionary<int, float>();
+    public Dictionary<int, float> BeakerInfoDic { get { return mBeakerInfoDic; } }
 
     private void Awake()
     {   
@@ -100,8 +107,6 @@ public class Player : MonoBehaviour
         MainUIController.Instance.ShowStaminaGaugeBar(mStaminaMax, mStaminaCurrent);
         MainUIController.Instance.ShowHungryGaugeBar(mHungryMax, mHungryCurrent);
         MainUIController.Instance.ShowHPGaugeBar(mHPmax, mHPcurrent);
-
-        mBeaker.gameObject.SetActive(true);
     }
 
     private void FixedUpdate()
@@ -199,15 +204,38 @@ public class Player : MonoBehaviour
                 OpenEquipItemMaker(false);
             }
 
-            if (Input.GetKey(KeyCode.Space))
+            if (mWeapon != null)
             {
-                mAnim.SetBool("attack01", true);
-                //mWeaponCollider.enabled = true;
+                if (Input.GetKey(KeyCode.Space))
+                {
+                    mAnim.SetBool("attack01", true);
+                    mWeapon.gameObject.GetComponent<BoxCollider>().enabled = true;
+                }
+                else
+                {
+                    mAnim.SetBool("attack01", false);
+                    mWeapon.gameObject.GetComponent<BoxCollider>().enabled = false;
+                }
             }
-            else
+
+            if (mSyringe != null)
             {
-                mAnim.SetBool("attack01", false);
-                //mWeaponCollider.enabled = false;
+                if(Input.GetKey(KeyCode.Space))
+                {
+                    RaycastHit hit;
+                    if (Physics.Raycast(mDetectAction.transform.position, mDetectAction.transform.forward, out hit, 7.0f))
+                    {
+                        if(hit.collider.CompareTag("Herbivore") || hit.collider.CompareTag("Carnivore"))
+                        {
+                            if(InvenController.Instance.CheckDrug())
+                            {
+                                Animal anim = hit.collider.GetComponent<Animal>();
+                                anim.CureVirusBySyringe();
+                                InvenController.Instance.SettingItemNumber(eItemType.Drug, 1, -1);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -217,9 +245,15 @@ public class Player : MonoBehaviour
         WaitForSeconds term = new WaitForSeconds(.1f);
 
         Plant plantDetected = mDetectAction.DetectObj.GetComponent<Plant>();
+
+        while(plantDetected == null)
+        {
+            yield return term;
+            plantDetected = mDetectAction.DetectObj.GetComponent<Plant>();
+        }
         plantDetected.StartFadeOut();
 
-        Timer effect = mEffectPool.GetFromPool(0);
+        Timer effect = IngameManager.Instance.GetEffect(eEffectType.CollectPlant);
         effect.gameObject.SetActive(true);
         effect.transform.position = plantDetected.transform.position;
 
@@ -235,7 +269,7 @@ public class Player : MonoBehaviour
 
         while (bPlantAction && (current > 0))
         {
-            effect = mEffectPool.GetFromPool(0);
+            effect = IngameManager.Instance.GetEffect(eEffectType.CollectPlant);
             effect.gameObject.SetActive(true);
             effect.transform.position = plantDetected.transform.position;
 
@@ -275,6 +309,16 @@ public class Player : MonoBehaviour
 
         MainUIController.Instance.ShowStaminaGaugeBar(mStaminaMax, mStaminaCurrent);
         MainUIController.Instance.OnOffActionGaugeBar(false);
+
+        if (plantDetected.IsInfect)
+        {
+            float rand = Random.value;
+
+            if (rand > mImmunity)
+            {
+                Infect(plantDetected.VirusID);
+            }
+        }
     }
 
     private void OpenInvenBox(bool value)
@@ -307,21 +351,23 @@ public class Player : MonoBehaviour
         MainUIController.Instance.ShowHPGaugeBar(mHPmax, mHPcurrent);
         if (mHPcurrent <= 0)
         {
-            Debug.Log("GameOver!!!");
-            //GameOver();
+            GameOver();
         }
     }
 
     public void CollectBlood(bool value)
     {
         mCameraYMove.SetCameraPos(value);
-        if(mBeaker.IsFullBlood)
+        if(mBeaker != null)
         {
-            mAnim.SetBool("IsFullBlood", value);
-        }
-        else
-        {
-            mAnim.SetBool("IsCollectBlood", value);
+            if (mBeaker.IsFullBlood)
+            {
+                mAnim.SetBool("IsFullBlood", value);
+            }
+            else
+            {
+                mAnim.SetBool("IsCollectBlood", value);
+            }
         }
     }
 
@@ -333,8 +379,13 @@ public class Player : MonoBehaviour
 
     public void BloodInBeaker()
     {
-        float blood = mDetectAction.DetectObj.GetComponent<Blood>().BloodAmount;
-        mBeaker.ShowInside(blood);
+        Blood blood = mDetectAction.DetectObj.GetComponent<Blood>();
+        mBeaker.ShowInside(blood.BloodAmount);
+
+        if (mBeakerInfoDic.ContainsKey(blood.VirusID))
+            mBeakerInfoDic[blood.VirusID] += blood.BloodAmount;
+        else
+            mBeakerInfoDic.Add(blood.VirusID, blood.BloodAmount);
     }
 
     public void UseItem(eUseTarget target, float value)
@@ -359,8 +410,50 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void Infect()
+    public void GetWeaponEquipment(int originalID = -999)
     {
+        if (originalID > 0)
+        {
+            mWeapon = Instantiate(mEquipPrefabs[originalID - 1], mEquipPos[0]).GetComponent<Weapon>();
+            mWeapon.gameObject.GetComponent<BoxCollider>().enabled = false;
+        }
+        else
+        {
+            if (mWeapon != null)
+                Destroy(mWeapon.gameObject);
+        }
+    }
+
+    public void GetBeakerEquipment(int originalID = -999)
+    {
+        if (originalID > 0)
+        {
+            mBeaker = Instantiate(mEquipPrefabs[originalID - 1], mEquipPos[1]).GetComponent<Beaker>();
+        }
+        else
+        {
+            if (mBeaker != null)
+                Destroy(mBeaker.gameObject);
+        }
+    }
+
+    public void GetSyringeEquipment(int originalID = -999)
+    {
+        if (originalID > 0)
+        {
+            mSyringe = Instantiate(mEquipPrefabs[originalID - 1], mEquipPos[1]).GetComponent<Syringe>();
+        }
+        else
+        {
+            if (mSyringe != null)
+                Destroy(mBeaker.gameObject);
+        }
+    }
+
+    private void Infect(int virusID)
+    {
+        mVirusID = virusID;
+        bIsInfect = true;
         mStaminaMax *= 0.5f;
 
         if(mStaminaMax <= mStaminaCurrent)
@@ -373,6 +466,9 @@ public class Player : MonoBehaviour
 
     private void GameOver()
     {
-        // Game Over!!
+        GameObject go = GameObject.Find("GameOverCanvas");
+        GameOverWindow ggWnd = go.GetComponent<GameOverWindow>();
+        //ggWnd.OpenGameOverWindow();
+        go.SetActive(true);
     }
 }

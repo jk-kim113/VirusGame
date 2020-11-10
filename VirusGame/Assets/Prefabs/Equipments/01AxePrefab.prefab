@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3198400490030409470}
   - component: {fileID: 3198400490030409471}
+  - component: {fileID: 114966862593043562}
   m_Layer: 11
-  m_Name: AxePrefab
+  m_Name: 01AxePrefab
   m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,6 +46,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 2.96}
   m_Center: {x: -2.08, y: 0.73, z: 5.11}
+--- !u!114 &114966862593043562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3198400490030409469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8971c873b5b6d480da42076d902ca12e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3198400490455847928
 PrefabInstance:
   m_ObjectHideFlags: 0

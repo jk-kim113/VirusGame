@@ -89,8 +89,6 @@ public class AnimalController : MonoBehaviour
                 if (mVirusSpawnPeriod <= 0)
                 {
                     int rand = Random.Range(0, mVirusList.Count);
-
-                    Debug.Log("Infect");
                     mVirusSpawnPeriod = 5.0f;
                     mVirusList[rand].Infect(VirusController.Instance.GetVirusID());
                     mInfectNumber++;
@@ -110,12 +108,12 @@ public class AnimalController : MonoBehaviour
         }
     }
 
-    public void Bleed(Vector3 pos, eAnimalDeathType type)
+    public void Bleed(Vector3 pos, eAnimalDeathType type, int virusID)
     {
         Blood blood = mBloodPool.GetFromPool((int)type);
         blood.transform.position = pos;
 
-        // Add VirusInfo in the Blood
+        blood.InitBlood(virusID);
     }
 
     private eAnimalKind IDToEnum(int originalID)

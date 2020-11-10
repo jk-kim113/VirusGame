@@ -28,9 +28,10 @@ public class Inven : MonoBehaviour
         {
             case eItemType.Drop:
             case eItemType.Use:
+            case eItemType.Drug:
                 for (int i = 0; i < mSlotArr.Length; i++)
                 {
-                    if (mSlotArr[i].ItemID == originalId)
+                    if (mSlotArr[i].ItemID == originalId && mSlotArr[i].ItemType == itemType)
                     {
                         mSlotArr[i].Init(img, num, originalId, itemType);
                         return;
@@ -74,11 +75,11 @@ public class Inven : MonoBehaviour
         }
     }
 
-    public bool CheckIsFull(int originalID)
+    public bool CheckIsFull(int originalID, eItemType itemType)
     {
         for (int i = 0; i < mSlotArr.Length; i++)
         {
-            if (mSlotArr[i].ItemID == originalID)
+            if (mSlotArr[i].ItemID == originalID && mSlotArr[i].ItemType == itemType)
             {
                 return false;
             }
@@ -95,6 +96,17 @@ public class Inven : MonoBehaviour
         return true;
     }
 
+    public bool CheckDrug()
+    {
+        for(int i = 0; i < mSlotArr.Length; i++)
+        {
+            if (mSlotArr[i].ItemType == eItemType.Drug)
+                return true;
+        }
+
+        return false;
+    }
+
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.Tab))
@@ -105,6 +117,28 @@ public class Inven : MonoBehaviour
                 mSelectAreaPosNum = 0;
             }
             mSelectAreaPos.transform.position = mSlotArr[mSelectAreaPosNum].gameObject.transform.position;
+
+            if(mSlotArr[mSelectAreaPosNum].ItemID > 0 && mSlotArr[mSelectAreaPosNum].ItemType == eItemType.Equip)
+            {
+                if(DataGroup.Instance.EquipItemDataDic[mSlotArr[mSelectAreaPosNum].ItemID].EquipType == eEquipType.Weapon)
+                {
+                    Player.Instance.GetWeaponEquipment(mSlotArr[mSelectAreaPosNum].ItemID);
+                }
+                else if(DataGroup.Instance.EquipItemDataDic[mSlotArr[mSelectAreaPosNum].ItemID].EquipType == eEquipType.Beaker)
+                {
+                    Player.Instance.GetBeakerEquipment(mSlotArr[mSelectAreaPosNum].ItemID);
+                }
+                else if(DataGroup.Instance.EquipItemDataDic[mSlotArr[mSelectAreaPosNum].ItemID].EquipType == eEquipType.Syringe)
+                {
+                    Player.Instance.GetSyringeEquipment(mSlotArr[mSelectAreaPosNum].ItemID);
+                }
+            }
+            else
+            {
+                Player.Instance.GetWeaponEquipment();
+                Player.Instance.GetBeakerEquipment();
+                Player.Instance.GetSyringeEquipment();
+            }
         }
 
         if(Input.GetKeyDown(KeyCode.C))
